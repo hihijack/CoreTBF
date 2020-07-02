@@ -1,4 +1,5 @@
 ﻿using DefaultNamespace;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,8 @@ namespace UI
         private bool _flagSelectedLstChangeed = false;
 
         private CanvasGroup cgGridAction;
+
+        bool isVisible;
 
         private void Awake()
         {
@@ -34,6 +37,16 @@ namespace UI
             else
             {
                 transform.localPosition = Vector3.left * 10000;
+                CacheItems();
+            }
+            isVisible = visible;
+        }
+
+        public bool IsVisible
+        {
+            get
+            {
+                return isVisible;
             }
         }
 
@@ -43,30 +56,26 @@ namespace UI
             cgGridAction.interactable = visible;
         }
 
-        public void StartShow()
+        void CacheItems()
         {
             for (int i = goGridAction.transform.childCount - 1; i >= 0; i--)
             {
                 GoPool.Inst.Cache(goGridAction.transform.GetChild(i).gameObject);
-            } 
-            for (int i = goGridActionSelected.transform.childCount - 1; i >= 0; i--)
-            {
-                GoPool.Inst.Cache(goGridActionSelected.transform.GetChild(i).gameObject);
             }
-            
-            //添加可行动列表
-            foreach (var character in GameMgr.Inst.lstCharacters)
-            {
-                if (character.camp == ECamp.Ally && character.IsInReady())
-                {
-                    var uiItem = GameUtil.PopOrInst(pfbCharacterActionItem);
-                    uiItem.transform.parent = goGridAction.transform;
-                    var uiItemFightAction = uiItem.GetComponent<UIFightAction>();
-                    uiItemFightAction.SetData(character);
-                }
-            }
+        }
+
+        public void StartShow(Character target)
+        {
+            CacheItems();
+
+             //添加可行动列表
+             var uiItem = GameUtil.PopOrInst(pfbCharacterActionItem);
+            uiItem.transform.parent = goGridAction.transform;
+            var uiItemFightAction = uiItem.GetComponent<UIFightAction>();
+            uiItemFightAction.SetData(target);
+
             //敌人行动
-            RefreshActionSelectedList();
+            //RefreshActionSelectedList();
         }
 
         private void RefreshActionSelectedList()
@@ -83,16 +92,22 @@ namespace UI
 
         private void Update()
         {
-            if (_flagSelectedLstChangeed)
-            {
-                RefreshActionSelectedList();
-                _flagSelectedLstChangeed = false;
-            }
+            //if (_flagSelectedLstChangeed)
+            //{
+            //    RefreshActionSelectedList();
+            //    _flagSelectedLstChangeed = false;
+            //}
         }
 
         public void BtnStartAct()
         {
-            GameMgr.Inst.ToNextStage();
+            //行动结束
+            GameMgr.Inst.RoundEnd();
+        }
+
+        internal void OnSelectACharacter(Character character)
+        {
+            StartShow(character);
         }
     }
 }

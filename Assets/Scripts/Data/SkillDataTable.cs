@@ -28,7 +28,8 @@ namespace Data
     {
         Wait,
         Def,
-        Atk
+        Atk,
+        ExchangeLoc
     }
 
     public enum ESkillTarget
@@ -51,6 +52,8 @@ namespace Data
         [VerticalGroup("伤害"), LabelWidth(60)]
         public float dmg,dmgFire;
 
+        public int[] buffsAdd;
+
         public int targetCount;
         
         public float timePower;
@@ -58,16 +61,21 @@ namespace Data
         public float timeAtkStiff;
         public int tenacityAtk;
         public int cost;
-
+        public int mpGet;
         /// <summary>
         /// 产生仇恨
         /// </summary>
-        public int hatred;
+        //public int hatred;
 
-        public bool quick;
+        //public bool quick;
+
+        //技能目标优先队伍序号.0表示随机
+        public int targetTeamLoc;
+
         [TextArea]
         public string tip;
 
         public TimelineAsset tlAsset;
+        public TimelineAsset tlAssetPower;
     }
 }

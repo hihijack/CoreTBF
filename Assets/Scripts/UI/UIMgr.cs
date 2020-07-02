@@ -8,7 +8,9 @@ namespace UI
         public UIFightLog uiFightLog;
 
         public UIFightActionRoot uiFightActionRoot;
-        
+
+        public UIHPRoot uiHPRoot;
+
         private static UIMgr _inst;
         
         public static UIMgr Inst

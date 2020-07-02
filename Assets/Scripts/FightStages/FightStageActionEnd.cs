@@ -19,11 +19,11 @@ namespace DefaultNamespace.FightStages
                 return;
             }
 
-            UIMgr.Inst.uiFightLog.AppendLog(">>>进入结束阶段");
+           // UIMgr.Inst.uiFightLog.AppendLog(">>>进入结束阶段");
 
             UIMgr.Inst.uiFightActionRoot.SetVisible(true);
             UIMgr.Inst.uiFightActionRoot.SetActionVisible(true);
-            UIMgr.Inst.uiFightActionRoot.StartShow();
+            //UIMgr.Inst.uiFightActionRoot.StartShow();
         }
     }
 }

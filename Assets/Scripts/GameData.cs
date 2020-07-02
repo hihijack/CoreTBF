@@ -8,7 +8,8 @@ namespace DefaultNamespace
         
         public RoleDataTable roleData;
         public SkillDataTable skillData;
-        
+        public BuffDataTable buffData;
+
         private static GameData _inst;
         public static GameData Inst
         {

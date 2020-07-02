@@ -1,4 +1,6 @@
-﻿namespace DefaultNamespace.FightStages
+﻿using UnityEngine;
+
+namespace DefaultNamespace.FightStages
 {
     public class FightStageNormal : FightStageBase
     {
@@ -13,6 +15,14 @@
             if (GameMgr.Inst.GetActiveCharacter() != null)
             {
                 GameMgr.Inst.SetFightStage(EFightStage.ActionSelect);
+            }
+            else
+            {
+                //等待中的开始行动
+                //if (Input.GetKeyDown(KeyCode.Space))
+                //{
+                //    GameMgr.Inst.BtnActionAtOnce();
+                //}
             }
         }
     }

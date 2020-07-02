@@ -5,8 +5,12 @@
         public override void Act()
         {
             base.Act();
+        }
+
+        public override void RealAct()
+        {
+            base.RealAct();
             caster.State = ECharacterState.Wait;
-            actionEnd();
         }
     }
 }

@@ -14,50 +14,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
   - ID: 1
-    name: "\u72C2\u6218\u58EB"
-    model: berserker
-    headicon: hd_berserker
+    name: "\u767D\u9762/\u516D\u82F1\u96C4"
+    model: hakumen
+    headicon: hd_hakumen
     HP: 100
     MP: 100
-    skills: 010000000200000003000000
+    skills: 01000000020000000d000000030000000a000000
     atk: 20
-    def: 5
+    def: 2
     resFire: 0
     speed: 1.8
     tenacity: 100
+    tenClearStiff: 0
   - ID: 2
-    name: "\u6CD5\u5E08"
-    model: magicuser
-    headicon: hd_magicuser
+    name: "\u96EA\u6CC9/\u5C11\u5973\u5FCD\u8005"
+    model: yumi
+    headicon: hd_yumi
     HP: 50
     MP: 150
-    skills: 010000000200000004000000
+    skills: 01000000020000000d000000040000000b000000
     atk: 20
-    def: 0
+    def: 2
     resFire: 5
     speed: 1.2
     tenacity: 100
+    tenClearStiff: 0
   - ID: 3
-    name: "\u6B66\u58EB"
-    model: kunoichi
-    headicon: hd_kun
+    name: "\u53CC\u6708\u8BA9\u53F6"
+    model: yuzuriha
+    headicon: hd_yuz
     HP: 80
     MP: 60
-    skills: 01000000020000000500000009000000
+    skills: 01000000020000000d0000000500000009000000
     atk: 30
-    def: 0
+    def: 1
     resFire: 0
     speed: 2
     tenacity: 100
+    tenClearStiff: 0
   - ID: 4
-    name: "\u5DEB\u5E08"
-    model: witch
-    headicon: hd_witch
-    HP: 500
+    name: Vatista
+    model: vatista
+    headicon: hd_vatista
+    HP: 200
     MP: 100
-    skills: 060000000700000008000000
+    skills: 06000000070000000c000000
     atk: 100
-    def: 5
+    def: 10
     resFire: 5
     speed: 1.5
     tenacity: 100
+    tenClearStiff: 2

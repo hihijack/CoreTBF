@@ -45,6 +45,8 @@ namespace DefaultNamespace
                     return new FightActionDef {caster = caster,skill = skill, targets = targets};
                 case ESkillLogic.Atk:
                     return new FightActionAtk {caster = caster,skill = skill, targets = targets};
+                case ESkillLogic.ExchangeLoc:
+                    return new FightActionExchangeLoc { caster = caster, skill = skill, targets = targets };
                 default:
                     throw new ArgumentOutOfRangeException();
             }

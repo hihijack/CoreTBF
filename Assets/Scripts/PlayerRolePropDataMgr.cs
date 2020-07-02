@@ -27,34 +27,14 @@ namespace DefaultNamespace
         
         public void Init()
         {
-            int maxHP = 0;
-            int maxMP = 0;
             propData = new PropData();
-            foreach (var character in GameMgr.Inst.lstCharacters)
-            {
-                if (character.camp == ECamp.Ally)
-                {
-                    maxHP += character.roleData.HP;
-                    maxMP += character.roleData.MP;
-                }
-            }
-
-            propData.maxHP = maxHP;
-            propData.maxMP = maxMP;
-            propData.hp = maxHP;
-            propData.mp = maxMP;
-        }
-        
-        public void ChangeHP(int hpchange)
-        {
-            propData.ChangeHP(hpchange);
-            UIPlayerInfo.Inst.Refresh();
+            propData.mp = 0;
         }
 
         public void ChangeMP(int mpchange)
         {
             propData.ChangeMP(mpchange);
-            UIPlayerInfo.Inst.Refresh();
+            UIMgr.Inst.uiHPRoot.RefreshMP();
         }
     }
 }

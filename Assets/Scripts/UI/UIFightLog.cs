@@ -6,8 +6,11 @@ using System.Text;
 public class UIFightLog : MonoBehaviour
 {
     public Text txtContet;
+    public Scrollbar scrollBar;
 
     StringBuilder sbLog;
+
+
 
     private void Awake()
     {
@@ -19,5 +22,6 @@ public class UIFightLog : MonoBehaviour
     {
         sbLog.AppendLine(log);
         txtContet.text = sbLog.ToString();
+        scrollBar.value = 0;
     }
 }

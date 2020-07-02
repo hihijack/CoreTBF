@@ -14,95 +14,118 @@ namespace DefaultNamespace
 
         private int _index;
 
-        Dictionary<Character, int> _dicHatredRecord;
+        //Dictionary<Character, int> _dicHatredRecord;
 
-        Character _chrHatredTarget;//缓存仇恨最高目标,仇恨修改时计算一次.可能为空
+        //Character _chrHatredTarget;//缓存仇恨最高目标,仇恨修改时计算一次.可能为空
 
         public AI(Character character)
         {
             _character = character;
-            arrSkillIndexToAction = new int[]{0,0,1,2};
+            arrSkillIndexToAction = new int[]{0,0,1,0,2,0,1};
             _index = -1;
-            _dicHatredRecord = new Dictionary<Character, int>();
+            //_dicHatredRecord = new Dictionary<Character, int>();
         }
 
         /// <summary>
         /// 记录仇恨
         /// </summary>
-        public void SetHatred(Character character, int hatred)
-        {
-            if (_dicHatredRecord.ContainsKey(character))
-            {
-                _dicHatredRecord[character] = hatred;
-            }
-            else
-            {
-                _dicHatredRecord.Add(character, hatred);
-            }
-            SetHatredTarget();
-        }
+        //public void SetHatred(Character character, int hatred)
+        //{
+        //    if (_dicHatredRecord.ContainsKey(character))
+        //    {
+        //        _dicHatredRecord[character] = hatred;
+        //    }
+        //    else
+        //    {
+        //        _dicHatredRecord.Add(character, hatred);
+        //    }
+        //    SetHatredTarget();
+        //}
 
-        /// <summary>
-        /// 添加仇恨值
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="hatredOffset"></param>
-        public void AddHatred(Character character, int hatredOffset)
-        {
-            if (_dicHatredRecord.ContainsKey(character))
-            {
-                _dicHatredRecord[character] = Mathf.Max(0, _dicHatredRecord[character] + hatredOffset);
-            }
-            else
-            {
-                _dicHatredRecord.Add(character, Mathf.Max(hatredOffset, 0));
-            }
-            SetHatredTarget();
-        }
+        ///// <summary>
+        ///// 添加仇恨值
+        ///// </summary>
+        ///// <param name="character"></param>
+        ///// <param name="hatredOffset"></param>
+        //public void AddHatred(Character character, int hatredOffset)
+        //{
+        //    if (_dicHatredRecord.ContainsKey(character))
+        //    {
+        //        _dicHatredRecord[character] = Mathf.Max(0, _dicHatredRecord[character] + hatredOffset);
+        //    }
+        //    else
+        //    {
+        //        _dicHatredRecord.Add(character, Mathf.Max(hatredOffset, 0));
+        //    }
+        //    SetHatredTarget();
+        //}
 
-        /// <summary>
-        /// 获取仇恨值.默认为0
-        /// </summary>
-        /// <param name="character"></param>
-        /// <returns></returns>
-        public int GetHatred(Character character)
-        {
-            _dicHatredRecord.TryGetValue(character, out int r);
-            return r;
-        }
+        ///// <summary>
+        ///// 预计算仇恨
+        ///// </summary>
+        ///// <param name="character"></param>
+        ///// <param name="hatredOffset"></param>
+        ///// <returns></returns>
+        //public bool PreCalHatred(Character character, int hatredOffset)
+        //{
+        //    bool r = false;
+        //    if (_chrHatredTarget != null && _character != _chrHatredTarget)
+        //    {
+        //        int curTargetHatred = GetHatred(_chrHatredTarget);
+        //        int curHatred = GetHatred(character);
+        //        if (curHatred + hatredOffset >= curTargetHatred)
+        //        {
+        //            r = true;
+        //        }
+        //    }
+
+        //    return r;
+        //}
+
+        ///// <summary>
+        ///// 获取仇恨值.默认为0
+        ///// </summary>
+        ///// <param name="character"></param>
+        ///// <returns></returns>
+        //public int GetHatred(Character character)
+        //{
+        //    _dicHatredRecord.TryGetValue(character, out int r);
+        //    return r;
+        //}
 
 
         /// <summary>
         /// 计算设置仇恨目标
         /// </summary>
-        void SetHatredTarget()
-        {
-            Character chrTemp = null;
-            int hatredTemp = 0;
-            foreach (var chr in _dicHatredRecord.Keys)
-            {
-                if (_dicHatredRecord[chr] > hatredTemp)
-                {
-                    chrTemp = chr;
-                    hatredTemp = _dicHatredRecord[chr];
-                }
-            }
-            var t = _chrHatredTarget;
-            _chrHatredTarget = chrTemp;
-            if (t != _chrHatredTarget)
-            {
-                UIMgr.Inst.uiFightLog.AppendLog($"{_character.roleData.name}仇恨目标变更->{_chrHatredTarget.roleData.name}");
-            }
-        }
+        //void SetHatredTarget()
+        //{
+        //    Character chrTemp = null;
+        //    int hatredTemp = 0;
+        //    foreach (var chr in _dicHatredRecord.Keys)
+        //    {
+        //        if (_dicHatredRecord[chr] > hatredTemp)
+        //        {
+        //            chrTemp = chr;
+        //            hatredTemp = _dicHatredRecord[chr];
+        //        }
+        //    }
+        //    var t = _chrHatredTarget;
+        //    _chrHatredTarget = chrTemp;
+        //    if (t != _chrHatredTarget)
+        //    {
+        //        UIMgr.Inst.uiFightLog.AppendLog($"<Color=red>{_character.roleData.name}仇恨目标变更->{_chrHatredTarget.roleData.name}</Color>");
+        //        UIMgr.Inst.uiFight.RefreshHatredTarget(_chrHatredTarget);
+        //    }
+        //}
 
         /// <summary>
         /// 取仇恨目标
         /// </summary>
         /// <returns></returns>
-        public Character GetHatredTarget()
-        {
-            return _chrHatredTarget;
-        }
+        //public Character GetHatredTarget()
+        //{
+        //    return _chrHatredTarget;
+        //}
 
         /// <summary>
         /// 主要阶段要使用的行动
@@ -110,15 +133,41 @@ namespace DefaultNamespace
         /// <returns></returns>
         public FightActionBase ActionForMain()
         {
-            _index++;
-            if (_index > arrSkillIndexToAction.Length - 1)
+            SkillData skillData = null;
+            if (_character.mSkillPowering != null)
             {
-                _index = 0;
+                //正在蓄力,只能使用蓄力技能
+                skillData = _character.mSkillPowering;
             }
+            else
+            {
+                _index++;
+                if (_index > arrSkillIndexToAction.Length - 1)
+                {
+                    _index = 0;
+                }
+                skillData = _character.lstSkillData[arrSkillIndexToAction[_index]];
+            }
+            
             //主动循环使用技能
             //TODO AI防御处理
-            var skillData = _character.lstSkillData[arrSkillIndexToAction[_index]];
             return FightActionFactory.Inst.CreateFightAction(_character, skillData, GetSkillTargets(skillData));
+        }
+
+        /// <summary>
+        /// 即将使用的技能
+        /// </summary>
+        /// <returns></returns>
+        public SkillData GetNextSkillToCast()
+        {
+            int t = _index;
+            t++;
+            if (t > arrSkillIndexToAction.Length - 1)
+            {
+                t = 0;
+            }
+            var skillData = _character.lstSkillData[arrSkillIndexToAction[t]];
+            return skillData;
         }
 
         /// <summary>
@@ -138,13 +187,13 @@ namespace DefaultNamespace
             {
                 if (skillData.targetType == ESkillTarget.Enemy)
                 {
-                    if (_chrHatredTarget != null)
+                    if (skillData.targetTeamLoc > 0)
                     {
-                        targets.Add(_chrHatredTarget);
+                        targets.Add(GameMgr.Inst.GetAllyCharacterByTeamLoc(skillData.targetTeamLoc));
                     }
                     else
                     {
-                        targets.Add(GetNearestEnemyCharacter());
+                        targets.Add(GameMgr.Inst.GetARandomAllyCharacter());
                     }
                 }else if (skillData.targetType == ESkillTarget.Ally)
                 {

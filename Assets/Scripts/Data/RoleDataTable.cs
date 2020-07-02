@@ -38,5 +38,9 @@ namespace Data
         public int resFire;
         public float speed;
         public int tenacity;
+        /// <summary>
+        /// 韧性清空硬直时间
+        /// </summary>
+        public float tenClearStiff;
     }
 }

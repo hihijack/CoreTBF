@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5975258493350970141}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: magicuser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4154372344276217599}
   - component: {fileID: 4758870364869217558}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

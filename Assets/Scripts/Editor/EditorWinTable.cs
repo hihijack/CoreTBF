@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Boo.Lang;
+using UnityEditor;
 using UnityEngine;
 
 namespace DefaultNamespace.Editor
@@ -7,15 +8,36 @@ namespace DefaultNamespace.Editor
     {
         private Object target;
         private UnityEditor.Editor targetEditor;
-    
+
+        static List<EditorWinTable> lst = new List<EditorWinTable>();
+
         [MenuItem("Assets/在表格窗口打开")]
         static void AddWindow()
         {
             //GetWindow<EditorWinTable>(false, "表格窗口").SetTarget(Selection.activeObject);
-            //打开多个窗口
-            EditorWinTable inst = ScriptableObject.CreateInstance<EditorWinTable>();
-            inst.Show();
-            inst.SetTarget(Selection.activeObject);
+            EditorWinTable existWin = null;
+            foreach (var win in lst)
+            {
+                if (win.target == Selection.activeObject)
+                {
+                    existWin = win;
+                    break;
+                }
+            }
+
+            if (existWin == null)
+            {
+                //打开多个窗口
+                EditorWinTable inst = ScriptableObject.CreateInstance<EditorWinTable>();
+                inst.Show();
+                inst.SetTarget(Selection.activeObject);
+                lst.Add(inst);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            lst.Remove(this);
         }
 
         private void OnGUI()

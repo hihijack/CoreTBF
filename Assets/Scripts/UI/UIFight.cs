@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DefaultNamespace;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,10 +17,23 @@ namespace UI
         public GameObject timeTip;
 
         private List<UIFightItemCharacter> lstItems;
+
+        List<UIBuffRoot> lstBuffRoots;
+
+        List<UIAINextAction> lstAINextActions;
+
         private float progMin, progMax;
-        
+
+        RectTransform rtTransform;
+
+        private void Awake()
+        {
+            rtTransform = gameObject.GetComponent<RectTransform>();
+        }
+
         private void Start()
         {
+           
             progMin = imageProg.rectTransform.localPosition.x - imageProg.rectTransform.sizeDelta.x * 0.5f;
             progMax = progMin + imageProg.rectTransform.sizeDelta.x;
             HideTimeTip();
@@ -27,12 +42,96 @@ namespace UI
         public void Init()
         {
             lstItems = new List<UIFightItemCharacter>();
+            lstBuffRoots = new List<UIBuffRoot>();
             foreach (var character in GameMgr.Inst.lstCharacters)
             {
                 var go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/ItemCharacter"), itemRoot.transform);
                 var uiItem = go.GetComponent<UIFightItemCharacter>();
                 uiItem.SetData(character);
                 lstItems.Add(uiItem);
+
+                //buffUI
+                var goBuff = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UIBuff"), transform);
+                var uiBuffRoot = goBuff.GetComponent<UIBuffRoot>();
+                uiBuffRoot.SetTarget(character);
+                lstBuffRoots.Add(uiBuffRoot);
+
+                var posEntity = character.entityCtl.GetPos();
+                var screenPos = GameMgr.Inst.cameraMain.WorldToScreenPoint(posEntity) + new Vector3(0, -5f, 0);
+                Vector2 locPos;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(rtTransform, screenPos, null, out locPos);
+                goBuff.transform.localPosition = locPos;
+            }
+
+            InitAINexts();
+        }
+
+        /// <summary>
+        /// 添加buff时刷新
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="buff"></param>
+        public void RefreshBuffUIOnAdd(Character target, BuffBase buff)
+        {
+            var uibuffRoot = GetBuffRoot(target);
+            uibuffRoot.RefreshOnAddABuff(buff);
+        }
+
+        public void RefreshBuffUI()
+        {
+            foreach (var item in lstBuffRoots)
+            {
+                item.Refresh();
+            }
+        }
+
+        public void RefreshBuffUIOnRemove(Character target, BuffBase buff)
+        {
+            var uibuffRoot = GetBuffRoot(target);
+            uibuffRoot.RefreshOnRemoveABuff(buff);
+        }
+
+        public UIBuffRoot GetBuffRoot(Character target)
+        {
+            foreach (var item in lstBuffRoots)
+            {
+                if (item.character == target)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        void InitAINexts()
+        {
+            lstAINextActions = new List<UIAINextAction>();
+            foreach (var character in GameMgr.Inst.lstCharacters)
+            {
+                if (character.camp == DefaultNamespace.ECamp.Enemy)
+                {
+                    var go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/ItemAINextAction"), transform);
+                    var uiItem = go.GetComponent<UIAINextAction>();
+                    uiItem.SetTarget(character);
+                    uiItem.Refresh();
+                    lstAINextActions.Add(uiItem);
+                }
+            }
+        }
+
+        public void RefreshAIItems()
+        {
+            foreach (var item in lstAINextActions)
+            {
+                item.Refresh();
+            }
+        }
+
+        public void SetAIItemsVisible(bool visible)
+        {
+            foreach (var item in lstAINextActions)
+            {
+                item.SetVisible(visible);
             }
         }
 
@@ -78,6 +177,18 @@ namespace UI
             else
             {
                 txtStage.text = "";
+            }
+        }
+
+        /// <summary>
+        /// 刷新仇恨目标
+        /// </summary>
+        /// <param name="target"></param>
+        internal void RefreshHatredTarget(DefaultNamespace.Character target)
+        {
+            foreach (var t in lstItems)
+            {
+                t.SetIsHatredTarget(t.character == target);
             }
         }
 

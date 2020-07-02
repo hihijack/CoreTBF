@@ -49,7 +49,7 @@ namespace DefaultNamespace
 
         public void Cache(string key, GameObject go)
         {
-            go.transform.parent = _goRoot.transform;
+            go.transform.SetParent(_goRoot.transform, false);
             go.transform.localPosition = Vector3.zero;
 
             if (string.IsNullOrEmpty(key))

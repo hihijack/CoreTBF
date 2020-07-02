@@ -7,22 +7,12 @@ namespace UI
 {
     public class UIEnemyPlayerInfo : MonoBehaviour
     {
+        public Image headIcon;
         public Slider sldHP;
+        public Slider sldTen;
         public Text txtHP;
         public Slider sldMP;
         public Text txtMP;
-        
-        private static UIEnemyPlayerInfo _inst;
-        public static UIEnemyPlayerInfo Inst
-        {
-            get { return _inst; }
-            
-        }
-
-        private void Awake()
-        {
-            _inst = this;
-        }
 
         private Character target;
         
@@ -37,11 +27,11 @@ namespace UI
             {
                 return;
             }
-            
-            sldHP.value = (float)target.propData.hp / target.propData.maxHP;
-//            txtHP.text = target.propData.hp + "/" + target.propData.maxHP;
-//            sldMP.value = (float) target.propData.mp / target.propData.maxMP;
-//            txtMP.text = target.propData.mp + "/" + target.propData.maxHP;
+
+            GameUtil.SetSprite(headIcon, target.roleData.headicon);
+
+            sldHP.value = (float)target.propData.hp / target.propData.MaxHP;
+            sldTen.value = (float)target.propData.tenacity / target.propData.tenacityMax;
         }
     }
 }

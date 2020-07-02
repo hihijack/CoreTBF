@@ -10,7 +10,9 @@ namespace UI
     {
         public Text txtName;
         public Text txtCost;
-        
+
+        public UIFightAction uiFightAction;
+
         private SkillData  _skillData;
 
         private Character _character;
@@ -34,15 +36,24 @@ namespace UI
 
         private void Refresh()
         {
-            txtName.text = _skillData.name;
-            if (_skillData.cost > 0)
+            string nameDesc = _skillData.name;
+            int cost = _skillData.cost;
+            //发动蓄力技能
+            if (_character.mSkillPowering == _skillData)
             {
-                txtCost.text = "COST:" +  _skillData.cost;
+                nameDesc = "!发动-" + _skillData.name;
+                cost = 0;
             }
-            else
-            {
-                txtCost.text = "";
-            }
+            txtName.text = nameDesc;
+
+            //if (cost > 0)
+            //{
+            //    txtCost.text = "COST:" + cost;
+            //}
+            //else
+            //{
+            //    txtCost.text = "";
+            //}
 
             _btn.interactable = _actionEnable;
         }
@@ -51,6 +62,21 @@ namespace UI
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(_skillData.name);
+
+            //仇恨溢出提示
+            //if (_character.camp == ECamp.Ally && _actionEnable)
+            //{
+            //    if (_character.target.ai.PreCalHatred(_character, _skillData.hatred))
+            //    {
+            //        sb.AppendLine("<color=red>>>将引起仇恨<<</color>");
+            //    }
+            //}
+            
+            if (_skillData.cost > 0)
+            {
+                sb.AppendLine($"<color=cyan>消耗:{_skillData.cost / UIHPRoot.MPPerPoint}格</color>");
+            }
+
             if (_skillData.dmg > 0)
             {
                 sb.AppendLine($"伤害:{_skillData.dmg * 100}%");
@@ -75,18 +101,15 @@ namespace UI
             {
                 sb.AppendLine($"削韧:{_skillData.tenacityAtk}");
             }
-            if (_skillData.cost > 0)
-            {
-                sb.AppendLine($"消耗:{_skillData.cost}");
-            }
-            if (_skillData.hatred > 0)
-            {
-                sb.AppendLine($"仇恨:{_skillData.hatred}");
-            }
-            if (_skillData.quick)
-            {
-                sb.AppendLine(">>速攻<<");
-            }
+           
+            //if (_skillData.hatred > 0)
+            //{
+            //    sb.AppendLine($"仇恨:{_skillData.hatred}");
+            //}
+            //if (_skillData.quick)
+            //{
+            //    sb.AppendLine(">>速攻<<");
+            //}
             sb.AppendLine();
             sb.AppendLine(_skillData.tip);
             UITip.Inst.Show(sb.ToString());
@@ -104,7 +127,7 @@ namespace UI
 
         public void OnClick()
         {
-            _character.OnActionSelected(_skillData);
+            uiFightAction.OnSkillClick(this);
         }
         
         public SkillData GetData()

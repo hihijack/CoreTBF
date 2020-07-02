@@ -1,4 +1,5 @@
 ﻿using UI;
+using UnityEngine.UIElements;
 
 namespace DefaultNamespace
 {
@@ -7,40 +8,55 @@ namespace DefaultNamespace
         public override void Act()
         {
             base.Act();
+        }
 
-            bool realyAct = true;
-            
-            if (skill.timePower > 0)
+        public override void RealAct()
+        {
+            base.RealAct();
+            bool isPowerAct = IsPowerAct();
+
+            if (isPowerAct)
             {
                 //蓄力技能
-                if (caster.mTimePower < skill.timePower)
-                {
-                    //蓄力开始
-                    realyAct = false;
-                    caster.State = ECharacterState.Power;
-                    caster.mTimeStiff = skill.timePower;
-                    caster.mSkillPowering = skill;
-                    UIMgr.Inst.uiFightLog.AppendLog($"{caster.roleData.name}开始蓄力:{skill.name}!!");
-                }
+                //蓄力开始
+                caster.State = ECharacterState.Power;
+                caster.mTimeStiff = skill.timePower;
+                caster.mSkillPowering = skill;
+                UIMgr.Inst.uiFightLog.AppendLog($"{caster.roleData.name}开始蓄力:{skill.name}!!");
             }
-
-            if (realyAct)
+            else
             {
                 caster.mSkillPowering = null;
                 caster.mTimePower = 0;
                 caster.State = ECharacterState.Acting;
+
+                //mp恢复
+                if (caster.camp == ECamp.Ally)
+                {
+                    PlayerRolePropDataMgr.Inst.ChangeMP(skill.mpGet);
+                }
+
+                //韧性恢复
+                if (caster.camp == ECamp.Enemy)
+                {
+                    caster.propData.RecoverTenacity();
+                    UIMgr.Inst.uiHPRoot.RefreshTarget(caster);
+                }
+
                 foreach (var target in targets)
                 {
-                    caster.DamageTarget(target, skill.dmg, skill.timeAtkStiff);
+                    caster.DamageTarget(target, new DmgData() { dmgPrecent = skill.dmg, timeAtkStiff = skill.timeAtkStiff, tenAtk = skill.tenacityAtk });
+                    //添加buff
+                    foreach (var buffID in skill.buffsAdd)
+                    {
+                        target.AddABuff(buffID, caster);
+                    }
                 }
-               
+
                 //后摇硬直
                 caster.State = ECharacterState.Stiff;
                 caster.mTimeStiff = skill.backswing;
             }
-
-            //行动结束
-            actionEnd();
         }
     }
 }

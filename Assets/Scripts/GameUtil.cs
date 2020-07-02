@@ -21,6 +21,12 @@ public static class GameUtil
         image.sprite = sprite;
     }
 
+    public static void SetSprite(Image image, string path, string spriteName)
+    {
+        var sprite = Resources.Load<Sprite>($"{path}/{spriteName}");
+        image.sprite = sprite;
+    }
+
     public static void CacheChildren(GameObject go)
     {
         for (int i = go.transform.childCount - 1; i >= 0; i--)

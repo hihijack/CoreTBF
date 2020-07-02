@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6993371315811328479}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: paladin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 740376474612091965}
   - component: {fileID: 8208923833469300692}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

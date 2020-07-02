@@ -14,7 +14,7 @@ namespace DefaultNamespace.FightStages
         {
             base.OnEnter();
 
-            UIMgr.Inst.uiFightLog.AppendLog(">>>进入主要阶段");
+            //UIMgr.Inst.uiFightLog.AppendLog(">>>进入主要阶段");
 
             //在Ready状态的友方可选择行动
             //如果是防御状态,只能切换到等待
@@ -25,31 +25,33 @@ namespace DefaultNamespace.FightStages
             
             if (acter.camp == ECamp.Ally)
             {
-                if (acter.mSkillPowering != null)
-                {
-                    //有正在蓄力的技能
-                    acter.ActionSelectPoweringSkill();
-                }
+                //if (acter.mSkillPowering != null)
+                //{
+                //    //有正在蓄力的技能
+                //    acter.ActionSelectPoweringSkill();
+                //}
                 
                 UIMgr.Inst.uiFightActionRoot.SetVisible(true);
                 UIMgr.Inst.uiFightActionRoot.SetActionVisible(true);
-                UIMgr.Inst.uiFightActionRoot.StartShow();
+                //UIMgr.Inst.uiFightActionRoot.StartShow();
             }
             else
             {
                 //AI选择技能
-                if (acter.mSkillPowering != null)
+                //if (acter.mSkillPowering != null)
+                //{
+                //    acter.ActionSelectPoweringSkill();
+                //}
+                //else
+                //{
+                   
+                //}
+
+                foreach (var t in GameMgr.Inst.lstCharacters)
                 {
-                    acter.ActionSelectPoweringSkill();
-                }
-                else
-                {
-                    foreach (var t in GameMgr.Inst.lstCharacters)
+                    if (t.camp == ECamp.Enemy && t.IsEnableAction && t.IsInReady())
                     {
-                        if (t.camp == ECamp.Enemy && t.IsAlive() && t.IsInReady())
-                        {
-                            GameMgr.Inst.CaheAction(t.ai.ActionForMain());
-                        }
+                        GameMgr.Inst.CaheAction(t.ai.ActionForMain());
                     }
                 }
                 GameMgr.Inst.ToNextStage();
@@ -60,7 +62,8 @@ namespace DefaultNamespace.FightStages
         public override void OnExit()
         {
             base.OnExit();
-//           UIMgr.Inst.uiFightActionRoot.SetVisible(false);
+            UIMgr.Inst.uiFightActionRoot.SetVisible(false);
+            UIMgr.Inst.uiFight.RefreshAIItems();
         }
     }
 }

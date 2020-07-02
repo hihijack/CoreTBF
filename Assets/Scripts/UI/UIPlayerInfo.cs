@@ -8,27 +8,29 @@ namespace UI
     {
         public Slider sldHP;
         public Text txtHP;
-        public Slider sldMP;
-        public Text txtMP;
+        public Image headIcon;
 
-        private static UIPlayerInfo _inst;
-        public static UIPlayerInfo Inst
-        {
-            get { return _inst; }
-            
-        }
+        public Color colorDying;
+        public Color colorNormal;
 
-        private void Awake()
-        {
-            _inst = this;
-        }
+        public Character data;
 
         public void Refresh()
         {
-            sldHP.value = (float)PlayerRolePropDataMgr.Inst.propData.hp / PlayerRolePropDataMgr.Inst.propData.maxHP;
-            txtHP.text = PlayerRolePropDataMgr.Inst.propData.hp + "/" + PlayerRolePropDataMgr.Inst.propData.maxHP;
-            sldMP.value = (float) PlayerRolePropDataMgr.Inst.propData.mp / PlayerRolePropDataMgr.Inst.propData.maxMP;
-            txtMP.text = PlayerRolePropDataMgr.Inst.propData.mp + "/" + PlayerRolePropDataMgr.Inst.propData.maxMP;
+            if (data != null)
+            {
+                GameUtil.SetSprite(headIcon, data.roleData.headicon);
+                sldHP.value = (float)data.propData.hp / data.propData.MaxHP;
+                txtHP.text = data.propData.hp + "/" + data.propData.MaxHP;
+                if (data.State == ECharacterState.Dying)
+                {
+                    sldHP.targetGraphic.color = colorDying;
+                }
+                else
+                {
+                    sldHP.targetGraphic.color = colorNormal;
+                }
+            }
         }
     }
 }

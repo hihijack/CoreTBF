@@ -18,7 +18,7 @@ namespace DefaultNamespace.FightStages
                 return;
             }
 
-            UIMgr.Inst.uiFightLog.AppendLog(">>>进入速攻反击阶段");
+            //UIMgr.Inst.uiFightLog.AppendLog(">>>进入速攻反击阶段");
 
             //如果触发方是敌人,我方准备状态中,有速攻技的可以发动速攻技能
             //如果触发方是我方,AI可以选择速攻技能
@@ -27,7 +27,7 @@ namespace DefaultNamespace.FightStages
             {
                 UIMgr.Inst.uiFightActionRoot.SetVisible(true);
                 UIMgr.Inst.uiFightActionRoot.SetActionVisible(true);
-                UIMgr.Inst.uiFightActionRoot.StartShow();
+                //UIMgr.Inst.uiFightActionRoot.StartShow();
             }
             else
             {
