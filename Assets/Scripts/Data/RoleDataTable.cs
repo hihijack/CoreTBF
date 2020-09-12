@@ -39,6 +39,11 @@ namespace Data
         public float speed;
         public int tenacity;
         /// <summary>
+        /// 坚韧度
+        /// </summary>
+        [LabelText("坚韧度")]
+        public int toughness;
+        /// <summary>
         /// 韧性清空硬直时间
         /// </summary>
         public float tenClearStiff;

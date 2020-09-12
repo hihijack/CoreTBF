@@ -27,6 +27,8 @@ MonoBehaviour:
     tenacityAtk: 0
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u4E0D\u884C\u52A8\u4ECD\u7136\u7559\u5728\u51C6\u5907\u72B6\u6001.\u5904\u4E8E\u51C6\u5907\u72B6\u6001\u4E0B\u4F1A\u81EA\u52A8\u6062\u590D\u80FD\u91CF."
     tlAsset: {fileID: 0}
@@ -45,6 +47,8 @@ MonoBehaviour:
     tenacityAtk: 0
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u5B8C\u5168\u62B5\u6321\u4E00\u6B21\u653B\u51FB"
     tlAsset: {fileID: 11400000, guid: b58ef737bc0dc4a499a115d3eaa8db9d, type: 2}
@@ -63,6 +67,8 @@ MonoBehaviour:
     tenacityAtk: 50
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u53EF\u4EE5\u6709\u6548\u5730\u524A\u51CF\u654C\u4EBA\u97E7\u6027,\u6253\u65AD\u84C4\u529B\u5E76\u4EE4\u5176\u5927\u786C\u76F4."
     tlAsset: {fileID: 11400000, guid: fd1aaca5c67b0874b9afd68dee9ed841, type: 2}
@@ -81,6 +87,8 @@ MonoBehaviour:
     tenacityAtk: 20
     cost: 20
     mpGet: 0
+    tenChangeTo: 1
+    tenChangeToPower: 0.01
     targetTeamLoc: 0
     tip: "\u9700\u8981\u84C4\u529B\u91CA\u653E\u7684\u5F3A\u529B\u653B\u51FB"
     tlAsset: {fileID: 11400000, guid: 055b39b1403155d41b2cadbbc1b03144, type: 2}
@@ -99,6 +107,8 @@ MonoBehaviour:
     tenacityAtk: 5
     cost: 10
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u51CC\u5389\u7684\u653B\u51FB"
     tlAsset: {fileID: 11400000, guid: 055b39b1403155d41b2cadbbc1b03144, type: 2}
@@ -114,9 +124,11 @@ MonoBehaviour:
     timePower: 0
     backswing: 1.2
     timeAtkStiff: 1
-    tenacityAtk: 10
+    tenacityAtk: 50
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 1
     tip: "\u76EE\u6807:\u524D\u6392\n\u5BF9\u76EE\u6807\u9020\u6210\u4F24\u5BB3"
     tlAsset: {fileID: 11400000, guid: fd1aaca5c67b0874b9afd68dee9ed841, type: 2}
@@ -132,9 +144,11 @@ MonoBehaviour:
     timePower: 1
     backswing: 2
     timeAtkStiff: 1
-    tenacityAtk: 10
+    tenacityAtk: 60
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 1
     targetTeamLoc: 1
     tip: "\u5BF9\u6240\u6709\u654C\u4EBA\u9020\u6210\u6BC1\u706D\u6027\u6253\u51FB"
     tlAsset: {fileID: 11400000, guid: fd1aaca5c67b0874b9afd68dee9ed841, type: 2}
@@ -153,6 +167,8 @@ MonoBehaviour:
     tenacityAtk: 0
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: 
     tlAsset: {fileID: 11400000, guid: 055b39b1403155d41b2cadbbc1b03144, type: 2}
@@ -171,6 +187,8 @@ MonoBehaviour:
     tenacityAtk: 5
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u4E00\u6B21\u5FEB\u901F\u7684\u653B\u51FB"
     tlAsset: {fileID: 11400000, guid: fd1aaca5c67b0874b9afd68dee9ed841, type: 2}
@@ -189,6 +207,8 @@ MonoBehaviour:
     tenacityAtk: 0
     cost: 0
     mpGet: 10
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u83B7\u5F971\u683C\u80FD\u91CF\u70B9"
     tlAsset: {fileID: 11400000, guid: fd1aaca5c67b0874b9afd68dee9ed841, type: 2}
@@ -204,9 +224,11 @@ MonoBehaviour:
     timePower: 0
     backswing: 0.8
     timeAtkStiff: 0
-    tenacityAtk: 0
+    tenacityAtk: 10
     cost: 10
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u964D\u4F4E\u76EE\u6807\u9632\u5FA1"
     tlAsset: {fileID: 11400000, guid: fd1aaca5c67b0874b9afd68dee9ed841, type: 2}
@@ -222,9 +244,11 @@ MonoBehaviour:
     timePower: 0
     backswing: 1.5
     timeAtkStiff: 2
-    tenacityAtk: 10
-    cost: 0
+    tenacityAtk: 30
+    cost: 70
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 1
     tip: "\u5F3A\u529B\u7684\u9ED1\u6697\u7BAD\u653B\u51FB\u5373\u4F7F\u9632\u5FA1\u4E5F\u4F1A\u51FA\u73B0\u5927\u786C\u76F4"
     tlAsset: {fileID: 11400000, guid: 055b39b1403155d41b2cadbbc1b03144, type: 2}
@@ -243,6 +267,8 @@ MonoBehaviour:
     tenacityAtk: 0
     cost: 0
     mpGet: 0
+    tenChangeTo: 0
+    tenChangeToPower: 0
     targetTeamLoc: 0
     tip: "\u4E0E\u961F\u53CB\u4EA4\u4E92\u4F4D\u7F6E.\u5904\u4E8E\u5371\u9669\u60C5\u51B5\u7684\u524D\u6392\u961F\u53CB,\u53EF\u4EE5\u4E0E\u5176\u4EA4\u4E92\u4F4D\u7F6E"
     tlAsset: {fileID: 0}

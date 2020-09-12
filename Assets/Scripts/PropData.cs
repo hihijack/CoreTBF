@@ -14,17 +14,45 @@ namespace DefaultNamespace
         public int tenacityMax;
         public int tenacity;
 
+        /// <summary>
+        /// 坚韧度:降低削韧;0~100
+        /// </summary>
+        public int toughness;
+        public int toughnessParamAdd;
+        public float toughnessParamMul = 1f;
+
         public int defParamAdd;
         public float defParamMul = 1f;
 
         public int maxHPParamAdd;
         private float _maxHPParamMul = 1f;
 
+        public float dmgHurtedMul = 1f;//受到的伤害增加;计算防御之前
+
         public int Def
         {
             get
             {
                 return Mathf.CeilToInt((def + defParamAdd) * defParamMul);
+            }
+        }
+
+        public int Toughness
+        {
+            get
+            {
+                return Mathf.Clamp(Mathf.CeilToInt((toughness + toughnessParamAdd) * toughnessParamMul), 0 , 100);
+            }
+        }
+
+        /// <summary>
+        /// 受到的伤害增加百分百;计算防御之前
+        /// </summary>
+        public float DmgHurtedMul
+        {
+            get
+            {
+                return dmgHurtedMul;
             }
         }
 
@@ -65,6 +93,15 @@ namespace DefaultNamespace
         {
             tenacity += change;
             tenacity = Mathf.Clamp(tenacity, 0, tenacityMax);
+        }
+
+        /// <summary>
+        /// 设置韧性为指定百分比.至少1点
+        /// </summary>
+        /// <param name="percent"></param>
+        public void SetTenacityPercent(float percent)
+        {
+            tenacity = Mathf.CeilToInt(tenacityMax * percent); 
         }
 
         /// <summary>

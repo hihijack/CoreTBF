@@ -31,6 +31,11 @@ namespace UI
             rtTransform = gameObject.GetComponent<RectTransform>();
         }
 
+        public RectTransform GetRect()
+        {
+            return rtTransform;
+        }
+
         private void Start()
         {
            
@@ -161,6 +166,8 @@ namespace UI
                     itemUI.transform.localPosition = localPos;
                 }
             }
+
+            RefreshBuffUI();
 
             if (GameMgr.Inst.IsInStage(EFightStage.ActionSelect))
             {

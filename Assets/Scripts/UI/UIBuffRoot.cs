@@ -3,6 +3,7 @@ using System.Collections;
 using DefaultNamespace;
 using Boo.Lang;
 using System;
+using UI;
 
 public class UIBuffRoot : MonoBehaviour
 {
@@ -33,6 +34,15 @@ public class UIBuffRoot : MonoBehaviour
         foreach (var uiBuffItem in _lstBuffItems)
         {
             uiBuffItem.Refresh();
+        }
+        if (character != null)
+        {
+            //跟随角色位置
+            var posEntity = character.entityCtl.GetPos();
+            var screenPos = GameMgr.Inst.cameraMain.WorldToScreenPoint(posEntity) + new Vector3(0, -50f, 0);
+            Vector2 locPos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(UIMgr.Inst.uiFight.GetRect(), screenPos, null, out locPos);
+            transform.localPosition = locPos;
         }
     }
 

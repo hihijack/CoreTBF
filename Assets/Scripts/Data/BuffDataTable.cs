@@ -28,6 +28,7 @@ public enum EBuffLogic
     /// 改变防御
     /// </summary>
     ChangeDef, 
+    Break
 }
 
 [Serializable]
@@ -39,6 +40,11 @@ public class BuffData
     public string desc;
     public string icon;
     public int maxLayer;
+
+    /// <summary>
+    /// 持续时间.0表示常驻
+    /// </summary>
+    [LabelText("持续时间")]
     public float dur;
     public float[] arrParam;
 }

@@ -7,6 +7,7 @@ namespace UI
     public class UIPlayerInfo : MonoBehaviour
     {
         public Slider sldHP;
+        public Slider sldTen;
         public Text txtHP;
         public Image headIcon;
 
@@ -21,6 +22,7 @@ namespace UI
             {
                 GameUtil.SetSprite(headIcon, data.roleData.headicon);
                 sldHP.value = (float)data.propData.hp / data.propData.MaxHP;
+                sldTen.value = (float)data.propData.tenacity / data.propData.tenacityMax;
                 txtHP.text = data.propData.hp + "/" + data.propData.MaxHP;
                 if (data.State == ECharacterState.Dying)
                 {

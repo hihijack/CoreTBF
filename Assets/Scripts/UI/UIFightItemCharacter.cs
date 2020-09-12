@@ -43,6 +43,12 @@ namespace UI
         {
             if (character != null)
             {
+                if (!character.IsAlive())
+                {
+                    //死亡,移除
+                    gameObject.transform.localPosition = Vector3.right * 1000;
+                    return;
+                }
                 txtStiffTime.text = character.mTimeStiff.ToString("0.0") + "S";
                 //if (character.camp == ECamp.Ally)
                 //{

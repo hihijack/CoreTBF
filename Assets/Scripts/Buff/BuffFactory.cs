@@ -11,6 +11,8 @@ public class BuffFactory
         {
             case EBuffLogic.ChangeDef:
                 return new BuffChangeDef(buffData, target, caster, 1);
+            case EBuffLogic.Break:
+                return new BuffBreak(buffData, target, caster, 1);
             default:
                 break;
         }

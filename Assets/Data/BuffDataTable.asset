@@ -24,3 +24,12 @@ MonoBehaviour:
     - 1
     - 0
     - -1
+  - ID: 2
+    logic: 1
+    name: BREAK
+    desc: "\u53D7\u5230\u7684\u4F24\u5BB3\u589E\u52A050%"
+    icon: Icon.2_01
+    maxLayer: 1
+    dur: 0
+    arrParam:
+    - 1.5

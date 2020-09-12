@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Data;
+using Sirenix.Serialization;
 using UI;
 using UnityEngine;
+using UnityEngine.Accessibility;
 using Object = UnityEngine.Object;
 
 namespace DefaultNamespace
@@ -155,6 +157,12 @@ namespace DefaultNamespace
         /// </summary>
         public void UpdateInNormalStage()
         {
+            if (!IsAlive())
+            {
+                //死亡
+                entityCtl.SetPos(Vector3.right * 1000);
+            }
+
             var oriTimeStiff = mTimeStiff;
             mTimeStiff -= Time.deltaTime;
             mTimeStiff = Mathf.Max(mTimeStiff, 0);
@@ -165,21 +173,7 @@ namespace DefaultNamespace
             }
 
             //更新buff
-            foreach (var buff in lstBuffs)
-            {
-                buff.UpdateDur(Time.deltaTime);
-            }
-
-            UIMgr.Inst.uiFight.RefreshBuffUI();
-
-            for (int i = lstBuffs.Count - 1; i >= 0; i--)
-            {
-                if (!lstBuffs[i].IsValid())
-                {
-                    UIMgr.Inst.uiFight.RefreshBuffUIOnRemove(this, lstBuffs[i]);
-                    lstBuffs.RemoveAt(i);
-                }
-            }
+            RefreshBuff();
 
             if (IsEnableAction)
             {
@@ -195,6 +189,41 @@ namespace DefaultNamespace
                     {
                         PlayerRolePropDataMgr.Inst.ChangeMP(5);
                     }
+                }
+            }
+
+            //更新图片
+            if (State == ECharacterState.Dying)
+            {
+                entityCtl.SetSprite("dying");
+            }
+            else if (State == ECharacterState.Def)
+            {
+                entityCtl.SetSprite("def");
+            }
+            else if (State == ECharacterState.Power)
+            {
+                entityCtl.SetSprite("power");
+            }
+            else
+            {
+                entityCtl.SetSprite("idle");
+            }
+        }
+
+        void RefreshBuff()
+        {
+            foreach (var buff in lstBuffs)
+            {
+                buff.UpdateDur(Time.deltaTime);
+            }
+
+            for (int i = lstBuffs.Count - 1; i >= 0; i--)
+            {
+                if (!lstBuffs[i].IsValid())
+                {
+                    UIMgr.Inst.uiFight.RefreshBuffUIOnRemove(this, lstBuffs[i]);
+                    lstBuffs.RemoveAt(i);
                 }
             }
         }
@@ -217,6 +246,16 @@ namespace DefaultNamespace
         public void ActiveAction()
         {
             State = ECharacterState.Active;
+            //从break中恢复
+            var buffBreak = GetBuff(2);
+            if (buffBreak != null && buffBreak.IsValid())
+            {
+                buffBreak.SetLayer(0);
+                RefreshBuff();
+                propData.RecoverTenacity();
+                UIMgr.Inst.uiHPRoot.RefreshTarget(this);
+            }
+
             //进入触发
             GameMgr.Inst.SetActiveCharacte(this);
         }
@@ -271,6 +310,9 @@ namespace DefaultNamespace
 
             int dmg = CalDmg(dmgData.dmgPrecent);
 
+            //计算增伤减伤
+            dmg = Mathf.CeilToInt(dmg * target.propData.DmgHurtedMul);
+
             if (target.propData.shield > 0)
             {
                 //消耗护盾抵消伤害
@@ -296,25 +338,27 @@ namespace DefaultNamespace
                 //硬直处理
                 target.mTimeStiff = Mathf.Max(dmgData.timeAtkStiff, target.mTimeStiff);
                 //削韧硬直
-                target.propData.ChangeTenacity(-1 * dmgData.tenAtk);
-                if (target.camp == ECamp.Enemy)
+                int oriTenacity = target.propData.tenacity;
+                target.propData.ChangeTenacity(-1 * CalTenacityDmg(dmgData.tenAtk, target.propData));
+                if (oriTenacity > 0 && target.propData.tenacity <= 0)
                 {
-                    if (target.propData.tenacity <= 0)
-                    {
-                        //韧性清空
-                        target.OnTenacityCleared();
-                    }
-                }
-                else
-                {
-                    //友方受击,直接中断蓄力
-                    target.State = ECharacterState.Stiff;
-                    target.mTimePower = 0f;
-                    target.mSkillPowering = null;
+                    //韧性清空
+                    target.OnTenacityCleared();
                 }
             }
 
             UIMgr.Inst.uiHPRoot.RefreshTarget(target);
+        }
+
+        /// <summary>
+        /// 计算韧性伤害
+        /// </summary>
+        /// <param name="tenAtk"></param>
+        /// <param name="propDataTarget"></param>
+        /// <returns></returns>
+        private int CalTenacityDmg(int tenAtk, PropData propDataTarget)
+        {
+            return Mathf.CeilToInt(tenAtk *  (100 - propDataTarget.Toughness) / 100f);
         }
 
         /// <summary>
@@ -354,6 +398,7 @@ namespace DefaultNamespace
             mTimePower = 0f;
             //清空buff,所有buff层数归0
             ClearAllBuff();
+            GameMgr.Inst.OnCharacterDead(this);
         }
 
         /// <summary>
@@ -388,18 +433,17 @@ namespace DefaultNamespace
         /// </summary>
         private void OnTenacityCleared()
         {
-            if (camp == ECamp.Enemy)
-            {
-                //中断蓄力
-                State = ECharacterState.Stiff;
-                mTimePower = 0f;
-                mSkillPowering = null;
-                //硬直时间
-                mTimeStiff += roleData.tenClearStiff;
+            //中断蓄力
+            State = ECharacterState.Stiff;
+            mTimePower = 0f;
+            mSkillPowering = null;
+            //硬直时间
+            mTimeStiff += roleData.tenClearStiff;
 
-                propData.RecoverTenacity();
-                UIMgr.Inst.uiHPRoot.RefreshTarget(this);
-            }
+            //添加BREAK BUFF
+            AddABuff(2, null);
+            //propData.RecoverTenacity();
+            UIMgr.Inst.uiHPRoot.RefreshTarget(this);
         }
 
         private int CalDmg(float skillDmg)
@@ -407,9 +451,13 @@ namespace DefaultNamespace
             return Mathf.CeilToInt(skillDmg * propData.atk);
         }
 
+        /// <summary>
+        /// 濒死也算存活
+        /// </summary>
+        /// <returns></returns>
         internal bool IsAlive()
         {
-            return propData.hp > 0;
+            return State != ECharacterState.Dead;
         }
     }
 }

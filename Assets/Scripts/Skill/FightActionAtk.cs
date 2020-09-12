@@ -22,6 +22,13 @@ namespace DefaultNamespace
                 caster.State = ECharacterState.Power;
                 caster.mTimeStiff = skill.timePower;
                 caster.mSkillPowering = skill;
+                //蓄力改变韧性
+                if (skill.tenChangeToPower > 0)
+                {
+                    caster.propData.SetTenacityPercent(skill.tenChangeToPower);
+                    UIMgr.Inst.uiHPRoot.RefreshTarget(caster);
+                }
+               
                 UIMgr.Inst.uiFightLog.AppendLog($"{caster.roleData.name}开始蓄力:{skill.name}!!");
             }
             else
@@ -36,12 +43,13 @@ namespace DefaultNamespace
                     PlayerRolePropDataMgr.Inst.ChangeMP(skill.mpGet);
                 }
 
-                //韧性恢复
-                if (caster.camp == ECamp.Enemy)
+                //韧性改变至指定百分比;0不改变
+                if (skill.tenChangeTo > 0)
                 {
-                    caster.propData.RecoverTenacity();
-                    UIMgr.Inst.uiHPRoot.RefreshTarget(caster);
+                    caster.propData.SetTenacityPercent(skill.tenChangeTo);
                 }
+
+                UIMgr.Inst.uiHPRoot.RefreshTarget(caster);
 
                 foreach (var target in targets)
                 {

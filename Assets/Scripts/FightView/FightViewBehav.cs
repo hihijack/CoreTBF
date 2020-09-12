@@ -95,7 +95,7 @@ public class FightViewBehav
                 {
                     continue;
                 }
-                if ((character.State == ECharacterState.Stiff && param.spriteName == "hited") || param.spriteName != "hited")
+                if (((character.State == ECharacterState.Stiff || character.State == ECharacterState.Dying || character.State == ECharacterState.Dead) && param.spriteName == "hited") || param.spriteName != "hited")
                 {
                     character.entityCtl.SetSprite(param.spriteName);
                 }

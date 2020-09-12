@@ -235,13 +235,14 @@ public class GameMgr : MonoBehaviour
     {
         foreach (var character in lstCharacters)
         {
-            if (character.camp == ECamp.Ally && character.teamLoc == teamLoc)
+            if (character.camp == ECamp.Ally && character.teamLoc == teamLoc && character.IsAlive())
             {
                 return character;
             }
         }
         return null;
     }
+    
 
     /// <summary>
     /// 缓存一个action,在行动阶段执行
@@ -419,7 +420,25 @@ public class GameMgr : MonoBehaviour
             return r;
         }
     }
-   
+
+
+    /// <summary>
+    /// 当一个角色死亡
+    /// </summary>
+    /// <param name="character"></param>
+    internal void OnCharacterDead(Character character)
+    {
+        //更新其他同队角色teamloc
+        //之后的角色teamLoc - 1
+        foreach (var chr in lstCharacters)
+        {
+            if (chr.camp == character.camp && chr != character && chr.teamLoc > character.teamLoc )
+            {
+                chr.teamLoc--;
+            }
+        }
+    }
+
 
     /// <summary>
     /// 是否敌人的仇恨目标
