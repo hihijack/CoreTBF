@@ -31,6 +31,6 @@ public class BehavMoveCharacter : PlayableBehaviour
     {
         base.OnBehaviourPlay(playable, info);
         param.dur = (float)playable.GetDuration();
-        GameMgr.Inst.fightViewBehav.OnPlayableMoveCharacter(param);
+        FightState.Inst.fightViewBehav.OnPlayableMoveCharacter(param);
     }
 }

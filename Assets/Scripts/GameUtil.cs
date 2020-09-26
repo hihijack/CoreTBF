@@ -57,4 +57,9 @@ public static class GameUtil
         }
         return (T) r;
     }
+
+    public static string ToTitleCase(string s)
+    {
+        return s.Substring(0, 1).ToUpper() + s.Substring(1); 
+    }
 }

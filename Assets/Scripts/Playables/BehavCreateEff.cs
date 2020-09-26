@@ -18,6 +18,6 @@ public class BehavCreateEff : PlayableBehaviour
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
         base.OnBehaviourPlay(playable, info);
-        GameMgr.Inst.fightViewBehav.OnPlayableCreateEff(param);
+        FightState.Inst.fightViewBehav.OnPlayableCreateEff(param);
     }
 }

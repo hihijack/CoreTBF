@@ -100,7 +100,8 @@ namespace SQLiter
 
 			// just for testing, comment/uncomment to play with it
 			// note that it MUST be invoked after SQLite has initialized, 2-3 seconds later usually.  1 second is cutting it too close
-			Invoke("Test", 3);
+			//Invoke("Test", 3);
+			Test();
 		}
 
 		/// <summary>
@@ -117,10 +118,10 @@ namespace SQLiter
 				GetAllWords();
 			});
 
-			InsertWord("Dogma", "A pack of lovely dogs");
-			InsertWord("Firehose", "A hose that is on fire");
-			InsertWord("Tree", "Binary Search Algorithm");
-			InsertWord("Cake", "Always a lie");
+			//InsertWord("Dogma", "A pack of lovely dogs");
+			//InsertWord("Firehose", "A hose that is on fire");
+			//InsertWord("Tree", "Binary Search Algorithm");
+			//InsertWord("Cake", "Always a lie");
 		}
 
 		/// <summary>

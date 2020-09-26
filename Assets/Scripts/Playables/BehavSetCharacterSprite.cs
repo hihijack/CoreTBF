@@ -14,6 +14,6 @@ public class BehavSetCharacterSprite : PlayableBehaviour
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
         base.OnBehaviourPlay(playable, info);
-        GameMgr.Inst.fightViewBehav.OnPlayableSetSprite(param);
+        FightState.Inst.fightViewBehav.OnPlayableSetSprite(param);
     }
 }

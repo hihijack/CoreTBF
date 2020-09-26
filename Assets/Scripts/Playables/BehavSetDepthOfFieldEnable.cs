@@ -9,6 +9,6 @@ public class BehavSetDepthOfFieldEnable : PlayableBehaviour
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
         base.OnBehaviourPlay(playable, info);
-        GameMgr.Inst.fightViewBehav.OnPlayableSetDepthOfFieldEnable(enable);
+        FightState.Inst.fightViewBehav.OnPlayableSetDepthOfFieldEnable(enable);
     }
 }
