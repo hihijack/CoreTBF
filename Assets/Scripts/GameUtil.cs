@@ -1,4 +1,5 @@
 ﻿using DefaultNamespace;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,10 +16,31 @@ public static class GameUtil
         return t;
     }
 
-    public static void SetSprite(Image image, string spriteName)
+    public static void SetSprite(this Image image, string spriteName)
     {
         var sprite = Resources.Load<Sprite>($"Sprites/{spriteName}");
         image.sprite = sprite;
+    }
+
+    public static void SetSpriteNativeSize(this Image img, float width, float height)
+    {
+
+        float asspt = img.sprite.rect.width / img.sprite.rect.height;
+        if (width > 0)
+        {
+            img.rectTransform.sizeDelta = new Vector2(width, width / asspt);
+        }
+        else if (height > 0)
+        {
+            img.rectTransform.sizeDelta = new Vector2(height * asspt, height);
+        }
+    }
+
+    public static void SetImageAlpha(this Image img, float alpha)
+    {
+        var c = img.color;
+        c.a = alpha;
+        img.color = c;
     }
 
     public static void SetSprite(Image image, string path, string spriteName)
@@ -56,6 +78,28 @@ public static class GameUtil
             r = tf.GetComponent<T>();
         }
         return (T) r;
+    }
+
+    public static Rect LimitRectIn(Rect ori, Rect limit)
+    {
+        Rect r = ori;
+        if (ori.yMin < limit.yMin)
+        {
+            r = r.AddPosition(0, limit.yMin - ori.yMin);
+        }
+        if (ori.yMax > limit.yMax)
+        {
+            r = r.AddPosition(0, limit.yMax - ori.yMax);
+        }
+        if (ori.xMin < limit.xMin)
+        {
+            r = r.AddPosition(limit.xMin - ori.xMin, 0);
+        }
+        if (ori.xMax > limit.xMax)
+        {
+            r = r.AddPosition(limit.xMax - ori.xMax, 0);
+        }
+        return r;
     }
 
     public static string ToTitleCase(string s)

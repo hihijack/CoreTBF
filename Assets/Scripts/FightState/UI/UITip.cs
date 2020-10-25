@@ -1,42 +1,47 @@
-﻿using UnityEngine;
+﻿using Sirenix.Utilities;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
 {
-    public class UITip : MonoBehaviour
+    public class UITip : UIBase
     {
         public Text txtTip;
 
-        private bool showing;
+        float border = 10;
 
-        public static UITip Inst { get; private set; }
+        RectTransform rt;
 
-        private void Awake()
+        protected override void OnAwake()
         {
-            Inst = this;
+            base.OnAwake();
+            rt = GetComponent<RectTransform>();
         }
 
-        public void Show(string tip)
+        public void Refresh(string tip)
         {
             txtTip.text = tip;
-            showing = true;
         }
 
-        public void Hide()
+        protected override void OnUpdate()
         {
-            showing = false;
+            base.OnUpdate();
+
+            rt.sizeDelta = new Vector2(txtTip.rectTransform.sizeDelta.x + border * 2, txtTip.rectTransform.sizeDelta.y + border * 2);
+
+            Vector2 offsetToMin = new Vector2(-1 * rt.sizeDelta.x / 2, 30);
+            Vector2 min = UIMgr.Inst.GetMousePos() + offsetToMin;
+            Rect rect = new Rect(min, rt.sizeDelta);
+            Rect rectScreen = new Rect();
+            rectScreen.center = Vector2.zero;
+            rectScreen = rectScreen.AlignCenter(Screen.width - 20, Screen.height - 20);
+            rect = GameUtil.LimitRectIn(rect, rectScreen);
+            rt.localPosition = rect.center;
         }
-        
-        private void Update()
+
+        public override void OnShow()
         {
-            if (showing)
-            {
-                transform.localPosition = Input.mousePosition - new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
-            }
-            else
-            {
-                transform.localPosition = Vector3.left * 10000f;
-            }
+            base.OnShow();
         }
     }
 }

@@ -27,6 +27,8 @@ namespace Data
         public int ID;
         public string name;
 
+        public string icon;
+
         /// <summary>
         /// 逻辑
         /// </summary>
@@ -90,23 +92,24 @@ namespace Data
         {
             ID = reader.GetInt16(0);
             name = reader.GetString(1);
-            logic = (ESkillLogic)Enum.Parse(typeof(ESkillLogic), reader.GetString(2));
-            targetType = (ESkillTarget)Enum.Parse(typeof(ESkillTarget), reader.GetString(3));
-            dmg = reader.GetInt16(4);
-            dmgFire = reader.GetInt16(5);
-            dmgTenacity = reader.GetInt16(6);
-            targetCount = reader.GetInt16(7);
-            timePower = reader.GetFloat(8);
-            backswing = reader.GetFloat(9);
-            timeAtkStiff = reader.GetFloat(10);
-            cost = reader.GetInt16(11);
-            tenChangeTo = reader.GetFloat(12);
-            tenChangeToPower = reader.GetFloat(13);
-            targetTeamLocs = JSONNode.Parse(reader.GetString(14));
-            tip = reader.GetString(15);
-            tlAsset = reader.IsDBNull(16) ? "" : reader.GetString(16);
-            tlAssetPower = reader.IsDBNull(17) ? "" : reader.GetString(17);
-            data = reader.IsDBNull(18) ? null : JSONNode.Parse(reader.GetString(18));
+            icon = reader.GetString(2);
+            logic = (ESkillLogic)Enum.Parse(typeof(ESkillLogic), reader.GetString(3));
+            targetType = (ESkillTarget)Enum.Parse(typeof(ESkillTarget), reader.GetString(4));
+            dmg = reader.GetInt16(5);
+            dmgFire = reader.GetInt16(6);
+            dmgTenacity = reader.GetInt16(7);
+            targetCount = reader.GetInt16(8);
+            timePower = reader.GetFloat(9);
+            backswing = reader.GetFloat(10);
+            timeAtkStiff = reader.GetFloat(11);
+            cost = reader.GetInt16(12);
+            tenChangeTo = reader.GetFloat(13);
+            tenChangeToPower = reader.GetFloat(14);
+            targetTeamLocs = JSONNode.Parse(reader.GetString(15));
+            tip = reader.GetString(16);
+            tlAsset = reader.IsDBNull(17) ? "" : reader.GetString(17);
+            tlAssetPower = reader.IsDBNull(18) ? "" : reader.GetString(18);
+            data = reader.IsDBNull(19) ? null : JSONNode.Parse(reader.GetString(19));
         }
     }
 }

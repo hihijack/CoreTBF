@@ -112,7 +112,9 @@ namespace UI
             //}
             sb.AppendLine();
             sb.AppendLine(_skillData.tip);
-            UITip.Inst.Show(sb.ToString());
+            //UITip.Inst.Show(sb.ToString());
+            UITip uiTip = UIMgr.Inst.ShowUI(UITable.EUITable.UITip) as UITip;
+            uiTip.Refresh(sb.ToString());
             if (_skillData.backswing > 0)
             {
                 UIMgr.Inst.uiFight.ShowTimeTip(_skillData.backswing);
@@ -121,7 +123,8 @@ namespace UI
 
         public void OnHoverOut()
         {
-            UITip.Inst.Hide();
+            //UITip.Inst.Hide();
+            UIMgr.Inst.HideUI(UITable.EUITable.UITip);
             UIMgr.Inst.uiFight.HideTimeTip();
         }
 

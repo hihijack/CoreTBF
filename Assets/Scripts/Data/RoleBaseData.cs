@@ -1,5 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using System.Data;
+using System.Text;
 using UnityEngine;
 
 namespace Data
@@ -16,6 +17,9 @@ namespace Data
         public int atk;
         public int def;
         public int resFire;
+        public int resThunder;
+        public int resDark;
+        public int resMagic;
         public float speed;
         public int tenacity;
         /// <summary>
@@ -37,16 +41,35 @@ namespace Data
             atk = reader.GetInt16(5);
             def = reader.GetInt16(6);
             resFire = reader.GetInt16(7);
-            speed = reader.GetFloat(8);
-            tenacity = reader.GetInt16(9);
-            toughness = reader.GetInt16(10);
-            tenClearStiff = reader.GetFloat(11);
+            resThunder = reader.GetInt16(8);
+            resDark = reader.GetInt16(9);
+            resMagic = reader.GetInt16(10);
+            tenacity = reader.GetInt16(11);
+            toughness = reader.GetInt16(12);
+            tenClearStiff = reader.GetFloat(13);
+            speed = reader.GetFloat(14);
             skills = new int[5];
-            skills[0] = reader.GetInt16(12);
-            skills[1] = reader.GetInt16(13);
-            skills[2] = reader.GetInt16(14);
-            skills[3] = reader.GetInt16(15);
-            skills[4] = reader.GetInt16(16);
+            skills[0] = reader.GetInt16(15);
+            skills[1] = reader.GetInt16(16);
+            skills[2] = reader.GetInt16(17);
+            skills[3] = reader.GetInt16(18);
+            skills[4] = reader.GetInt16(19);
+        }
+
+        public string GetPropDesc()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"生命:{hp}");
+            sb.AppendLine($"攻击力:{atk}");
+            sb.AppendLine($"防御力:{def}");
+            sb.AppendLine($"火焰抗性:{resFire}");
+            sb.AppendLine($"闪电抗性:{resThunder}");
+            sb.AppendLine($"黑暗抗性:{resDark}");
+            sb.AppendLine($"魔力抗性:{resMagic}");
+            sb.AppendLine($"韧性:{tenacity}");
+            sb.AppendLine($"强韧度:{toughness}");
+            sb.AppendLine($"速度:{speed}");
+            return sb.ToString();
         }
     }
 }

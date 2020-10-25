@@ -18,7 +18,7 @@ public enum EFightStage
 }
 
 [System.Serializable]
-public class FightState
+public class FightState : GameStateBase
 {
     public Camera cameraMain;
 
@@ -45,45 +45,6 @@ public class FightState
 
     public static FightState Inst { get; private set; }
 
-    public void Init()
-    {
-        Inst = this;
-        characterMgr = new FightCharacterMgr();
-        lstActionData = new List<FightActionBase>();
-        //战斗视图初始化
-        fightViewBehav = new FightViewBehav(director, ppv);
-    }
-
-    public void OnEnter()
-    {
-
-        unitRoot = GameObject.FindGameObjectWithTag("UnitRoot");
-        characterMgr.SetUnitRoot(unitRoot);
-        characterMgr.AddCharacter(1, ECamp.Ally);
-        characterMgr.AddCharacter(2, ECamp.Ally);
-        characterMgr.AddCharacter(3, ECamp.Ally);
-        characterMgr.AddCharacter(4, ECamp.Enemy);
-
-        InitFightStages();
-
-        //初始化战斗UI
-        UIMgr.Inst.uiFight.Init();
-
-        //刷新血量UI
-        var lstCharacters = characterMgr.GetCharacters();
-        foreach (var character in lstCharacters)
-        {
-            UIMgr.Inst.uiHPRoot.RefreshTarget(character);
-        }
-
-        //玩家属性数据
-        PlayerRolePropDataMgr.Inst.Init();
-
-        //初始化完毕,进入Normal状态
-        SetFightStage(EFightStage.Normal);
-    }
-
-
     /// <summary>
     /// 获取站位位置
     /// </summary>
@@ -101,13 +62,6 @@ public class FightState
             return pointsEnemy[teamLoc - 1].transform.position;
         }
         return Vector3.zero;
-    }
-
-    // Update is called once per frame
-    public void Update()
-    {
-        CurFightStage.OnUpdate();
-        fightViewBehav.DoUpate();
     }
 
     /// <summary>
@@ -397,5 +351,57 @@ public class FightState
             return pointsEnemy[character.teamLoc - 1].transform.position;
         }
         return Vector3.zero;
+    }
+
+    public override void OnEnter()
+    {
+        unitRoot = GameObject.FindGameObjectWithTag("UnitRoot");
+        characterMgr.SetUnitRoot(unitRoot);
+        characterMgr.AddCharacter(1, ECamp.Ally);
+        characterMgr.AddCharacter(2, ECamp.Ally);
+        characterMgr.AddCharacter(3, ECamp.Ally);
+        characterMgr.AddCharacter(4, ECamp.Enemy);
+
+        InitFightStages();
+
+        //初始化战斗UI
+        UIMgr.Inst.uiFight.Init();
+
+        //刷新血量UI
+        var lstCharacters = characterMgr.GetCharacters();
+        foreach (var character in lstCharacters)
+        {
+            UIMgr.Inst.uiHPRoot.RefreshTarget(character);
+        }
+
+        //玩家属性数据
+        PlayerRolePropDataMgr.Inst.Init();
+
+        //初始化完毕,进入Normal状态
+        SetFightStage(EFightStage.Normal);
+    }
+
+    public override void OnUpdate()
+    {
+        CurFightStage.OnUpdate();
+        fightViewBehav.DoUpate();
+    }
+
+    public override void OnExit()
+    {
+       
+    }
+
+    public override void Init()
+    {
+        if (!hasInit)
+        {
+            Inst = this;
+            characterMgr = new FightCharacterMgr();
+            lstActionData = new List<FightActionBase>();
+            //战斗视图初始化
+            fightViewBehav = new FightViewBehav(director, ppv);
+        }
+        hasInit = true;
     }
 }
