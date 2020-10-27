@@ -47,7 +47,7 @@ namespace DefaultNamespace.Editor
                 return;
             }
             EditorGUI.BeginChangeCheck();
-            target = EditorGUILayout.ObjectField("目标:" , target, typeof(ScriptableObject));
+            target = EditorGUILayout.ObjectField("目标:" , target, typeof(ScriptableObject), false);
             if (EditorGUI.EndChangeCheck())
             {
                 //使用目标创建一个Editor
@@ -65,7 +65,7 @@ namespace DefaultNamespace.Editor
         {
             this.target = target;
             targetEditor = UnityEditor.Editor.CreateEditor(target);
-            this.title = target.name;
+            this.titleContent =  new GUIContent(target.name);
         }
     }
 }

@@ -11,6 +11,8 @@ public class PlayerData
 {
     public List<int> LstCharacterIDUnlocked { get; private set; }
 
+    public int curLayerInRaid = 1;
+
     public PlayerData()
     {
         LstCharacterIDUnlocked = new List<int>();

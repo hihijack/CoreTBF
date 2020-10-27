@@ -26,4 +26,5 @@ public class BuffDataer : Singleton<BuffDataer>
             }
         }
     }
+    
 }

@@ -7,13 +7,19 @@ public class UIItemWorldTreeNode : UIItemBase
 {
     public Image icon;
 
-    WorldTreeNode treeNode;
-
+    WorldGraphNode node;
+    private int maxNodeCount;
+    private int index;
     RectTransform rectTf;
 
-    public void Init(WorldTreeNode treeNode)
+    bool enableArrive;//允许到达
+
+    public void Init(WorldGraphNode treeNode, int index, int maxNodeCount, bool enableArrive)
     {
-        this.treeNode = treeNode;
+        this.node = treeNode;
+        this.maxNodeCount = maxNodeCount;
+        this.index = index;
+        this.enableArrive = enableArrive;
     }
 
     public override void OnAwake()
@@ -30,40 +36,21 @@ public class UIItemWorldTreeNode : UIItemBase
     public override void Refresh()
     {
         base.Refresh();
-        icon.SetSprite(treeNode.eventBaseData.GetIcon());
+        icon.SetSprite(node.eventBaseData.GetIcon());
         rectTf.anchoredPosition = CalPos();
-        name = treeNode.layer + "_" + treeNode.index;
+        if (enableArrive)
+        {
+            icon.color = Color.white;
+        }else
+        {
+            icon.color = Color.gray;
+        }
     }
 
     private Vector2 CalPos()
     {
-        Vector2 r = Vector2.zero;
-        float yInter = 200;
-        float xInter = 150;
-        r.y = 250 + treeNode.layer * yInter + UnityEngine.Random.Range(-30f,30f);
-        int iOffsetCenter = GetCenterIndex(treeNode.index, treeNode.maxIndexCurLayer);
-        r.x = iOffsetCenter * xInter + UnityEngine.Random.Range(-45f, 45f);
-        return r;
-    }
-
-    int GetCenterIndex(int i, int count)
-    {
-        int r = 0;
-        if (count % 2 == 0)
-        {
-            if (i >= count / 2)
-            {
-                r = i - count / 2 + 1;
-            }
-            else
-            {
-                r = i - count / 2;
-            }
-        }
-        else
-        {
-            r = i - count / 2;
-        }
-        return r;
+          float r = 250;
+          float rad = -0.5f * Mathf.PI +  2 * Mathf.PI / maxNodeCount * index;
+          return new Vector2(r * Mathf.Cos(rad), r * Mathf.Sin(rad));       
     }
 }

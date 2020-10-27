@@ -113,7 +113,11 @@ public class UIIntoRaid : UIBase
 
     private void OnBtnComfirm()
     {
+        int[] roles = new int[]{mCurSelectedRoledata.ID};
+        int numOfFood = 30;
+        WorldRaidData.Inst.Init(roles, numOfFood);
         UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldTree);
+        UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldInfo);
         UIMgr.Inst.HideUI(UITable.EUITable.UIIntoRaid);
     }
 

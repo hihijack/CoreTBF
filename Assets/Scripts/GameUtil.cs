@@ -1,4 +1,5 @@
-﻿using DefaultNamespace;
+﻿using System.Collections.Generic;
+using DefaultNamespace;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -106,4 +107,25 @@ public static class GameUtil
     {
         return s.Substring(0, 1).ToUpper() + s.Substring(1); 
     }
+    
+    /// <summary>
+    /// 从给定范围内选择N个不重复随机数
+    /// </summary>
+    /// <returns>The random numbers set.</returns>
+    /// <param name="min">Minimum.</param>
+    /// <param name="max">Max.</param>
+    /// <param name="count">Count.</param>
+	public static HashSet<int> GetRandomNumbersSet(int min, int max, int count)
+    {
+	    if (count > (max - min + 1) || max < min) {
+			return null;  
+        } 
+        HashSet<int> set = new HashSet<int>();
+        while (set.Count < count)
+        {
+            set.Add(UnityEngine.Random.Range(min, max + 1));
+        }
+		return set;
+    }
+
 }
