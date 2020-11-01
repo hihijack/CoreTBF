@@ -311,6 +311,7 @@ GameObject:
   - component: {fileID: 3732178987692871653}
   - component: {fileID: 3732178987692871643}
   - component: {fileID: 3732178987692871642}
+  - component: {fileID: 3732178987398450748}
   m_Layer: 5
   m_Name: UIFight
   m_TagString: Untagged
@@ -361,6 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a53d85959d640b788ab9371e8ad9b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   imageProg: {fileID: 3732178987507360434}
   itemRoot: {fileID: 3732178987289233254}
   txtStage: {fileID: 3732178986090063780}
@@ -368,3 +370,15 @@ MonoBehaviour:
   spaceSize: 82
   heightOffset: 86
   timeTip: {fileID: 3732178986213222384}
+--- !u!225 &3732178987398450748
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732178987692871652}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

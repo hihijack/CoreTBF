@@ -10,7 +10,7 @@ public class FightActionExchangeLoc : FightActionBase
     public override void Act()
     {
 
-        UIMgr.Inst.uiFightLog.AppendLog($"{caster.roleData.name}发动了{skill.name}");
+        UIFightLog.Inst.AppendLog($"{caster.roleData.name}发动了{skill.name}");
 
         var target = targets[0];
         var t = caster.teamLoc;

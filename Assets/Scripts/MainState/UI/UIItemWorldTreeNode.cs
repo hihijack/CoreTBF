@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,15 @@ public class UIItemWorldTreeNode : UIItemBase
         this.maxNodeCount = maxNodeCount;
         this.index = index;
         this.enableArrive = enableArrive;
+        var btn = icon.GetComponent<Button>();
+        btn.onClick.AddListener(OnClick);
+    }
+
+    private void OnClick()
+    {
+        UIMgr.Inst.HideUI(UITable.EUITable.UIWorldTree);
+        UIMgr.Inst.HideUI(UITable.EUITable.UIWorldInfo);
+        GameMgr.Inst.ToState(EGameState.Fight);
     }
 
     public override void OnAwake()

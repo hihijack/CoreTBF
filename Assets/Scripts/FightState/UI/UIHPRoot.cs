@@ -5,7 +5,7 @@ using UI;
 using DefaultNamespace;
 using System.Collections.Generic;
 
-public class UIHPRoot : MonoBehaviour
+public class UIHPRoot : UIBase
 {
     public GameObject goGridAlly;
     public GameObject goGridEnemy;
@@ -15,8 +15,16 @@ public class UIHPRoot : MonoBehaviour
     public GameObject goGridMP;
     public const int MPPerPoint = 10;
 
+    public static UIHPRoot Inst{get;private set;}
+
     Dictionary<Character, UIPlayerInfo> _dicPlayerInfo = new Dictionary<Character, UIPlayerInfo>(5);
     Dictionary<Character, UIEnemyPlayerInfo> _dicEnemyInfo = new Dictionary<Character, UIEnemyPlayerInfo>(5);
+
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+        Inst = this;
+    }
 
     public void RefreshMP()
     {

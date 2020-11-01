@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 6936313100382045393}
   - component: {fileID: 6936313100382045392}
   - component: {fileID: 6936313100382045395}
+  - component: {fileID: 8425376598350485379}
   m_Layer: 5
   m_Name: UIHPRoot
   m_TagString: Untagged
@@ -180,6 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0dbad1c70f0464994c2d024edf127d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   goGridAlly: {fileID: 6936313100235482591}
   goGridEnemy: {fileID: 6936313100068721455}
   pfbUIItemPlayerInfo: {fileID: 2746636513732157785, guid: bb24dc66bf74ff3428f7ec5f8d1610c3,
@@ -187,6 +189,18 @@ MonoBehaviour:
   pfbUIItemEnemyInfo: {fileID: 8262022060803869224, guid: 22b905ea503c8974fbb78f9ba6558992,
     type: 3}
   goGridMP: {fileID: 6936313100478495406}
+--- !u!225 &8425376598350485379
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936313100382045358}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &6936313100478495406
 GameObject:
   m_ObjectHideFlags: 0

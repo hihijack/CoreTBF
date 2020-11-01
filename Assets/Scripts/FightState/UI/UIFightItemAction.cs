@@ -117,7 +117,7 @@ namespace UI
             uiTip.Refresh(sb.ToString());
             if (_skillData.backswing > 0)
             {
-                UIMgr.Inst.uiFight.ShowTimeTip(_skillData.backswing);
+                UIFight.Inst.ShowTimeTip(_skillData.backswing);
             }
         }
 
@@ -125,7 +125,7 @@ namespace UI
         {
             //UITip.Inst.Hide();
             UIMgr.Inst.HideUI(UITable.EUITable.UITip);
-            UIMgr.Inst.uiFight.HideTimeTip();
+            UIFight.Inst.HideTimeTip();
         }
 
         public void OnClick()

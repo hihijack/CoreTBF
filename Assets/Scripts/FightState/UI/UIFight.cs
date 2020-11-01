@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class UIFight : MonoBehaviour
+    public class UIFight : UIBase
     {
         public Image imageProg;
         public GameObject itemRoot;
@@ -26,8 +26,12 @@ namespace UI
 
         RectTransform rtTransform;
 
-        private void Awake()
+        public static UIFight Inst{get;private set;}
+
+        protected override void OnAwake()
         {
+            base.OnAwake();
+            Inst = this;
             rtTransform = gameObject.GetComponent<RectTransform>();
         }
 
@@ -44,8 +48,9 @@ namespace UI
             HideTimeTip();
         }
 
-        public void Init()
+        public override void Init()
         {
+            base.Init();
             lstItems = new List<UIFightItemCharacter>();
             lstBuffRoots = new List<UIBuffRoot>();
             var lstCharacters = FightState.Inst.characterMgr.GetCharacters();

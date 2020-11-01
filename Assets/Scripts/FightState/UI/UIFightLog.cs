@@ -3,20 +3,21 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Text;
 
-public class UIFightLog : MonoBehaviour
+public class UIFightLog : UIBase
 {
     public Text txtContet;
     public Scrollbar scrollBar;
 
     StringBuilder sbLog;
 
+    public static UIFightLog Inst{get; private set;}
 
-
-    private void Awake()
+    protected override void OnAwake()
     {
+        base.OnAwake();
+        Inst = this;
         sbLog = new StringBuilder();
     }
-
 
     public void AppendLog(string log)
     {

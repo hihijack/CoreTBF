@@ -222,7 +222,12 @@ namespace DefaultNamespace
             {
                 //从允许目标中找到第一个存活的
                 Character targetChara = null;
+                int targetTeamLoc = 0;
                 var t = skillData.targetTeamLocs;
+                if (t == null)
+                {
+                    Debug.LogError("error targetTeamLocs:" + skillData.ID);//#######       
+                }
                 for (int i = 0; i < t.Count; i++)
                 {
                     var teamLoc = t[i].AsInt;
@@ -230,13 +235,19 @@ namespace DefaultNamespace
                     if (chara != null)
                     {
                         targetChara = chara;
+                        targetTeamLoc = teamLoc;
                         break;
                     }
                 }
-                for (int i = 0; i < skillData.targetCount; i++)
+                targets.Add(targetChara);
+                for (int i = 0; i < skillData.targetCount - 1; i++)
                 {
                    //往后添加目标
-
+                    var chara = FightState.Inst.characterMgr.GetAliveCharacter(ECamp.Ally, targetTeamLoc + i + 1);
+                    if (chara != null)
+                    {
+                        targets.Add(chara);
+                    }
                 }
             }
 

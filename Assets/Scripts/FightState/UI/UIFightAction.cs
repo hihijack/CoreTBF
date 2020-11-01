@@ -157,7 +157,7 @@ namespace UI
         private void RealSkillCast(SkillBaseData skillData, Character target)
         {
             _character.OnActionSelected(skillData, target);
-            UIMgr.Inst.uiFightActionRoot.SetVisible(false);
+            UIMgr.Inst.HideUI(UITable.EUITable.UIFightActionPanel);
         }
 
         internal void OnSkillTargetClick(SkillBaseData skillData, Character target)

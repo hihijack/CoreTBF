@@ -46,8 +46,8 @@ namespace Data
             resMagic = reader.GetInt16(10);
             tenacity = reader.GetInt16(11);
             toughness = reader.GetInt16(12);
-            tenClearStiff = reader.GetFloat(13);
-            speed = reader.GetFloat(14);
+            speed = reader.GetFloat(13);
+            tenClearStiff = reader.GetFloat(14);
             skills = new int[5];
             skills[0] = reader.GetInt16(15);
             skills[1] = reader.GetInt16(16);

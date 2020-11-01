@@ -83,6 +83,7 @@ namespace DefaultNamespace
             entityCtl.SetSprite("idle");
 
             mTimeStiff = 5 / roleData.speed;
+
             State = ECharacterState.Stiff;
             
             lstSkillData = new List<SkillBaseData>(4);
@@ -135,7 +136,7 @@ namespace DefaultNamespace
                 buff = BuffFactory.CreateABuff(buffID, dur, this, caster);
                 lstBuffs.Add(buff);
                 buff.OnAdd();
-                UIMgr.Inst.uiFight.RefreshBuffUIOnAdd(this, buff);
+                UIFight.Inst.RefreshBuffUIOnAdd(this, buff);
             }
         }
 
@@ -221,7 +222,7 @@ namespace DefaultNamespace
             {
                 if (!lstBuffs[i].IsValid())
                 {
-                    UIMgr.Inst.uiFight.RefreshBuffUIOnRemove(this, lstBuffs[i]);
+                    UIFight.Inst.RefreshBuffUIOnRemove(this, lstBuffs[i]);
                     lstBuffs.RemoveAt(i);
                 }
             }
@@ -252,7 +253,7 @@ namespace DefaultNamespace
                 buffBreak.SetLayer(0);
                 RefreshBuff();
                 propData.RecoverTenacity();
-                UIMgr.Inst.uiHPRoot.RefreshTarget(this);
+                UIHPRoot.Inst.RefreshTarget(this);
             }
 
             //进入触发
@@ -329,7 +330,7 @@ namespace DefaultNamespace
             var targetDef = (float)target.propData.Def;
             dmg = Mathf.CeilToInt(dmg * (1 - targetDef * 6 / (100 + targetDef * 6)));
 
-            UIMgr.Inst.uiFightLog.AppendLog($"{roleData.name}对{target.roleData.name}造成了{dmg}点伤害!");
+            UIFightLog.Inst.AppendLog($"{roleData.name}对{target.roleData.name}造成了{dmg}点伤害!");
             target.Hurted(dmg);
 
             if (target.IsEnableAction)
@@ -346,7 +347,7 @@ namespace DefaultNamespace
                 }
             }
 
-            UIMgr.Inst.uiHPRoot.RefreshTarget(target);
+            UIHPRoot.Inst.RefreshTarget(target);
         }
 
         /// <summary>
@@ -389,7 +390,7 @@ namespace DefaultNamespace
         /// </summary>
         private void ToDead()
         {
-            UIMgr.Inst.uiFightLog.AppendLog($"<Color=red>{roleData.name}死亡!</Color>");
+            UIFightLog.Inst.AppendLog($"<Color=red>{roleData.name}死亡!</Color>");
             State = ECharacterState.Dead;
             //硬直清空
             mTimeStiff = 0f;
@@ -416,7 +417,7 @@ namespace DefaultNamespace
         /// </summary>
         private void ToDying()
         {
-            UIMgr.Inst.uiFightLog.AppendLog($"<Color=red>{roleData.name}已经濒死!失去行动能力</Color>");
+            UIFightLog.Inst.AppendLog($"<Color=red>{roleData.name}已经濒死!失去行动能力</Color>");
             State = ECharacterState.Dying;
             //硬直清空
             mTimeStiff = 0f;
@@ -443,7 +444,7 @@ namespace DefaultNamespace
             //TODO 韧性清空BREAK持续时间
             AddABuff(2, 2, null);
             //propData.RecoverTenacity();
-            UIMgr.Inst.uiHPRoot.RefreshTarget(this);
+            UIHPRoot.Inst.RefreshTarget(this);
         }
 
         private int CalDmg(float skillDmg)

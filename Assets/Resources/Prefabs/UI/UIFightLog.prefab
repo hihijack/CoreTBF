@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 6279526623278067517}
   - component: {fileID: 6279526623278067516}
   - component: {fileID: 4798668907707930798}
+  - component: {fileID: 5127438269570735182}
   m_Layer: 5
   m_Name: UIFightLog
   m_TagString: Untagged
@@ -148,8 +149,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63bb5233f0332d64d83b65c8b64a94af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   txtContet: {fileID: 6279526625240047800}
   scrollBar: {fileID: 6279526624066081331}
+--- !u!225 &5127438269570735182
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6279526623278067490}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &6279526624066081329
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +439,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -431.7, y: 172.4}
+  m_AnchoredPosition: {x: -459, y: -226}
   m_SizeDelta: {x: 344.5, y: 186}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6279526624923040979

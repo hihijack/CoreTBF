@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79930455c3324c25a95ee84c6d97b2ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 0
+  layer: 1
   txtTip: {fileID: 743511987963111261}
 --- !u!1 &743511987963111263
 GameObject:

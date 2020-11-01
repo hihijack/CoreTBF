@@ -17,7 +17,7 @@ namespace DefaultNamespace
         
         public virtual void Act()
         {
-            UIMgr.Inst.uiFightLog.AppendLog($"{caster.roleData.name}发动了{skill.name}");
+            UIFightLog.Inst.AppendLog($"{caster.roleData.name}发动了{skill.name}");
 
 
             TimelineAsset tlAssetToPlay; 
@@ -35,7 +35,7 @@ namespace DefaultNamespace
             if (tlAssetToPlay != null)
             {
                 //UI关闭AI提示显示
-                UIMgr.Inst.uiFight.SetAIItemsVisible(false);
+                UIFight.Inst.SetAIItemsVisible(false);
                 FightState.Inst.fightViewBehav.TimeLineCtl.Play(tlAssetToPlay);
             }
             else

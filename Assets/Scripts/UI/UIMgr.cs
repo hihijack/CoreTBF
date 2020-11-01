@@ -9,13 +9,6 @@ namespace UI
     {
         public Canvas canvasRoot;
 
-        public UIFight uiFight;
-        public UIFightLog uiFightLog;
-
-        public UIFightActionRoot uiFightActionRoot;
-
-        public UIHPRoot uiHPRoot;
-
         public static UIMgr Inst { get; private set; }
 
         public Dictionary<EUITable, UIBase> _dicUIs = new Dictionary<EUITable, UIBase>();
@@ -77,6 +70,19 @@ namespace UI
             //获取鼠标在画布上的位置
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRoot.transform as RectTransform, Input.mousePosition, null, out position);
             return position;
+        }
+
+        public T GetUI<T>(EUITable uiName) where T : UIBase
+        {
+            if (_dicUIs.ContainsKey(uiName))
+            {
+                var ui = _dicUIs[uiName];
+                if (ui.State == EUIState.Showing)
+                {
+                    return ui as T;
+                }
+            }
+            return null;
         }
     }
 }

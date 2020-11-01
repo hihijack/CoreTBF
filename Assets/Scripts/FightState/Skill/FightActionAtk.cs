@@ -29,10 +29,10 @@ namespace DefaultNamespace
                 if (skill.tenChangeToPower > 0)
                 {
                     caster.propData.SetTenacityPercent(skill.tenChangeToPower);
-                    UIMgr.Inst.uiHPRoot.RefreshTarget(caster);
+                    UIHPRoot.Inst.RefreshTarget(caster);
                 }
                
-                UIMgr.Inst.uiFightLog.AppendLog($"{caster.roleData.name}开始蓄力:{skill.name}!!");
+                UIFightLog.Inst.AppendLog($"{caster.roleData.name}开始蓄力:{skill.name}!!");
             }
             else
             {
@@ -52,7 +52,7 @@ namespace DefaultNamespace
                     caster.propData.SetTenacityPercent(skill.tenChangeTo);
                 }
 
-                UIMgr.Inst.uiHPRoot.RefreshTarget(caster);
+                UIHPRoot.Inst.RefreshTarget(caster);
 
                 foreach (var target in targets)
                 {

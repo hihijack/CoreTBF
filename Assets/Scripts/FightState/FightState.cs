@@ -152,7 +152,7 @@ public class FightState : GameStateBase
         SetActiveCharacte(null);
         SetFightStage(EFightStage.Normal);
         //AI行动刷新
-        UIMgr.Inst.uiFight.RefreshAIItems();
+        UIFight.Inst.RefreshAIItems();
     }
 
 
@@ -182,7 +182,7 @@ public class FightState : GameStateBase
         }
 
         lstActionData.Add(action);
-        UIMgr.Inst.uiFightActionRoot.MarkSelectedLstChanged();
+        UIFightActionRoot.Inst.MarkSelectedLstChanged();
     }
 
    
@@ -365,17 +365,20 @@ public class FightState : GameStateBase
         InitFightStages();
 
         //初始化战斗UI
-        UIMgr.Inst.uiFight.Init();
-
+        var uiFight = UIMgr.Inst.ShowUI(UITable.EUITable.UIFight);
         //刷新血量UI
+        var uiHPRoot = UIMgr.Inst.ShowUI(UITable.EUITable.UIHPRoot) as UIHPRoot;
         var lstCharacters = characterMgr.GetCharacters();
         foreach (var character in lstCharacters)
         {
-            UIMgr.Inst.uiHPRoot.RefreshTarget(character);
+            uiHPRoot.RefreshTarget(character);
         }
 
         //玩家属性数据
         PlayerRolePropDataMgr.Inst.Init();
+
+        //战斗日志UI
+        UIMgr.Inst.ShowUI(UITable.EUITable.UIFightLog);
 
         //初始化完毕,进入Normal状态
         SetFightStage(EFightStage.Normal);

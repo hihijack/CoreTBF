@@ -25,13 +25,13 @@ namespace DefaultNamespace.FightStages
             var activer = FightState.Inst.GetActiveCharacter();
             if (activer.camp == ECamp.Enemy)
             {
-                UIMgr.Inst.uiFightActionRoot.SetVisible(true);
-                UIMgr.Inst.uiFightActionRoot.SetActionVisible(true);
+                UIMgr.Inst.ShowUI(UITable.EUITable.UIFightActionPanel);
+                UIFightActionRoot.Inst.SetActionVisible(true);
                 //UIMgr.Inst.uiFightActionRoot.StartShow();
             }
             else
             {
-                UIMgr.Inst.uiFightActionRoot.SetActionVisible(false);
+                UIFightActionRoot.Inst.SetActionVisible(false);
                 //TODO AI速攻技能
             }
         }
@@ -44,7 +44,7 @@ namespace DefaultNamespace.FightStages
         public override void OnExit()
         {
             base.OnExit();
-            UIMgr.Inst.uiFightActionRoot.SetVisible(false);
+            UIMgr.Inst.HideUI(UITable.EUITable.UIFightActionPanel);
         }
     }
 }

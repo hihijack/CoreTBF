@@ -31,8 +31,8 @@ namespace DefaultNamespace.FightStages
                 //    acter.ActionSelectPoweringSkill();
                 //}
                 
-                UIMgr.Inst.uiFightActionRoot.SetVisible(true);
-                UIMgr.Inst.uiFightActionRoot.SetActionVisible(true);
+                UIMgr.Inst.ShowUI(UITable.EUITable.UIFightActionPanel);
+                UIFightActionRoot.Inst.SetActionVisible(true);
                 //UIMgr.Inst.uiFightActionRoot.StartShow();
             }
             else
@@ -57,8 +57,8 @@ namespace DefaultNamespace.FightStages
         public override void OnExit()
         {
             base.OnExit();
-            UIMgr.Inst.uiFightActionRoot.SetVisible(false);
-            UIMgr.Inst.uiFight.RefreshAIItems();
+            UIMgr.Inst.HideUI(UITable.EUITable.UIFightActionPanel);
+            UIFight.Inst.RefreshAIItems();
         }
     }
 }

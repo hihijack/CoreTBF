@@ -78,8 +78,8 @@ namespace Data
         /// </summary>
         public float tenChangeToPower;
 
-        //技能目标;{1,2,3}
-        public JSONNode targetTeamLocs;
+        //技能目标:{1,2,3}
+        public JSONArray targetTeamLocs;
 
         public string tip;
 
@@ -105,7 +105,12 @@ namespace Data
             cost = reader.GetInt16(12);
             tenChangeTo = reader.GetFloat(13);
             tenChangeToPower = reader.GetFloat(14);
-            targetTeamLocs = JSONNode.Parse(reader.GetString(15));
+            var strTtargetTeamLoc = reader.GetString(15);
+            if (!strTtargetTeamLoc.Equals("0"))
+            {
+                targetTeamLocs = JSONNode.Parse(strTtargetTeamLoc).AsArray;
+            }
+           
             tip = reader.GetString(16);
             tlAsset = reader.IsDBNull(17) ? "" : reader.GetString(17);
             tlAssetPower = reader.IsDBNull(18) ? "" : reader.GetString(18);

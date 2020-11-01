@@ -543,6 +543,7 @@ GameObject:
   - component: {fileID: 6192205225732806158}
   - component: {fileID: 6192205225732806159}
   - component: {fileID: 6192205225732806156}
+  - component: {fileID: 6941093594566382736}
   m_Layer: 5
   m_Name: UIFightActionPanel
   m_TagString: Untagged
@@ -593,9 +594,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5084a84eb6b74ef382365f7b61ad09b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   goGridAction: {fileID: 6192205224776997189}
   goGridActionSelected: {fileID: 6192205225453822474}
   pfbCharacterActionItem: {fileID: 2967944550023787689, guid: 6c8bb81c67f517746ad1495c82020503,
     type: 3}
   pfbActionSelectedItem: {fileID: 5767932784891912071, guid: 5182f70980e101b45a490664a540a43e,
     type: 3}
+--- !u!225 &6941093594566382736
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6192205225732806153}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

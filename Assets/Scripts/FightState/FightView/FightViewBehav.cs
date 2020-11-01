@@ -61,7 +61,7 @@ public class FightViewBehav
         {
             case EEventLogic.End:
                 FightStageActionAct.curAction.EndAct();
-                UIMgr.Inst.uiFight.SetAIItemsVisible(true);
+                UIFight.Inst.SetAIItemsVisible(true);
                 break;
             case EEventLogic.RealAct:
                 FightStageActionAct.curAction.RealAct();

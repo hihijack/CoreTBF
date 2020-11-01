@@ -12,6 +12,10 @@
         UITipGetItem, //获得物品提示
         UITip, //通用悬浮提示
         UIWorldInfo,//世界树界面信息
-        UIWorldTree //世界树
+        UIWorldTree, //世界树
+        UIFight, //战斗
+        UIHPRoot, //战斗血条
+        UIFightActionPanel,
+        UIFightLog
     }
 }

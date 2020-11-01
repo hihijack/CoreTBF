@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class UIFightActionRoot : MonoBehaviour
+    public class UIFightActionRoot : UIBase
     {
         public GameObject goGridAction;
         public GameObject goGridActionSelected;
@@ -18,28 +18,24 @@ namespace UI
 
         bool isVisible;
 
-        private void Awake()
+        public static UIFightActionRoot Inst{get;private set;}
+
+        protected override void OnAwake()
         {
+            base.OnAwake();
+            Inst = this;
             cgGridAction = goGridAction.GetComponent<CanvasGroup>();
+        }
+
+        public override void OnHide()
+        {
+            base.OnHide();
+             CacheItems();
         }
 
         public void MarkSelectedLstChanged()
         {
             _flagSelectedLstChangeed = true;
-        }
-        
-        public void SetVisible(bool visible)
-        {
-            if (visible)
-            {
-                transform.localPosition = Vector3.zero;
-            }
-            else
-            {
-                transform.localPosition = Vector3.left * 10000;
-                CacheItems();
-            }
-            isVisible = visible;
         }
 
         public bool IsVisible

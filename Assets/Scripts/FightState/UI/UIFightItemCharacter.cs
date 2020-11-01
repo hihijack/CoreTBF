@@ -82,7 +82,8 @@ namespace UI
                     imgState.gameObject.SetActive(false);
                 }
 
-                if (UIMgr.Inst.uiFightActionRoot.IsVisible && character.camp == ECamp.Ally && character.IsEnableAction && character.IsInReady() && !FightState.Inst.characterMgr.HasActed(character))
+                if ( UIFightActionRoot.Inst != null && UIFightActionRoot.Inst.State == EUIState.Showing 
+                    && character.camp == ECamp.Ally && character.IsEnableAction && character.IsInReady() && !FightState.Inst.characterMgr.HasActed(character))
                 {
                     //可行动
                     _imgExHeadIcon.SetOutLineEnable(true);
@@ -109,9 +110,9 @@ namespace UI
         /// </summary>
         public void OnBtnClick_HeadIcon()
         {
-            if (UIMgr.Inst.uiFightActionRoot.IsVisible)
+            if (UIFightActionRoot.Inst != null && UIFightActionRoot.Inst.State == EUIState.Showing)
             {
-                UIMgr.Inst.uiFightActionRoot.OnSelectACharacter(character);
+                UIFightActionRoot.Inst.OnSelectACharacter(character);
             }
         }
 

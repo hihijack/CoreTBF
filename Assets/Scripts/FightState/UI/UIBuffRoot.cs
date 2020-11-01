@@ -41,7 +41,7 @@ public class UIBuffRoot : MonoBehaviour
             var posEntity = character.entityCtl.GetPos();
             var screenPos = FightState.Inst.cameraMain.WorldToScreenPoint(posEntity) + new Vector3(0, -50f, 0);
             Vector2 locPos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(UIMgr.Inst.uiFight.GetRect(), screenPos, null, out locPos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(UIFight.Inst.GetRect(), screenPos, null, out locPos);
             transform.localPosition = locPos;
         }
     }
