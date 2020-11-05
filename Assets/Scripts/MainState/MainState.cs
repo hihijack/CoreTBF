@@ -5,7 +5,7 @@ public class MainState : GameStateBase
 {
     public override void Init()
     {
-       
+       EventProcessor.Inst.Init();
     }
 
     public override void OnEnter()

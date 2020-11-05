@@ -27,12 +27,23 @@ public class WorldRaidData : Singleton<WorldRaidData>
         }
     }
 
+    /// <summary>
+    /// 生成事件树处理器
+    /// </summary>
+    /// <returns></returns>
+    EventTreeHandler GenEventTreeHandler(EventBaseData rootEvent)
+    {
+        EventTreeHandler eventTreeHalder = new EventTreeHandler();
+        eventTreeHalder.GenEventTree(rootEvent);
+        return eventTreeHalder;
+    }
+
     public void CreateWorldGraphData(int nodeCount)
     {
         Node<WorldGraphNode>[] nodes = new Node<WorldGraphNode>[nodeCount];
         for (int i = 0; i < nodes.Length; i++)
         {
-            nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GetEventBaseData()));
+            nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.GetARandomRootEvent())));
         }
         graph = new GraphAdjList<WorldGraphNode>(nodes);
         

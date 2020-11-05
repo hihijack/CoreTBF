@@ -27,9 +27,10 @@ public class UIItemWorldTreeNode : UIItemBase
 
     private void OnClick()
     {
-        UIMgr.Inst.HideUI(UITable.EUITable.UIWorldTree);
-        UIMgr.Inst.HideUI(UITable.EUITable.UIWorldInfo);
-        GameMgr.Inst.ToState(EGameState.Fight);
+        // UIMgr.Inst.HideUI(UITable.EUITable.UIWorldTree);
+        // UIMgr.Inst.HideUI(UITable.EUITable.UIWorldInfo);
+        // GameMgr.Inst.ToState(EGameState.Fight);
+        node.eventTreeHandler.TriRoot();
     }
 
     public override void OnAwake()
@@ -46,7 +47,7 @@ public class UIItemWorldTreeNode : UIItemBase
     public override void Refresh()
     {
         base.Refresh();
-        icon.SetSprite(node.eventBaseData.GetIcon());
+        icon.SetSprite(node.eventTreeHandler.tree.root.Data.GetIcon());
         rectTf.anchoredPosition = CalPos();
         if (enableArrive)
         {

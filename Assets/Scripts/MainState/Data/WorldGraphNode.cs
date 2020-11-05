@@ -1,9 +1,9 @@
 public class WorldGraphNode
 {   
-    public EventBaseData eventBaseData;
+    public EventTreeHandler eventTreeHandler;
 
-    public WorldGraphNode(EventBaseData eventBaseData)
+    public WorldGraphNode(EventTreeHandler eventTreeHandler)
     {
-        this.eventBaseData = eventBaseData;
+        this.eventTreeHandler = eventTreeHandler;
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using SimpleJSON;
 
 public class UIWorldTree : UIBase
 {
@@ -14,11 +15,28 @@ public class UIWorldTree : UIBase
     Dictionary<WorldGraphNode, UIItemWorldTreeNode> _dic;
     List<UIItemLine> _lstLines;
 
+    public static UIWorldTree Inst;
+
     public override void Init()
     {
         base.Init();
+        Inst = this;
+
         _dic = new Dictionary<WorldGraphNode, UIItemWorldTreeNode>();
         _lstLines = new List<UIItemLine>();
+
+        EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_SHOW, OnEventShowEventUI);
+        EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_FIGHT, OnEventFight);
+    }
+
+    private void OnEventFight(EventBaseData eventBaseData, JSONNode data)
+    {
+
+    }
+
+    private void OnEventShowEventUI(EventBaseData eventBaseData, JSONNode data)
+    {
+        
     }
 
     public override void OnShow()
