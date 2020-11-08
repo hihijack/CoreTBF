@@ -26,7 +26,12 @@ public class EventBaseData
         desc = reader.GetString(2);
         jsonOptions = reader.IsDBNull(3) ? null : JSONNode.Parse(reader.GetString(3));
         jsonChilds = reader.IsDBNull(4) ? null : JSONNode.Parse(reader.GetString(4));
-        jsonEvents = reader.IsDBNull(5) ? null : JSONNode.Parse(reader.GetString(5));
+        string strEnents = reader.IsDBNull(5) ? null : reader.GetString(5);
+        if (!string.IsNullOrEmpty(strEnents))
+        {
+             jsonEvents =JSONNode.Parse(strEnents);
+        }
+       
         isRoot = reader.GetBoolean(6);
     }
 

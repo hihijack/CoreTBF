@@ -11,11 +11,7 @@ public class FightCharacterMgr
 
     private List<Character> lstChrActed = new List<Character>();//缓存已行动的角色
 
-
     GameObject unitRoot;
-
-    public int enemyID;
-    public int[] allyIDS;
 
     public FightCharacterMgr()
     {
@@ -259,5 +255,50 @@ public class FightCharacterMgr
         {
             character.UpdateInNormalStage();
         }
+    }
+
+    /// <summary>
+    /// 当角色死亡
+    /// </summary>
+    /// <param name="character"></param>
+    internal void OnCharacterDead(Character character)
+    {
+        if (CheckATeamDieOut(character.camp))
+        {
+            FightState.Inst.OnTeamDieOut(character.camp);
+            return;
+        }
+        ChangeTeamLocOnSomeOneDie(character);
+    }
+
+    /// <summary>
+    /// 检测一队全灭
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckATeamDieOut(ECamp camp)
+    {
+        bool r = true;
+        foreach (var chara in lstCharacters)
+        {
+            if (chara.camp == camp && chara.IsAlive())
+            {
+                r = false;
+            }
+        }
+        return r;
+    }
+
+    /// <summary>
+    /// 清理角色实体
+    /// </summary>
+    internal void Clear()
+    {
+        foreach (var character in lstCharacters)
+        {
+            character.Clear();
+        }
+        lstCharacters.Clear();
+        lstChrActed.Clear();
+        unitRoot = null;
     }
 }

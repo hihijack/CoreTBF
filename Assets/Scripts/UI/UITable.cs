@@ -16,6 +16,7 @@
         UIFight, //战斗
         UIHPRoot, //战斗血条
         UIFightActionPanel,
-        UIFightLog
+        UIFightLog,
+        UIWorldEvent
     }
 }

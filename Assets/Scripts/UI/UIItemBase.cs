@@ -16,6 +16,16 @@ public class UIItemBase : MonoBehaviour
         var t = go.GetComponent<T>();
         return t;
     }
+    
+    public static T Create<T>(Transform parent, string path, string pfbName) where T : UIItemBase
+    {
+        var go = GoPool.Inst.PopOrInst(pfbName, path);
+        go.transform.SetParent(parent, false);
+        var t = go.GetComponent<T>();
+        return t;
+    }
+
+    
 
     public virtual void Cache()
     {

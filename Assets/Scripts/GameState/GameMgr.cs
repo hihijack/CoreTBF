@@ -76,4 +76,12 @@ public class GameMgr : MonoBehaviour
             _curStage.OnEnter();
         }
     }
+
+    public MainState MainState
+    {
+        get
+        {
+            return mainState;    
+        }
+    }
 }

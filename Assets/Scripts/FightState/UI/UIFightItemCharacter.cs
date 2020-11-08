@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class UIFightItemCharacter : MonoBehaviour
+    public class UIFightItemCharacter : UIItemBase
     {
         public Image headIcon;
         public Text txtStiffTime;

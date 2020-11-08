@@ -75,9 +75,10 @@ namespace DefaultNamespace
         public Character(int dataID)
         {
             roleData = RoleDataer.Inst.Get(dataID);
-            var pfb = UnityEngine.Resources.Load<GameObject>($"Prefabs/Character/{roleData.model}");
-            if (!pfb) return;
-            var go = Object.Instantiate(pfb);
+            // var pfb = UnityEngine.Resources.Load<GameObject>($"Prefabs/Character/{roleData.model}");
+            // if (!pfb) return;
+            // var go = Object.Instantiate(pfb);
+            var go = GoPool.Inst.PopOrInst(roleData.model, "Prefabs/Character");
             entityCtl = GameUtil.GetOrAdd<RoleEntityCtl>(go);
             entityCtl.Init(this);
             entityCtl.SetSprite("idle");
@@ -287,6 +288,14 @@ namespace DefaultNamespace
             FightState.Inst.ToNextStage();
         }
 
+        /// <summary>
+        /// 清理角色实体
+        /// </summary>
+        internal void Clear()
+        {
+           entityCtl.Cache();
+        }
+
         public bool HasQuickSkill()
         {
             return _hasQuickSkill;
@@ -398,7 +407,7 @@ namespace DefaultNamespace
             mTimePower = 0f;
             //清空buff,所有buff层数归0
             ClearAllBuff();
-            FightState.Inst.OnCharacterDead(this);
+            FightState.Inst.characterMgr.OnCharacterDead(this);
         }
 
         /// <summary>

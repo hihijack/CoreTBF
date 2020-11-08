@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class UIEnemyPlayerInfo : MonoBehaviour
+    public class UIEnemyPlayerInfo : UIItemBase
     {
         public Image headIcon;
         public Slider sldHP;

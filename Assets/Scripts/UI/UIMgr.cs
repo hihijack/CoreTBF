@@ -64,6 +64,15 @@ namespace UI
             }
         }
 
+        public void HideAll()
+        {
+            foreach (var ui in _dicUIs.Values)
+            {
+                ui.SetVisible(false);
+                ui.OnHide();
+            }
+        }
+
         public Vector2 GetMousePos()
         {
             Vector2 position;

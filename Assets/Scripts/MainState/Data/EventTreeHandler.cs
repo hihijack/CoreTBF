@@ -8,17 +8,21 @@ public class EventTreeHandler
     TreeNode<EventBaseData> curNode;
 
     /// <summary>
-    /// 选项触发。0表示触发根节点
+    /// 选项触发
     /// </summary>
     /// <param name="index"></param>
     /// <returns>目标节点</returns>
     public TreeNode<EventBaseData> TriSelection(int index)
     {
-        return null;
+        var targetNode = curNode.childs[index];
+        curNode = targetNode;
+        TriTreeNode(curNode);
+        return curNode;
     }
 
     public void TriRoot()
     {
+        curNode = tree.root;
         TriTreeNode(tree.root);
     }
 

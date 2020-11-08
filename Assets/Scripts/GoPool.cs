@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -45,6 +46,18 @@ namespace DefaultNamespace
             {
                 return null;
             }
+        }
+
+        public GameObject PopOrInst(string key, string path)
+        {
+            var go = Pop(key);
+            if (go == null)
+            {
+               var pfb = Resources.Load<GameObject>(Path.Combine(path, key));
+               go = GameObject.Instantiate<GameObject>(pfb);
+               go.name = key;
+            }
+            return go;
         }
 
         public void Cache(string key, GameObject go)

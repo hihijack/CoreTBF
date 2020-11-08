@@ -30,7 +30,12 @@ public class UIItemWorldTreeNode : UIItemBase
         // UIMgr.Inst.HideUI(UITable.EUITable.UIWorldTree);
         // UIMgr.Inst.HideUI(UITable.EUITable.UIWorldInfo);
         // GameMgr.Inst.ToState(EGameState.Fight);
-        node.eventTreeHandler.TriRoot();
+        if (enableArrive)
+        {
+            WorldRaidData.Inst.curPointIndex = index;
+            UIWorldTree.Inst.RefreshPoint();
+            node.eventTreeHandler.TriRoot();
+        }
     }
 
     public override void OnAwake()

@@ -27,16 +27,7 @@ public class UIWorldTree : UIBase
 
         EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_SHOW, OnEventShowEventUI);
         EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_FIGHT, OnEventFight);
-    }
-
-    private void OnEventFight(EventBaseData eventBaseData, JSONNode data)
-    {
-
-    }
-
-    private void OnEventShowEventUI(EventBaseData eventBaseData, JSONNode data)
-    {
-        
+        EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_LEAVE_WORLD, OnEventLeaveWorld);
     }
 
     public override void OnShow()
@@ -44,6 +35,36 @@ public class UIWorldTree : UIBase
         base.OnShow();
 
         StartCoroutine(CoShowTree());
+    }
+
+    public override void OnHide()
+    {
+        base.OnHide();
+        foreach (var item in _dic.Values)
+        {
+            item.Cache();
+        }
+        _dic.Clear();
+        foreach (var item in _lstLines)
+        {
+            item.Cache();
+        }
+        _lstLines.Clear();
+    }
+
+    private void OnEventLeaveWorld(EventBaseData eventBaseData, JSONNode data)
+    {
+         WorldRaidMgr.Inst.OnEventLeaveWorld(eventBaseData, data);
+    }
+
+    private void OnEventFight(EventBaseData eventBaseData, JSONNode data)
+    {
+        WorldRaidMgr.Inst.OnEventFight(eventBaseData, data);
+    }
+
+    private void OnEventShowEventUI(EventBaseData eventBaseData, JSONNode data)
+    {
+        WorldRaidMgr.Inst.OnEventShowEventUI(eventBaseData, data);
     }
 
     IEnumerator CoShowTree()

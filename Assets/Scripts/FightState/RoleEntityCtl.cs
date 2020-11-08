@@ -36,5 +36,10 @@ namespace DefaultNamespace
         {
             transform.position = pos;
         }
+
+        internal void Cache()
+        {
+           GoPool.Inst.Cache(gameObject);
+        }
     }
 }

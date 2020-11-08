@@ -13,6 +13,24 @@ public class WorldRaidData : Singleton<WorldRaidData>
 
     public int curPointIndex;//当前所在位置索引
 
+    int cachedOption = -1;
+
+    public WorldRaidData()
+    {
+        Event.Inst.Register(Event.EEvent.FIGHT_WIN, OnFightWin);
+        Event.Inst.Register(Event.EEvent.FIGHT_FAIL, OnFightFail);
+    }
+
+    private void OnFightFail(object obj)
+    {
+       cachedOption = 1;
+    }
+
+    private void OnFightWin(object obj)
+    {
+        cachedOption = 0;
+    }
+
     public bool HasData()
     {
         return  graph != null;
@@ -24,6 +42,15 @@ public class WorldRaidData : Singleton<WorldRaidData>
         foreach (var roleID in roleIds)
         {
             lstCharacters.Add(new CharacterForRaid(roleID));
+        }
+    }
+
+    internal void TryTriCachedOption()
+    {
+        if (cachedOption >= 0 && curPointIndex >= 0)
+        {
+            var curNode = GetCurInTreeNode();
+            curNode.eventTreeHandler.TriSelection(cachedOption);
         }
     }
 
@@ -159,5 +186,15 @@ public class WorldRaidData : Singleton<WorldRaidData>
     public void CreateANewLayerMap()
     {
         CreateWorldGraphData(UnityEngine.Random.Range(3,8));
+    }
+
+    internal void FightWin()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    internal void FightFail()
+    {
+        throw new System.NotImplementedException();
     }
 }

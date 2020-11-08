@@ -3,25 +3,24 @@ using System.Collections;
 using UnityEngine.UI;
 using DefaultNamespace;
 
-public class UIAINextAction : MonoBehaviour
+public class UIAINextAction : UIItemBase
 {
     public Text text;
     public Character target;
 
     RectTransform rtParent;
 
-    private void Awake()
-    {
-        rtParent = transform.parent.GetComponent<RectTransform>();
-    }
-  
-
     public void SetTarget(Character target)
     {
         this.target = target;
     }
 
-    public void Refresh()
+    public void SetRtParent(RectTransform rt)
+    {
+        rtParent = rt;
+    }
+
+    public override void Refresh()
     {
         if (target.IsEnableAction)
         {

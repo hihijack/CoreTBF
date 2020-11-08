@@ -59,9 +59,7 @@ public class UIHPRoot : UIBase
             }
             else
             {
-                var goUIItem = GameUtil.PopOrInst(pfbUIItemPlayerInfo);
-                goUIItem.transform.SetParent(goGridAlly.transform, false);
-                var uiItemPlayerInfo = goUIItem.GetComponent<UIPlayerInfo>();
+                var uiItemPlayerInfo = UIPlayerInfo.Create<UIPlayerInfo>(goGridAlly.transform, pfbUIItemPlayerInfo);
                 uiItemPlayerInfo.data = target;
                 uiItemPlayerInfo.Refresh();
                 _dicPlayerInfo.Add(target, uiItemPlayerInfo);
@@ -75,13 +73,27 @@ public class UIHPRoot : UIBase
             }
             else
             {
-                var goUIItem = GameUtil.PopOrInst(pfbUIItemEnemyInfo);
-                goUIItem.transform.SetParent(goGridEnemy.transform, false);
-                var uiItemPlayerInfo = goUIItem.GetComponent<UIEnemyPlayerInfo>();
+                var uiItemPlayerInfo = UIEnemyPlayerInfo.Create<UIEnemyPlayerInfo>(goGridEnemy.transform, pfbUIItemEnemyInfo);
                 uiItemPlayerInfo.SetData(target);
                 uiItemPlayerInfo.Refresh();
                 _dicEnemyInfo.Add(target, uiItemPlayerInfo);
             }
         }
+    }
+
+    public override void OnHide()
+    {
+        base.OnHide();
+        foreach (var item in _dicPlayerInfo.Values)
+        {
+            item.Cache();
+        }
+        foreach (var item in _dicEnemyInfo.Values)
+        {
+            item.Cache();
+        }
+        _dicPlayerInfo.Clear();
+        _dicEnemyInfo.Clear();
+
     }
 }

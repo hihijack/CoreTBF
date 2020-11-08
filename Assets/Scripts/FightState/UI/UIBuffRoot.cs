@@ -5,7 +5,7 @@ using Boo.Lang;
 using System;
 using UI;
 
-public class UIBuffRoot : MonoBehaviour
+public class UIBuffRoot : UIItemBase
 {
     public GameObject goGrid;
     public GameObject pfbUIItemBuff;
@@ -29,7 +29,7 @@ public class UIBuffRoot : MonoBehaviour
         uiItemBuff.Refresh();
     }
 
-    public void Refresh()
+    public override void Refresh()
     {
         foreach (var uiBuffItem in _lstBuffItems)
         {

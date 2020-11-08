@@ -42,10 +42,8 @@ namespace UI
 
         private void Start()
         {
-           
             progMin = imageProg.rectTransform.localPosition.x - imageProg.rectTransform.sizeDelta.x * 0.5f;
             progMax = progMin + imageProg.rectTransform.sizeDelta.x;
-            HideTimeTip();
         }
 
         public override void Init()
@@ -53,28 +51,57 @@ namespace UI
             base.Init();
             lstItems = new List<UIFightItemCharacter>();
             lstBuffRoots = new List<UIBuffRoot>();
+            lstAINextActions = new List<UIAINextAction>();
+        }
+
+        public override void OnShow()
+        {
+            base.OnShow();
+            HideTimeTip();
             var lstCharacters = FightState.Inst.characterMgr.GetCharacters();
             foreach (var character in lstCharacters)
             {
-                var go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/ItemCharacter"), itemRoot.transform);
-                var uiItem = go.GetComponent<UIFightItemCharacter>();
+                // var go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/ItemCharacter"), itemRoot.transform);
+                // var uiItem = go.GetComponent<UIFightItemCharacter>();
+
+                var uiItem = UIFightItemCharacter.Create<UIFightItemCharacter>(itemRoot.transform, "Prefabs/UI", "ItemCharacter");
+
                 uiItem.SetData(character);
+
                 lstItems.Add(uiItem);
 
                 //buffUI
-                var goBuff = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UIBuff"), transform);
-                var uiBuffRoot = goBuff.GetComponent<UIBuffRoot>();
+                // var goBuff = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UIBuff"), transform);
+                // var uiBuffRoot = goBuff.GetComponent<UIBuffRoot>();
+                // uiBuffRoot.SetTarget(character);
+                var uiBuffRoot = UIBuffRoot.Create<UIBuffRoot>(transform, "Prefabs/UI", "UIBuff");
                 uiBuffRoot.SetTarget(character);
-                lstBuffRoots.Add(uiBuffRoot);
+                uiBuffRoot.Refresh();
 
-                var posEntity = character.entityCtl.GetPos();
-                var screenPos = FightState.Inst.cameraMain.WorldToScreenPoint(posEntity) + new Vector3(0, -5f, 0);
-                Vector2 locPos;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(rtTransform, screenPos, null, out locPos);
-                goBuff.transform.localPosition = locPos;
+                lstBuffRoots.Add(uiBuffRoot);
             }
 
             InitAINexts();
+        }
+
+        public override void OnHide()
+        {
+            base.OnHide();
+            foreach (var item in lstItems)
+            {
+                item.Cache();
+            }
+            foreach (var item in lstAINextActions)
+            {
+                item.Cache();
+            }
+            foreach (var item in lstBuffRoots)
+            {
+                item.Cache();
+            }
+            lstItems.Clear();
+            lstAINextActions.Clear();
+            lstBuffRoots.Clear();
         }
 
         /// <summary>
@@ -116,14 +143,13 @@ namespace UI
 
         void InitAINexts()
         {
-            lstAINextActions = new List<UIAINextAction>();
             foreach (var character in FightState.Inst.characterMgr.GetCharacters())
             {
                 if (character.camp == ECamp.Enemy)
                 {
-                    var go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/ItemAINextAction"), transform);
-                    var uiItem = go.GetComponent<UIAINextAction>();
+                    var uiItem = UIAINextAction.Create<UIAINextAction>(transform, "Prefabs/UI", "ItemAINextAction");
                     uiItem.SetTarget(character);
+                    uiItem.SetRtParent(rtTransform);
                     uiItem.Refresh();
                     lstAINextActions.Add(uiItem);
                 }

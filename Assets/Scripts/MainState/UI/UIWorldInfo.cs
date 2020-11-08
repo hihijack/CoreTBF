@@ -31,6 +31,7 @@ public class UIWorldInfo : UIBase
           var uiItem = UIItemBase.Create<UIItemCharacterForWorldInfo>(tfGridChraracters.transform, pfbUIItemChracter);
           uiItem.Set(data);
           uiItem.Refresh();
+          lstUIItemCharacters.Add(uiItem);
       }
       //食物
       txtNumOfFood.text = "x" + WorldRaidData.Inst.numOfFood;

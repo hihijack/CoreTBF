@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class UIPlayerInfo : MonoBehaviour
+    public class UIPlayerInfo : UIItemBase
     {
         public Slider sldHP;
         public Slider sldTen;
@@ -16,7 +16,7 @@ namespace UI
 
         public Character data;
 
-        public void Refresh()
+        public override void Refresh()
         {
             if (data != null)
             {

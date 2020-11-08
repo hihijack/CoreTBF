@@ -19,6 +19,13 @@ public class UIFightLog : UIBase
         sbLog = new StringBuilder();
     }
 
+    public override void OnHide()
+    {
+        base.OnHide();
+        sbLog.Clear();
+        txtContet.text = "";
+    }
+
     public void AppendLog(string log)
     {
         sbLog.AppendLine(log);

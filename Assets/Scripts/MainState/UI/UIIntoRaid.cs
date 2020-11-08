@@ -115,6 +115,7 @@ public class UIIntoRaid : UIBase
     {
         int[] roles = new int[]{mCurSelectedRoledata.ID};
         int numOfFood = 30;
+         GameMgr.Inst.MainState.curInWorld = EWorld.OtherWorld;
         WorldRaidData.Inst.Init(roles, numOfFood);
         UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldTree);
         UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldInfo);

@@ -6,6 +6,7 @@ using DefaultNamespace;
 using DefaultNamespace.FightStages;
 using UI;
 using UnityEditorInternal;
+using System;
 
 public enum EFightStage
 {
@@ -62,17 +63,6 @@ public class FightState : GameStateBase
             return pointsEnemy[teamLoc - 1].transform.position;
         }
         return Vector3.zero;
-    }
-
-    /// <summary>
-    /// 当一个角色死亡
-    /// </summary>
-    /// <param name="character"></param>
-    internal void OnCharacterDead(Character character)
-    {
-        //更新其他同队角色teamloc
-        //之后的角色teamLoc - 1
-        characterMgr.ChangeTeamLocOnSomeOneDie(character);
     }
 
     /// <summary>
@@ -295,6 +285,23 @@ public class FightState : GameStateBase
         }
     }
 
+    /// <summary>
+    /// 队伍全灭
+    /// </summary>
+    /// <param name="camp"></param>
+    internal void OnTeamDieOut(ECamp camp)
+    {
+        if (camp == ECamp.Ally)
+        {
+           Event.Inst.Fire(Event.EEvent.FIGHT_FAIL, null);
+        }else if (camp == ECamp.Enemy)
+        {
+          Event.Inst.Fire(Event.EEvent.FIGHT_WIN, null);
+        }
+        //结束战斗
+        GameMgr.Inst.ToState(EGameState.MainStage);
+    }
+
     public Character GetCurCaster()
     {
         return FightStageActionAct.curAction.caster;
@@ -392,7 +399,8 @@ public class FightState : GameStateBase
 
     public override void OnExit()
     {
-       
+       characterMgr.Clear();
+       UIMgr.Inst.HideAll();
     }
 
     public override void Init()

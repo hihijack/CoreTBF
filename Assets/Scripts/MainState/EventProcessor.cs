@@ -6,6 +6,7 @@ public class EventProcessor : Singleton<EventProcessor>
 {
     public const string EVENT_SHOW = "show";
     public const string EVENT_FIGHT = "fight";
+    public const string EVENT_LEAVE_WORLD = "leaveworld";
 
     Dictionary<string, Action<EventBaseData,JSONNode>> _dicActions;
 
@@ -37,6 +38,7 @@ public class EventProcessor : Singleton<EventProcessor>
 
     public void FireEvent(string key, EventBaseData eventBaseData, JSONNode data)
     {
+        UnityEngine.Debug.Log("FireEvent:" + key);//########
         if (_dicActions.ContainsKey(key))
         {
             _dicActions[key](eventBaseData,data);
