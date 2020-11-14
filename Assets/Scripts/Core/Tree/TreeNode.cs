@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public class TreeNode<T>
@@ -28,5 +29,14 @@ public class TreeNode<T>
     public void AddChild(TreeNode<T> child)
     {
         childs.Add(child);
+    }
+
+    /// <summary>
+    /// 是否叶子节点
+    /// </summary>
+    /// <returns></returns>
+    internal bool IsLeafNode()
+    {
+        return childs == null || childs.Count == 0;
     }
 }

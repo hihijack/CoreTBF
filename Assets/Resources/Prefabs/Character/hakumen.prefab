@@ -89,7 +89,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2867745595146248702}
-  - component: {fileID: -3874791324771907027}
   m_Layer: 8
   m_Name: hakumen
   m_TagString: Untagged
@@ -112,24 +111,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-3874791324771907027
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7896107820448313931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8f7e6caa4149279650914b5c48c148, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: 952c6af82cdd114418644b54456aa09a, type: 3}
-  - {fileID: 21300000, guid: 630c1023d69632a438a13ca6a8e2e810, type: 3}
-  - {fileID: 21300000, guid: 9e1330d0079e25a4b8b104cbfc315323, type: 3}
-  - {fileID: 21300000, guid: 386dd51957fe8064fac5fd65af4f4395, type: 3}
-  - {fileID: 21300000, guid: 2bdaef504a94aa5419c27b4c21c9cb64, type: 3}
-  - {fileID: 21300000, guid: 6d261629a2594654eaf2f55ba86fd799, type: 3}
-  - {fileID: 21300000, guid: 67ee862c3ae701d429c7456f93ba1ed4, type: 3}
-  face: 0

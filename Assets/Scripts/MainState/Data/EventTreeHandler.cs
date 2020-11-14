@@ -35,6 +35,12 @@ public class EventTreeHandler
         for (int i = 0; i < node.Data.jsonEvents.Count; i++)
         {
            var eventT = node.Data.jsonEvents[i];
+           
+           //到叶子节点
+           if (node.IsLeafNode())
+           {
+                Event.Inst.Fire(Event.EEvent.ToEventLeaf, null);
+           }
            EventProcessor.Inst.FireEvent(eventT["event"], node.Data, eventT); 
         }
     }

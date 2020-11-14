@@ -23,6 +23,11 @@ public static class GameUtil
         image.sprite = sprite;
     }
 
+    internal static GameObject FindChild(GameObject gameObject, string path)
+    {
+        return gameObject.transform.Find(path).gameObject;
+    }
+
     public static void SetSpriteNativeSize(this Image img, float width, float height)
     {
 

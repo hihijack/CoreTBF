@@ -66,6 +66,38 @@ public class FightState : GameStateBase
     }
 
     /// <summary>
+    /// 技能表现结束
+    /// </summary>
+    internal void OnEndPlayView()
+    {
+        FightStageActionAct.curAction.EndAct();
+        UIFight.Inst.SetAIItemsVisible(true);
+        characterMgr.HandleHPState();
+        ECamp camDieOut;
+        if (CheckATeamDieOut(out camDieOut))
+        {
+            OnTeamDieOut(camDieOut);
+        }
+    }
+
+    bool CheckATeamDieOut(out ECamp campDieOut)
+    {
+        campDieOut = ECamp.Ally;
+        bool r = false;
+        if (characterMgr.CheckATeamDieOut(ECamp.Ally))
+        {
+            campDieOut = ECamp.Ally;
+            r = true;
+        }
+        else if (characterMgr.CheckATeamDieOut(ECamp.Enemy))
+        {
+            campDieOut = ECamp.Enemy;
+            r = true;
+        }
+        return r;
+    }
+
+    /// <summary>
     /// 当尝试立即行动
     /// </summary>
     public void BtnActionAtOnce()
@@ -175,7 +207,7 @@ public class FightState : GameStateBase
         UIFightActionRoot.Inst.MarkSelectedLstChanged();
     }
 
-   
+
 
     /// <summary>
     /// 清理Action缓存
@@ -184,7 +216,7 @@ public class FightState : GameStateBase
     {
         lstActionData.Clear();
     }
-    
+
 
     public bool IsInStage(EFightStage stage) => mCurStage == stage;
 
@@ -213,7 +245,7 @@ public class FightState : GameStateBase
             bool r = true;
             if (GetActiveCharacter().camp == ECamp.Enemy)
             {
-                r =  characterMgr.CheckSkipEndStage();
+                r = characterMgr.CheckSkipEndStage();
             }
             return r;
         }
@@ -293,10 +325,11 @@ public class FightState : GameStateBase
     {
         if (camp == ECamp.Ally)
         {
-           Event.Inst.Fire(Event.EEvent.FIGHT_FAIL, null);
-        }else if (camp == ECamp.Enemy)
+            Event.Inst.Fire(Event.EEvent.FIGHT_FAIL, null);
+        }
+        else if (camp == ECamp.Enemy)
         {
-          Event.Inst.Fire(Event.EEvent.FIGHT_WIN, null);
+            Event.Inst.Fire(Event.EEvent.FIGHT_WIN, null);
         }
         //结束战斗
         GameMgr.Inst.ToState(EGameState.MainStage);
@@ -364,9 +397,10 @@ public class FightState : GameStateBase
     {
         unitRoot = GameObject.FindGameObjectWithTag("UnitRoot");
         characterMgr.SetUnitRoot(unitRoot);
-        characterMgr.AddCharacter(1, ECamp.Ally);
-        characterMgr.AddCharacter(2, ECamp.Ally);
-        characterMgr.AddCharacter(3, ECamp.Ally);
+        foreach (var item in WorldRaidData.Inst.lstCharacters)
+        {
+            characterMgr.AddCharacter(item.roleData.ID, ECamp.Ally);
+        }
         characterMgr.AddCharacter(4, ECamp.Enemy);
 
         InitFightStages();
@@ -399,8 +433,13 @@ public class FightState : GameStateBase
 
     public override void OnExit()
     {
-       characterMgr.Clear();
-       UIMgr.Inst.HideAll();
+        characterMgr.Clear();
+        UIMgr.Inst.HideAll();
+        mCurStage = EFightStage.None;
+        mDicFightStages.Clear();
+        _activeCharacter = null;
+        lstActionData.Clear();
+        fightViewBehav.Clear();
     }
 
     public override void Init()

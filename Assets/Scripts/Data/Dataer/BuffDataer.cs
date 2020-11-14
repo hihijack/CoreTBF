@@ -22,6 +22,7 @@ public class BuffDataer : Singleton<BuffDataer>
             }
             else
             {
+                UnityEngine.Debug.LogError("GetBuffData Error,id:" + id);//#########
                 return null;
             }
         }

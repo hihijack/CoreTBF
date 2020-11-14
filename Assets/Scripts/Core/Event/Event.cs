@@ -6,7 +6,12 @@ public class Event : Singleton<Event>
     public enum EEvent
     {
         FIGHT_WIN,
-        FIGHT_FAIL
+        FIGHT_FAIL,
+        ToEventLeaf, //到达事件树叶子节点
+        PlayerItemChange, //玩家物品改变
+        RAID_LAYER_CHANGE,
+        WORLD_NODE_MARK_CLEAR,//节点标记清理
+        WORLD_TREE_STATE_UPDATE,
     }
 
     Dictionary<EEvent, Action<object>> _dic = new Dictionary<EEvent, Action<object>>();
@@ -35,6 +40,17 @@ public class Event : Singleton<Event>
         if (_dic.ContainsKey(eventID))
         {
             _dic[eventID](data);
+        }else
+        {
+            UnityEngine.Debug.LogWarning("Fire Event That Has Not Registered:" + eventID);
+        }
+    }
+
+    public void Fire(EEvent eventID)
+    {
+        if (_dic.ContainsKey(eventID))
+        {
+            _dic[eventID](null);
         }else
         {
             UnityEngine.Debug.LogWarning("Fire Event That Has Not Registered:" + eventID);

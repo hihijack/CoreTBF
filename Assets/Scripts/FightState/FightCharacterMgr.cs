@@ -80,6 +80,14 @@ public class FightCharacterMgr
         return lst;
     }
 
+    internal void HandleHPState()
+    {
+        foreach (var t in lstCharacters)
+        {
+            t.HandleHPState();
+        }
+    }
+
     public int GetCharactersCount(ECamp camp)
     {
         int count = 0;
@@ -263,11 +271,6 @@ public class FightCharacterMgr
     /// <param name="character"></param>
     internal void OnCharacterDead(Character character)
     {
-        if (CheckATeamDieOut(character.camp))
-        {
-            FightState.Inst.OnTeamDieOut(character.camp);
-            return;
-        }
         ChangeTeamLocOnSomeOneDie(character);
     }
 
@@ -275,7 +278,7 @@ public class FightCharacterMgr
     /// 检测一队全灭
     /// </summary>
     /// <returns></returns>
-    private bool CheckATeamDieOut(ECamp camp)
+    public bool CheckATeamDieOut(ECamp camp)
     {
         bool r = true;
         foreach (var chara in lstCharacters)

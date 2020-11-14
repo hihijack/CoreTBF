@@ -24,22 +24,56 @@ public class UIWorldTree : UIBase
 
         _dic = new Dictionary<WorldGraphNode, UIItemWorldTreeNode>();
         _lstLines = new List<UIItemLine>();
+    }
 
-        EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_SHOW, OnEventShowEventUI);
-        EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_FIGHT, OnEventFight);
-        EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_LEAVE_WORLD, OnEventLeaveWorld);
+    /// <summary>
+    /// 当前节点标记为清理
+    /// </summary>
+    /// <param name="data"></param>
+    private void OnEventNodeMarkAsCleared(object data)
+    {
+        var curNode = WorldRaidData.Inst.GetCurInTreeNode();
+        if (_dic.ContainsKey(curNode))
+        {
+            var uiItem = _dic[curNode];
+            uiItem.Refresh();
+        }
     }
 
     public override void OnShow()
     {
         base.OnShow();
+        Event.Inst.Register(Event.EEvent.WORLD_NODE_MARK_CLEAR, OnEventNodeMarkAsCleared);
+        Event.Inst.Register(Event.EEvent.WORLD_TREE_STATE_UPDATE, OnEventWorldTreeStateUpdate);
+        Refresh();
+    }
 
-        StartCoroutine(CoShowTree());
+    /// <summary>
+    /// 世界树状态刷新
+    /// </summary>
+    /// <param name="obj"></param>
+    private void OnEventWorldTreeStateUpdate(object obj)
+    {
+        foreach (var uiItem in _dic.Values)
+        {
+            uiItem.Refresh();
+        }
+        foreach (var itemLine in _lstLines)
+        {
+            itemLine.Refresh();
+        }
     }
 
     public override void OnHide()
     {
         base.OnHide();
+        Event.Inst.UnRegister(Event.EEvent.WORLD_NODE_MARK_CLEAR, OnEventNodeMarkAsCleared);
+         Event.Inst.UnRegister(Event.EEvent.WORLD_TREE_STATE_UPDATE, OnEventWorldTreeStateUpdate);
+        Clear();
+    }
+
+    void Clear()
+    {
         foreach (var item in _dic.Values)
         {
             item.Cache();
@@ -52,32 +86,20 @@ public class UIWorldTree : UIBase
         _lstLines.Clear();
     }
 
-    private void OnEventLeaveWorld(EventBaseData eventBaseData, JSONNode data)
+    public void Refresh()
     {
-         WorldRaidMgr.Inst.OnEventLeaveWorld(eventBaseData, data);
-    }
-
-    private void OnEventFight(EventBaseData eventBaseData, JSONNode data)
-    {
-        WorldRaidMgr.Inst.OnEventFight(eventBaseData, data);
-    }
-
-    private void OnEventShowEventUI(EventBaseData eventBaseData, JSONNode data)
-    {
-        WorldRaidMgr.Inst.OnEventShowEventUI(eventBaseData, data);
+        Clear();
+        StartCoroutine(CoShowTree());
     }
 
     IEnumerator CoShowTree()
     {
-        _dic.Clear();
-        var lstEnableTreeNodeIndexs = WorldRaidData.Inst.GetEnableTreeNodeIndexs();
         int numOfNode = WorldRaidData.Inst.graph.GetNumOfVertex();
         for (int i = 0; i < numOfNode; i++)
         {
             var vertNode = WorldRaidData.Inst.graph[i];
             var uiItem = UIItemBase.Create<UIItemWorldTreeNode>(tfTreeNodes, pfbItem);
-            bool enableArrive = lstEnableTreeNodeIndexs.Contains(i);
-            uiItem.Init(vertNode.Data.Data, i , numOfNode, enableArrive);
+            uiItem.Init(vertNode.Data.Data, i , numOfNode, OnClickNodeItem);
             uiItem.Refresh();
             _dic.Add(vertNode.Data.Data, uiItem);
             yield return 0;
@@ -96,8 +118,8 @@ public class UIWorldTree : UIBase
                     var uiItem = _dic[vertNode.Data.Data];
                     var uiItemTarget = _dic[vertNodeOther.Data.Data];
                     var uiItemLine = UIItemBase.Create<UIItemLine>(tfLines, pfbItemLine);
-                    bool enableArrive = WorldRaidData.Inst.curPointIndex == i && lstEnableTreeNodeIndexs.Contains(nextIndex);
-                    uiItemLine.Init(uiItem.GetPos(), uiItemTarget.GetPos(),enableArrive);
+                    bool enableArrive = vertNodeOther.Data.Data.arrivable;
+                    uiItemLine.Init(uiItem.GetPos(), uiItemTarget.GetPos(), vertNode.Data.Data, vertNodeOther.Data.Data);
                     uiItemLine.Refresh();
                     _lstLines.Add(uiItemLine);
                     yield return 0;
@@ -107,6 +129,23 @@ public class UIWorldTree : UIBase
         }
         //显示角色位置
         RefreshPoint();
+    }
+
+    private void OnClickNodeItem(int index, WorldGraphNode node)
+    {
+        if (node.arrivable)
+        {
+            // WorldRaidData.Inst.curPointIndex = index;
+            WorldRaidData.Inst.SetCurPointIndex(index);
+            //食物消耗
+            PlayerDataMgr.Inst.PlayerData.ChangeItem(GameCfg.ID_FOOD, -1);
+            Event.Inst.Fire(Event.EEvent.PlayerItemChange, null);
+            UIWorldTree.Inst.RefreshPoint();
+            if (!node.hasClear)
+            {
+              node.eventTreeHandler.TriRoot();  
+            }
+        }
     }
 
     public void RefreshPoint()

@@ -114,9 +114,11 @@ public class UIIntoRaid : UIBase
     private void OnBtnComfirm()
     {
         int[] roles = new int[]{mCurSelectedRoledata.ID};
-        int numOfFood = 30;
-         GameMgr.Inst.MainState.curInWorld = EWorld.OtherWorld;
-        WorldRaidData.Inst.Init(roles, numOfFood);
+        GameMgr.Inst.MainState.curInWorld = EWorld.OtherWorld;
+        //往玩家物品添加30个食物
+        PlayerDataMgr.Inst.PlayerData.ChangeItem(2, 30);
+        WorldRaidData.Inst.Init(roles);
+        WorldRaidMgr.Inst.Init();
         UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldTree);
         UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldInfo);
         UIMgr.Inst.HideUI(UITable.EUITable.UIIntoRaid);

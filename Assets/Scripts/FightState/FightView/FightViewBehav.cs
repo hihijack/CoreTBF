@@ -8,6 +8,7 @@ using DG.Tweening;
 using Boo.Lang;
 using DefaultNamespace.FightStages;
 using UI;
+using UnityEngine.Timeline;
 
 public class FightViewBehav 
 {
@@ -50,6 +51,11 @@ public class FightViewBehav
 
     }
 
+    public void Play(TimelineAsset asset)
+    {
+        TimeLineCtl.Play(asset);
+    }
+
     internal void OnPlayableSetDepthOfFieldEnable(bool enable)
     {
         _ppv.weight = enable ? 1 : 0;
@@ -60,8 +66,7 @@ public class FightViewBehav
         switch (enentType)
         {
             case EEventLogic.End:
-                FightStageActionAct.curAction.EndAct();
-                UIFight.Inst.SetAIItemsVisible(true);
+                FightState.Inst.OnEndPlayView();
                 break;
             case EEventLogic.RealAct:
                 FightStageActionAct.curAction.RealAct();
@@ -170,5 +175,10 @@ public class FightViewBehav
             //缓动移动
             targetCharacter.entityCtl.transform.DOMove(pos, param.dur);
         }
+    }
+
+    internal void Clear()
+    {
+        
     }
 }

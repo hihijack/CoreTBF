@@ -89,7 +89,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2867745595146248702}
-  - component: {fileID: -5529201197970602830}
   m_Layer: 8
   m_Name: yumi
   m_TagString: Untagged
@@ -112,24 +111,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-5529201197970602830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7896107820448313931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8f7e6caa4149279650914b5c48c148, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: acbd06b359a19554486281646fd32d93, type: 3}
-  - {fileID: 21300000, guid: 86727b9263625654e85af3da92f2253c, type: 3}
-  - {fileID: 21300000, guid: 58b4e1cfc54342f46895f8d3bf0647a0, type: 3}
-  - {fileID: 21300000, guid: c4dffe366ccfc744d893d2e15eb9e36f, type: 3}
-  - {fileID: 21300000, guid: fcb58a23fbe84b44699010d4fedd48cd, type: 3}
-  - {fileID: 21300000, guid: 81237dc8ce4a0c445af3c411d6d9734c, type: 3}
-  - {fileID: 21300000, guid: d6e49668710939b449e55c794d254bae, type: 3}
-  face: 0

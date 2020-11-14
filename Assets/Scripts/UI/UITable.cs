@@ -17,6 +17,7 @@
         UIHPRoot, //战斗血条
         UIFightActionPanel,
         UIFightLog,
-        UIWorldEvent
+        UIWorldEvent,
+        UIGetItem //物品拾取界面
     }
 }

@@ -21,7 +21,7 @@ namespace UI
             this.target = target;
         }
         
-        public void Refresh()
+        public override void Refresh()
         {
             if (target == null)
             {

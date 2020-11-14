@@ -31,6 +31,9 @@ public class UIAINextAction : UIItemBase
             Vector2 locPos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rtParent, screenPos, null, out locPos);
             transform.localPosition = locPos;
+        }else
+        {
+            SetVisible(false);
         }
     }
     public void SetVisible(bool visible)

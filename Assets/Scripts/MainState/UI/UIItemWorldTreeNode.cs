@@ -13,14 +13,14 @@ public class UIItemWorldTreeNode : UIItemBase
     private int index;
     RectTransform rectTf;
 
-    bool enableArrive;//允许到达
+    Action<int,WorldGraphNode> cbOnNodeItemClick;
 
-    public void Init(WorldGraphNode treeNode, int index, int maxNodeCount, bool enableArrive)
+    public void Init(WorldGraphNode treeNode, int index, int maxNodeCount, Action<int,WorldGraphNode> cbOnNodeItemClick)
     {
         this.node = treeNode;
         this.maxNodeCount = maxNodeCount;
         this.index = index;
-        this.enableArrive = enableArrive;
+        this.cbOnNodeItemClick = cbOnNodeItemClick;
         var btn = icon.GetComponent<Button>();
         btn.onClick.AddListener(OnClick);
     }
@@ -30,12 +30,7 @@ public class UIItemWorldTreeNode : UIItemBase
         // UIMgr.Inst.HideUI(UITable.EUITable.UIWorldTree);
         // UIMgr.Inst.HideUI(UITable.EUITable.UIWorldInfo);
         // GameMgr.Inst.ToState(EGameState.Fight);
-        if (enableArrive)
-        {
-            WorldRaidData.Inst.curPointIndex = index;
-            UIWorldTree.Inst.RefreshPoint();
-            node.eventTreeHandler.TriRoot();
-        }
+        cbOnNodeItemClick(index,node);
     }
 
     public override void OnAwake()
@@ -52,9 +47,17 @@ public class UIItemWorldTreeNode : UIItemBase
     public override void Refresh()
     {
         base.Refresh();
-        icon.SetSprite(node.eventTreeHandler.tree.root.Data.GetIcon());
+        if (node.hasClear)
+        {
+            //已清理
+            icon.SetSprite("Buffs/Icon1_96");
+        }else
+        {
+            icon.SetSprite(node.eventTreeHandler.tree.root.Data.GetIcon());
+        }
+        
         rectTf.anchoredPosition = CalPos();
-        if (enableArrive)
+        if (node.arrivable)
         {
             icon.color = Color.white;
         }else

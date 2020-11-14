@@ -36,7 +36,7 @@ namespace DefaultNamespace
             {
                 //UI关闭AI提示显示
                 UIFight.Inst.SetAIItemsVisible(false);
-                FightState.Inst.fightViewBehav.TimeLineCtl.Play(tlAssetToPlay);
+                FightState.Inst.fightViewBehav.Play(tlAssetToPlay);
             }
             else
             {

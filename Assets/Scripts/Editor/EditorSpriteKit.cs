@@ -3,6 +3,9 @@ using UnityEditor;
 
 public class EditorSpriteKit : ScriptableObject
 {
+    /// <summary>
+    /// 注意spriteRender不能设置flip
+    /// </summary>
     [MenuItem("GameObject/规范化精灵描点", false, 1)]
     static void AutoSetSprite()
     {
@@ -17,6 +20,12 @@ public class EditorSpriteKit : ScriptableObject
             return;
         }
         var sprite = spriteRender.sprite;
+
+        if (spriteRender.flipX || spriteRender.flipY)
+        {
+            Debug.LogError("不能设置flip");
+            return;
+        }
 
         Vector2 worldSize = spriteRender.bounds.size;
 

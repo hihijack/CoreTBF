@@ -7,6 +7,12 @@ public class EventProcessor : Singleton<EventProcessor>
     public const string EVENT_SHOW = "show";
     public const string EVENT_FIGHT = "fight";
     public const string EVENT_LEAVE_WORLD = "leaveworld";
+    public const string EVENT_SHOW_ITEM_GET = "show_item_get";
+    public const string EVENT_TO_NEXT_AREA = "to_next_area";
+    /// <summary>
+    /// 标记节点为已清理
+    /// </summary>
+    public const string EVENT_MARK_CLEAR = "mark_clear";
 
     Dictionary<string, Action<EventBaseData,JSONNode>> _dicActions;
 
@@ -38,7 +44,7 @@ public class EventProcessor : Singleton<EventProcessor>
 
     public void FireEvent(string key, EventBaseData eventBaseData, JSONNode data)
     {
-        UnityEngine.Debug.Log("FireEvent:" + key);//########
+        UnityEngine.Debug.Log("FireEvent:" + key);//###############
         if (_dicActions.ContainsKey(key))
         {
             _dicActions[key](eventBaseData,data);

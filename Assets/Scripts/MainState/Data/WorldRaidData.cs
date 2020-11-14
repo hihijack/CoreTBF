@@ -45,6 +45,17 @@ public class WorldRaidData : Singleton<WorldRaidData>
         }
     }
 
+    internal void SetCurPointIndex(int index)
+    {
+        var oriIndex = curPointIndex;
+        curPointIndex = index;
+        if (curPointIndex != oriIndex)
+        {
+            UpdateNodeArrivableState();
+            Event.Inst.Fire(Event.EEvent.WORLD_TREE_STATE_UPDATE);
+        }
+    }
+
     internal void TryTriCachedOption()
     {
         if (cachedOption >= 0 && curPointIndex >= 0)
@@ -68,13 +79,29 @@ public class WorldRaidData : Singleton<WorldRaidData>
     public void CreateWorldGraphData(int nodeCount)
     {
         Node<WorldGraphNode>[] nodes = new Node<WorldGraphNode>[nodeCount];
+        int indexEnd = nodes.Length - 1;
+
         for (int i = 0; i < nodes.Length; i++)
         {
-            nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.GetARandomRootEvent())));
+            if (i == indexEnd)
+            {
+                //终点
+                nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.Get(GameCfg.ID_NEXT_AREA))));
+            }else
+            {
+                nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.GetARandomRootEvent())));
+            }
+
+            if (i == 0)
+            {
+                //第一个点是可达的
+                nodes[i].Data.arrivable = true;
+            }
+
         }
+
         graph = new GraphAdjList<WorldGraphNode>(nodes);
         
-        int indexEnd = nodes.Length - 1;
 
         for (int i = 0; i < nodes.Length; i++)
         {
@@ -106,15 +133,21 @@ public class WorldRaidData : Singleton<WorldRaidData>
         return EventDataer.Inst.Get(1);
     }
 
-    internal void Init(int[] roles, int numOfFood)
+    internal void Init(int[] roles)
     {
         InitCharacterData(roles);
-        this.numOfFood = numOfFood;
-        this.numOfGold = 0;
         this.layer = 1;
         this.maxLayer = 10;
         curPointIndex = -1;
         CreateANewLayerMap();
+    }
+
+    /// <summary>
+    /// 进入一个新区域,重置一些数据
+    /// </summary>
+    public void ResetOnIntoAArea()
+    {
+        curPointIndex = -1;
     }
 
     /// <summary>
@@ -181,6 +214,35 @@ public class WorldRaidData : Singleton<WorldRaidData>
            lst.Add(0);
         }
         return lst;
+    }
+
+    /// <summary>
+    /// 更新节点可到达性
+    /// </summary>
+    void UpdateNodeArrivableState()
+    {
+        int numOfNode = graph.GetNumOfVertex();
+        var lstEnableTreeNodeIndexs = GetEnableTreeNodeIndexs();
+        for (int i = 0; i < numOfNode; i++)
+        {
+            var vertNode = WorldRaidData.Inst.graph[i];
+            vertNode.Data.Data.arrivable = false;
+        }
+        if (curPointIndex >= 0)
+        {   
+            var curInVexNode = graph[curPointIndex];
+            var p = curInVexNode.FirstAdj;
+            while (p != null)
+            {
+                graph[p.Adjvex].Data.Data.arrivable = true;
+                p = p.Next;
+            }
+        }
+        else
+        {
+            //第一个点
+            graph[0].Data.Data.arrivable = true;
+        }  
     }
 
     public void CreateANewLayerMap()

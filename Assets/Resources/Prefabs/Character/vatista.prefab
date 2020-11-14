@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7805659275986160578}
-  - component: {fileID: 859889047952920188}
   m_Layer: 8
   m_Name: vatista
   m_TagString: Untagged
@@ -32,26 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &859889047952920188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2741459172448016503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8f7e6caa4149279650914b5c48c148, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: 0f28d61711b71a541a9b45abe2fe3f1d, type: 3}
-  - {fileID: 21300000, guid: 3f2c5e32ef22448489a295080ffcba83, type: 3}
-  - {fileID: 21300000, guid: 82a2a6cb3b144d2468af59f15483f016, type: 3}
-  - {fileID: 21300000, guid: 2c22be50327812e4fa2cb9b6d5bac128, type: 3}
-  - {fileID: 21300000, guid: b476d5855ddb6c240a1d63edb50a2e10, type: 3}
-  - {fileID: 21300000, guid: 0af6a0a30f3f1844c95b6f15d1c23ff4, type: 3}
-  - {fileID: 21300000, guid: 58302e3c116f8f949b4368111dc6676c, type: 3}
 --- !u!1 &6713832380485436736
 GameObject:
   m_ObjectHideFlags: 0

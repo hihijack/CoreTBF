@@ -10,6 +10,7 @@ public class GameData : Singleton<GameData>
     public readonly string TABLE_SKILLS = "skills";
     public readonly string TABLE_BUFFS = "buffs";
     public readonly string TABLE_EVENTS = "events";
+    public readonly string TABLE_ITEMS = "items";
     public readonly string TABLE_EVENTOPTIONS = "eventopions";
 
     readonly string _sqlDBLocation = "URI=file:coretbf.db";

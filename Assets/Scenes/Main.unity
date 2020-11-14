@@ -248,6 +248,7 @@ MonoBehaviour:
   mainState:
     stateKey: 0
     hasInit: 0
+    curInWorld: 0
 --- !u!114 &264260285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b7d7cc247fbc74d83bf46cb3a117fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showGMWindow: 1
 --- !u!1 &438667839
 GameObject:
   m_ObjectHideFlags: 0

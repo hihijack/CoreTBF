@@ -30,7 +30,7 @@ public class EventDataer : Singleton<EventDataer>
 
     public EventBaseData GetARandomRootEvent()
     {
-        var reader =  GameData.Inst.ExecuteQuery($"SELECT * FROM {GameData.Inst.TABLE_EVENTS} where isroot ORDER BY RANDOM() limit 1");
+        var reader =  GameData.Inst.ExecuteQuery($"SELECT * FROM {GameData.Inst.TABLE_EVENTS} where isroot and level > 0 ORDER BY RANDOM() limit 1");
         if (reader.Read())
             {
                 var eventData = new EventBaseData(reader);

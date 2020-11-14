@@ -17,6 +17,12 @@ public class UIWorldEvent : UIBase
     {
         base.Init();
         lstOptions = new List<UIItemWorldEventOption>();
+        Event.Inst.Register(Event.EEvent.ToEventLeaf, OnToEventLeaf);
+    }
+
+    private void OnToEventLeaf(object data)
+    {
+        UI.UIMgr.Inst.HideUI(UITable.EUITable.UIWorldEvent);
     }
 
     public override void OnHide()

@@ -15,4 +15,10 @@ public class EditorKit : ScriptableObject
     {
         EditorSceneManager.OpenScene("Assets/Scenes/UI.unity");
     }
+
+    [MenuItem("Tools/MyTool/打开模型场景 %l")]
+    static void OpenModelsScene()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/Models.unity");
+    }
 }

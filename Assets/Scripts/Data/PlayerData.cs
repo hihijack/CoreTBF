@@ -1,8 +1,16 @@
-﻿using Boo.Lang;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+
+public struct PlayerItem
+{
+    public int id;
+    public int count;
+}
+
+
 /// <summary>
 /// 玩家数据
 /// </summary>
@@ -11,11 +19,14 @@ public class PlayerData
 {
     public List<int> LstCharacterIDUnlocked { get; private set; }
 
+    public Dictionary<int, PlayerItem> dicItems;
+
     public int curLayerInRaid = 1;
 
     public PlayerData()
     {
         LstCharacterIDUnlocked = new List<int>();
+        dicItems = new Dictionary<int, PlayerItem>();
     }
 
     /// <summary>
@@ -27,6 +38,17 @@ public class PlayerData
         LstCharacterIDUnlocked.Add(1);
     }
 
+    internal int GetItemCount(int id)
+    {
+        if (dicItems.ContainsKey(id))
+        {
+            return dicItems[id].count;
+        }else
+        {
+            return 0;
+        }
+    }
+
     /// <summary>
     /// 设置角色解锁
     /// </summary>
@@ -36,6 +58,23 @@ public class PlayerData
         if (!LstCharacterIDUnlocked.Contains(id))
         {
             LstCharacterIDUnlocked.Add(id);
+        }
+    }
+
+    public void ChangeItem(int id, int count)
+    {
+        if (dicItems.ContainsKey(id))
+        {
+            var t = dicItems[id];
+            t.count += count;
+            t.count = Mathf.Max(0, t.count);
+            dicItems[id] = t;
+        }else
+        {
+            var t = new PlayerItem();
+            t.id = id;
+            t.count = count;
+            dicItems[id] = t;
         }
     }
 }

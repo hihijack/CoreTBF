@@ -317,6 +317,9 @@ namespace DefaultNamespace
         public void DamageTarget(Character target, DmgData dmgData)
         {
 
+            Debug.Log("DamageTarget:");
+            
+
             int dmg = CalDmg(dmgData.dmgPrecent);
 
             //计算增伤减伤
@@ -377,7 +380,10 @@ namespace DefaultNamespace
         private void Hurted(int dmg)
         {
             propData.ChangeHP(-1 * dmg);
+        }
 
+        public void HandleHPState()
+        {
             //死亡处理
             if (propData.hp <= 0)
             {
