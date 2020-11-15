@@ -28,9 +28,9 @@ public class BuffBaseData
         ID = reader.GetInt16(0);
         logic = (EBuffLogic)Enum.Parse(typeof(EBuffLogic), reader.GetString(1));
         name = reader.GetString(2);
-        desc = reader.GetString(3);
+        desc = reader.IsDBNull(3)? "" : reader.GetString(3);
         icon = reader.GetString(4);
         maxLayer = reader.GetInt16(5);
-        data = JSONNode.Parse(reader.GetString(6));
+        data = reader.IsDBNull(6)? null :JSONNode.Parse(reader.GetString(6));
     }
 }
