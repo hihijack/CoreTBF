@@ -21,7 +21,7 @@ namespace DefaultNamespace
         public AI(Character character)
         {
             _character = character;
-            arrSkillIndexToAction = new int[]{0,0,1,0,2,0,1};
+            arrSkillIndexToAction = character.roleData.aiSkillIndexs;
             _index = -1;
             //_dicHatredRecord = new Dictionary<Character, int>();
         }
@@ -222,23 +222,21 @@ namespace DefaultNamespace
             {
                 //从允许目标中找到第一个存活的
                 Character targetChara = null;
+                //以1号位为目标
                 int targetTeamLoc = 0;
-                var t = skillData.targetTeamLocs;
-                if (t == null)
+                //查找正在蓄力的敌方目标
+                var poweringChara = FightState.Inst.characterMgr.FindThatIsPowering(ECamp.Ally);
+                if (poweringChara != null)
                 {
-                    Debug.LogError("error targetTeamLocs:" + skillData.ID);//#######       
+                    targetChara = poweringChara;
+                    targetTeamLoc = targetChara.teamLoc;
                 }
-                for (int i = 0; i < t.Count; i++)
+                else
                 {
-                    var teamLoc = t[i].AsInt;
-                    var chara = FightState.Inst.characterMgr.GetAliveCharacter(ECamp.Ally, teamLoc);
-                    if (chara != null)
-                    {
-                        targetChara = chara;
-                        targetTeamLoc = teamLoc;
-                        break;
-                    }
+                    targetTeamLoc = 1;
+                    targetChara = FightState.Inst.characterMgr.GetAliveCharacter(ECamp.Ally, targetTeamLoc);
                 }
+
                 targets.Add(targetChara);
                 for (int i = 0; i < skillData.targetCount - 1; i++)
                 {

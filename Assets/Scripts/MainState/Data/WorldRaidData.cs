@@ -6,6 +6,8 @@ public class WorldRaidData : Singleton<WorldRaidData>
 
     public List<CharacterForRaid> lstCharacters;
 
+    List<int> lstEnemyID = new List<int>();
+
     public int numOfFood;
     public int numOfGold;
     public int layer;
@@ -19,6 +21,21 @@ public class WorldRaidData : Singleton<WorldRaidData>
     {
         Event.Inst.Register(Event.EEvent.FIGHT_WIN, OnFightWin);
         Event.Inst.Register(Event.EEvent.FIGHT_FAIL, OnFightFail);
+    }
+
+    public void AddEnemy(int id) 
+    {
+        lstEnemyID.Add(id);
+    }
+
+    public List<int> GetEnemyLst() 
+    {
+        return lstEnemyID;
+    }
+
+    public void ClearEnemy() 
+    {
+        lstEnemyID.Clear();
     }
 
     private void OnFightFail(object obj)

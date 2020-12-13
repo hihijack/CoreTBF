@@ -113,7 +113,7 @@ public class UIIntoRaid : UIBase
 
     private void OnBtnComfirm()
     {
-        int[] roles = new int[]{mCurSelectedRoledata.ID};
+        int[] roles = new int[]{mCurSelectedRoledata.ID, 2};
         GameMgr.Inst.MainState.curInWorld = EWorld.OtherWorld;
         //往玩家物品添加30个食物
         PlayerDataMgr.Inst.PlayerData.ChangeItem(2, 30);

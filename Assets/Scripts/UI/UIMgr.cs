@@ -20,7 +20,7 @@ namespace UI
        
         public UIBase ShowUI(EUITable uiName)
         {
-            Debug.Log("ShowUI:" + uiName);
+            //Debug.Log("ShowUI:" + uiName);
             UIBase ui = null;
             if (_dicUIs.ContainsKey(uiName))
             {

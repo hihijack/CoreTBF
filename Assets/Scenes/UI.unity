@@ -649,6 +649,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIWorldEvent
       objectReference: {fileID: 0}
+    - target: {fileID: 6233517910022995574, guid: dfd7d84965b428f40a170dfeda9d41ba,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2219535820957430838, guid: dfd7d84965b428f40a170dfeda9d41ba,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -777,7 +782,7 @@ PrefabInstance:
     - target: {fileID: 1771189588235194035, guid: 5302179a3323bde45b402eaf28debdd9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1771189588235194036, guid: 5302179a3323bde45b402eaf28debdd9,
         type: 3}
@@ -1031,7 +1036,7 @@ PrefabInstance:
     - target: {fileID: 1267058455563285982, guid: 7aa70269241b7304596812024daae89c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6474480135270154142, guid: 7aa70269241b7304596812024daae89c,
         type: 3}
@@ -1275,6 +1280,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UIGetItem
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419476214236583284, guid: da8a549dbe000094eabfcb1e1067897f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6419476214236583285, guid: da8a549dbe000094eabfcb1e1067897f,
         type: 3}
@@ -1539,11 +1549,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UIHPRoot
-      objectReference: {fileID: 0}
-    - target: {fileID: 6936313100382045358, guid: 849c78ecbc7ad7045bac19b6f3c1b0b9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6936313100382045393, guid: 849c78ecbc7ad7045bac19b6f3c1b0b9,
         type: 3}

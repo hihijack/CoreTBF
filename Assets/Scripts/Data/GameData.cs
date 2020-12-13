@@ -1,5 +1,6 @@
 ﻿using Data;
 using Mono.Data.SqliteClient;
+using SimpleJSON;
 using System.Data;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class GameData : Singleton<GameData>
     public readonly string TABLE_EVENTS = "events";
     public readonly string TABLE_ITEMS = "items";
     public readonly string TABLE_EVENTOPTIONS = "eventopions";
+    public readonly string TABLE_ROLEGROUP = "rolegroup";
 
     readonly string _sqlDBLocation = "URI=file:coretbf.db";
 
@@ -62,5 +64,18 @@ public class GameData : Singleton<GameData>
     {
         _reader.Close();
         _connection.Close();
+    }
+
+    public JSONNode GetSimpleData(string table, int id) 
+    {
+        IDataReader dataReader = ExecuteQuery($"select data from '{table}' where id = {id}");
+        if (dataReader.Read())
+        {
+            return JSONNode.Parse(dataReader.GetString(0));
+        }
+        else
+        {
+            return null;
+        }
     }
 }

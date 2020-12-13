@@ -78,8 +78,8 @@ namespace Data
         /// </summary>
         public float tenChangeToPower;
 
-        //技能目标:{1,2,3}
-        public JSONArray targetTeamLocs;
+        //施法距离
+        public int distance;
 
         public string tip;
 
@@ -95,8 +95,8 @@ namespace Data
             icon = reader.GetString(2);
             logic = (ESkillLogic)Enum.Parse(typeof(ESkillLogic), reader.GetString(3));
             targetType = (ESkillTarget)Enum.Parse(typeof(ESkillTarget), reader.GetString(4));
-            dmg = reader.GetInt16(5);
-            dmgFire = reader.GetInt16(6);
+            dmg = reader.GetInt16(5) / 100f;
+            dmgFire = reader.GetInt16(6) / 100f;
             dmgTenacity = reader.GetInt16(7);
             targetCount = reader.GetInt16(8);
             timePower = reader.GetFloat(9);
@@ -105,11 +105,7 @@ namespace Data
             cost = reader.GetInt16(12);
             tenChangeTo = reader.GetFloat(13);
             tenChangeToPower = reader.GetFloat(14);
-            var strTtargetTeamLoc = reader.GetString(15);
-            if (!strTtargetTeamLoc.Equals("0"))
-            {
-                targetTeamLocs = JSONNode.Parse(strTtargetTeamLoc).AsArray;
-            }
+            distance = reader.GetInt16(15);
            
             tip = reader.GetString(16);
             tlAsset = reader.IsDBNull(17) ? "" : reader.GetString(17);

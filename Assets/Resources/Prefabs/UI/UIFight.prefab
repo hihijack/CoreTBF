@@ -366,7 +366,7 @@ MonoBehaviour:
   imageProg: {fileID: 3732178987507360434}
   itemRoot: {fileID: 3732178987289233254}
   txtStage: {fileID: 3732178986090063780}
-  timeMax: 5
+  timeMax: 3
   spaceSize: 82
   heightOffset: 86
   timeTip: {fileID: 3732178986213222384}

@@ -13,8 +13,14 @@ namespace DefaultNamespace
         {
             base.RealAct();
             caster.State = ECharacterState.Def;
-            //增加护盾
-            //caster.propData.ChangeShield(1);
+            //韧性改变至指定百分比;0不改变
+            if (skill.tenChangeTo > 0)
+            {
+                caster.propData.SetTenacityPercent(skill.tenChangeTo);
+            }
+
+            UIHPRoot.Inst.RefreshTarget(caster);
+            caster.mTimeStiff = skill.backswing;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using DefaultNamespace;
+using SimpleJSON;
+using Sirenix.OdinInspector;
 using System.Data;
 using System.Text;
 using UnityEngine;
@@ -31,6 +33,8 @@ namespace Data
         /// </summary>
         public float tenClearStiff;
 
+        public int[] aiSkillIndexs;
+
         public RoleBaseData(IDataReader reader)
         {
             ID = reader.GetInt16(0);
@@ -54,6 +58,17 @@ namespace Data
             skills[2] = reader.GetInt16(17);
             skills[3] = reader.GetInt16(18);
             skills[4] = reader.GetInt16(19);
+
+            if (!reader.IsDBNull(20))
+            {
+                JSONNode aiData = JSONNode.Parse(reader.GetString(20));
+                int count = aiData.Count;
+                aiSkillIndexs = new int[count];
+                for (int i = 0; i < count; i++)
+                {
+                    aiSkillIndexs[i] = aiData[i].AsInt;
+                }
+            }
         }
 
         public string GetPropDesc()

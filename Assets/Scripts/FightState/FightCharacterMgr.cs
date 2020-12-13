@@ -222,6 +222,23 @@ public class FightCharacterMgr
     }
 
     /// <summary>
+    /// 查找正在蓄力的角色
+    /// </summary>
+    /// <param name="camp"></param>
+    /// <returns></returns>
+    public Character FindThatIsPowering(ECamp camp) 
+    {
+        foreach (var character in lstCharacters)
+        {
+            if (character.camp == camp && character.IsAlive() && character.State == ECharacterState.Power)
+            {
+                return character;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
     /// 取随机N个敌方
     /// </summary>
     /// <param name="count"></param>

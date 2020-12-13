@@ -668,7 +668,7 @@ MonoBehaviour:
   txtStiffTime: {fileID: 1964970255}
   txtHatred: {fileID: 1667288314}
   imgState: {fileID: 1943804348244331017}
-  rtPointer: {fileID: 1121058174939630133}
+  imgPointer: {fileID: 4080789132430464923}
   goShield: {fileID: 4703578777594858564}
   txtShield: {fileID: 3199361492067450884}
 --- !u!1 &6465207266385574645

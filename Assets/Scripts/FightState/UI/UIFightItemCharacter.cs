@@ -11,14 +11,14 @@ namespace UI
         public Text txtStiffTime;
         public Text txtHatred;
         public Image imgState;
-        public RectTransform rtPointer;
+        public Image imgPointer;
         public Character character;
 
         public GameObject goShield;
         public Text txtShield;
-
         //原指针高度
         float oriPointerHeight;
+        RectTransform rtPointer;
 
         UIImageEx _imgExHeadIcon;
 
@@ -29,6 +29,7 @@ namespace UI
 
         void Start()
         {
+            rtPointer = imgPointer.rectTransform;
             oriPointerHeight = rtPointer.sizeDelta.y;
         }
 
@@ -37,6 +38,14 @@ namespace UI
             this.character = character;
             var sprite = Resources.Load<Sprite>($"Sprites/{character.roleData.headicon}");
             headIcon.sprite = sprite;
+            if (character.camp == ECamp.Enemy)
+            {
+                imgPointer.color = Color.red;
+            }
+            else
+            {
+                imgPointer.color = Color.yellow;
+            }
         }
 
         private void Update()

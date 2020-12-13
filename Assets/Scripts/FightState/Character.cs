@@ -332,7 +332,7 @@ namespace DefaultNamespace
                 dmg = 0;
             }
 
-            //防御抵挡伤害
+            //TODO 防御抵挡伤害
             if (target.State == ECharacterState.Def)
             {
                 dmg = 0;
@@ -387,16 +387,28 @@ namespace DefaultNamespace
             //死亡处理
             if (propData.hp <= 0)
             {
-                if (State != ECharacterState.Dying && State != ECharacterState.Dead)
+                if (camp == ECamp.Ally)
                 {
-                    //进入濒死
-                    ToDying();
+                    if (State != ECharacterState.Dying && State != ECharacterState.Dead)
+                    {
+                        //进入濒死
+                        ToDying();
+                    }
+                    else if (State == ECharacterState.Dying)
+                    {
+                        //完全死亡
+                        ToDead();
+                    }
                 }
-                else if (State == ECharacterState.Dying)
+                else if (camp == ECamp.Enemy)
                 {
-                    //完全死亡
-                    ToDead();
+                    if (State != ECharacterState.Dead)
+                    {
+                        //进入濒死
+                        ToDead();
+                    }
                 }
+                
             }
         }
 
@@ -457,7 +469,7 @@ namespace DefaultNamespace
 
             //添加BREAK BUFF
             //TODO 韧性清空BREAK持续时间
-            AddABuff(2, 2, null);
+            AddABuff(2, 0, null);
             //propData.RecoverTenacity();
             UIHPRoot.Inst.RefreshTarget(this);
         }

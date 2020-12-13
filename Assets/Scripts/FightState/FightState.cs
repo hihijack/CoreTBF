@@ -204,7 +204,10 @@ public class FightState : GameStateBase
         }
 
         lstActionData.Add(action);
-        UIFightActionRoot.Inst.MarkSelectedLstChanged();
+        if (UIFightActionRoot.Inst != null)
+        {
+            UIFightActionRoot.Inst.MarkSelectedLstChanged();
+        }
     }
 
 
@@ -401,7 +404,12 @@ public class FightState : GameStateBase
         {
             characterMgr.AddCharacter(item.roleData.ID, ECamp.Ally);
         }
-        characterMgr.AddCharacter(4, ECamp.Enemy);
+
+        var lstEnemy = WorldRaidData.Inst.GetEnemyLst();
+        foreach (var enemyID in lstEnemy)
+        {
+            characterMgr.AddCharacter(enemyID, ECamp.Enemy);
+        }
 
         InitFightStages();
 

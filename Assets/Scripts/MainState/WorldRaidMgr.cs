@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SimpleJSON;
 using UI;
+using UnityEngine;
 
 public class WorldRaidMgr : Singleton<WorldRaidMgr>
 {
@@ -71,6 +72,40 @@ public class WorldRaidMgr : Singleton<WorldRaidMgr>
 
     private void OnEventFight(EventBaseData eventBaseData, JSONNode data)
     {
+        WorldRaidData.Inst.ClearEnemy();
+        JSONNode dataEnemys = data["enemys"];
+        int count = dataEnemys.Count;
+        for (int i = 0; i < count; i++)
+        {
+            JSONNode dataEnemy = dataEnemys[i];
+            if (dataEnemy["id"] != null)
+            {
+                WorldRaidData.Inst.AddEnemy(dataEnemy["id"].AsInt);
+            }
+            else if (dataEnemy["group"] != null)
+            {
+                JSONNode dataGroup = GameData.Inst.GetSimpleData(GameData.Inst.TABLE_ROLEGROUP, dataEnemy["group"].AsInt);
+                int countEnemy = dataGroup.Count;
+                for (int j = 0; j < countEnemy; j++)
+                {
+                    int enemyID = dataGroup[j].AsInt;
+                    WorldRaidData.Inst.AddEnemy(enemyID);
+                }
+            }
+            else if (dataEnemy["rangroup"] != null)
+            {
+                JSONNode dataRanGroup = dataEnemy["rangroup"];
+                int ranGroupID = dataRanGroup[UnityEngine.Random.Range(0, dataRanGroup.Count)].AsInt;
+                JSONNode dataGroup = GameData.Inst.GetSimpleData(GameData.Inst.TABLE_ROLEGROUP, ranGroupID);
+                int countEnemy = dataGroup.Count;
+                for (int j = 0; j < countEnemy; j++)
+                {
+                    int enemyID = dataGroup[j].AsInt;
+                    WorldRaidData.Inst.AddEnemy(enemyID);
+                }
+            }
+
+        }
         GameMgr.Inst.ToState(EGameState.Fight);
     }
 

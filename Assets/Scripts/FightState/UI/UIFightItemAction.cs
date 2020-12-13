@@ -71,7 +71,15 @@ namespace UI
             //        sb.AppendLine("<color=red>>>将引起仇恨<<</color>");
             //    }
             //}
-            
+            if (_skillData.distance == 1)
+            {
+                sb.AppendLine($"<color=yellow>近距离</color>");
+            }
+            else if (_skillData.distance > 1)
+            {
+                sb.AppendLine($"<color=yellow>远距离</color>");
+            }
+
             if (_skillData.cost > 0)
             {
                 sb.AppendLine($"<color=cyan>消耗:{_skillData.cost / UIHPRoot.MPPerPoint}格</color>");

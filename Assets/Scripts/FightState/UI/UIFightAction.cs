@@ -79,6 +79,10 @@ namespace UI
             //action列表
             foreach (var skillData in _character.lstSkillData)
             {
+                if (skillData == null)
+                {
+                    continue;
+                }
                 var uiItem = GameUtil.PopOrInst(pfbItemAction);
                 uiItem.transform.SetParent(gridItemAction.transform, false);
                 var itemAction = uiItem.GetComponent<UIFightItemAction>();
@@ -132,10 +136,10 @@ namespace UI
             bool needShowTargetSelectUI = true;
 
             var skillData = uiItemAction.GetData();
-            if (skillData.targetCount > 1 || skillData.targetType == ESkillTarget.Self)
+            if (skillData.targetType == ESkillTarget.Self)
             {
                 //不需要选择目标
-                //AOE不需要;对自身释放不需要
+                //对自身释放不需要
                 needShowTargetSelectUI = false;
             }
 
