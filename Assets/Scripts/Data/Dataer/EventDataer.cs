@@ -79,15 +79,17 @@ public class EventDataer : Singleton<EventDataer>
         _dic.Clear();
     }
 
-    public void UpdateToDB(EventBaseData data, bool isNewAdd)
+    public bool UpdateToDB(EventBaseData data, bool isNewAdd)
     {
+        int result = 0;
         if (isNewAdd)
         {
-            GameData.Inst.Execute($"instert into {GameData.Inst.TABLE_EVENTS} values({data.GetValuesStr()})");
+            result = GameData.Inst.Execute($"insert into {GameData.Inst.TABLE_EVENTS} values({data.GetValuesStr()})");
         }
         else
         {
-            GameData.Inst.Execute($"update {GameData.Inst.TABLE_EVENTS} set {data.GetKeyValueStr()} where id = {data.ID}");
+            result = GameData.Inst.Execute($"update {GameData.Inst.TABLE_EVENTS} set {data.GetKeyValueStr()} where id = '{data.ID}'");
         }
+        return result > 0;
     }
 }

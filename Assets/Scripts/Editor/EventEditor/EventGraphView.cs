@@ -74,6 +74,6 @@ public class EventGraphView : GraphView
     /// <param name="obj"></param>
     private void OnCreateNode(DropdownMenuAction action)
     {
-        EditorWinEventEditor.Inst.OnCreatNode(action);
+        EditorWinEventEditor.Inst.CreateNode(action);
     }
 }

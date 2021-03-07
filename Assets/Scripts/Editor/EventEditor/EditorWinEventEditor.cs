@@ -43,6 +43,8 @@ public class EditorWinEventEditor : EditorWindow
 
     Vector2 _posCacheToAddPerset;
 
+    bool _saveDirty;//保存脏标记
+
     [MenuItem("Tools/事件编辑器")]
     static void ShowWin()
     {
@@ -73,6 +75,11 @@ public class EditorWinEventEditor : EditorWindow
         }
     }
 
+    public void MarkSaveDiry(bool isDirty)
+    {
+        _saveDirty = isDirty;
+    }
+
     private void InitUI()
     {
         string uxmlPath = "Assets/Scripts/Editor/EventEditor/winEventEditor.uxml";
@@ -94,6 +101,9 @@ public class EditorWinEventEditor : EditorWindow
 
         var btnSave = rootVisualElement.Q<Button>("save");
         btnSave.RegisterCallback<MouseCaptureEvent>(OnBtnSave);
+
+        var btnAdd = rootVisualElement.Q<Button>("add");
+        btnAdd.RegisterCallback<MouseCaptureEvent>(OnBtnAdd);
 
         RefreshNodeInfo();
 
@@ -234,12 +244,35 @@ public class EditorWinEventEditor : EditorWindow
     /// <param name="evt"></param>
     private void OnBtnSave(MouseCaptureEvent evt)
     {
+        bool success = true;
         foreach (var nodeView in _dicNodeViewMap.Values)
         {
             nodeView.UpdateData();
-            EventDataer.Inst.UpdateToDB(nodeView.GetData(), nodeView.isNewAdded);
+            if(!EventDataer.Inst.UpdateToDB(nodeView.GetData(), nodeView.isNewAdded))
+            {
+                success = false;
+                break;
+            }
         }
 
+        if (success)
+        {
+            EditorUtility.DisplayDialog("保存事件", "保存成功", "确定");
+        }
+        else
+        {
+            EditorUtility.DisplayDialog("保存事件", "保存成功", "确定");
+        }
+    }
+
+    /// <summary>
+    /// 新增
+    /// </summary>
+    /// <param name="evt"></param>
+    private void OnBtnAdd(MouseCaptureEvent evt)
+    {
+        ClearGraph();
+        CreateNode(null);
     }
 
     private void OnBtnOpen(MouseCaptureEvent evt)
@@ -252,13 +285,19 @@ public class EditorWinEventEditor : EditorWindow
     /// <summary>
     /// 创建新节点
     /// </summary>
-    internal void OnCreatNode(DropdownMenuAction actionObj)
+    internal void CreateNode(DropdownMenuAction actionObj)
     {
         var eventDataNew = EventDataer.Inst.NewData();
         var nodeView = _graphView.AddNodeView(eventDataNew);
         nodeView.isNewAdded = true;
         _dicNodeViewMap.Add(eventDataNew.ID, nodeView);
-        nodeView.SetPosition(nodeView.GetPosition().SetPosition(actionObj.eventInfo.localMousePosition));
+
+        Vector2 pos = new Vector2(50, 100);
+        if (actionObj != null)
+        {
+            pos = actionObj.eventInfo.localMousePosition;
+        }
+        nodeView.SetPosition(nodeView.GetPosition().SetPosition(pos));
     }
 
     /// <summary>
@@ -287,14 +326,7 @@ public class EditorWinEventEditor : EditorWindow
     {
         Debug.Log("打开事件:" + data.desc);
 
-        //_graphView.Clear();
-        //删除node
-        var children = _graphView.nodes.ToList();
-        _graphView.DeleteElements(children);
-        //删除连线
-        var edges = _graphView.edges.ToList();
-        _graphView.DeleteElements(edges);
-        _dicNodeViewMap.Clear();
+        ClearGraph();
         //初始化树
         Tree<EventBaseData> tree = new Tree<EventBaseData>(new TreeNode<EventBaseData>(data));
         AddChildForTreeNode(tree.root);
@@ -304,6 +336,17 @@ public class EditorWinEventEditor : EditorWindow
         _frameRefresh = Time.renderedFrameCount;
         //连接线
         GenConnectEdges();
+    }
+
+    void ClearGraph()
+    {
+        //删除node
+        var children = _graphView.nodes.ToList();
+        _graphView.DeleteElements(children);
+        //删除连线
+        var edges = _graphView.edges.ToList();
+        _graphView.DeleteElements(edges);
+        _dicNodeViewMap.Clear();
     }
 
     private void GenConnectEdges()
@@ -474,12 +517,6 @@ public class EditorWinEventEditor : EditorWindow
             AddChildForTreeNode(child);
         }
     }
-
-    private void OnBtnAdd()
-    {
-        throw new NotImplementedException();
-    }
-
 
     void InitData() 
     {

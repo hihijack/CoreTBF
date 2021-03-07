@@ -99,7 +99,7 @@ public class EventBaseData
         sb.Append($"desc='{desc}',");
         sb.Append($"options='{GetOptionStr()}',");
         sb.Append($"childs='{GetChildStr()}',");
-        sb.Append($"events='{jsonEvents.ToString()}',");
+        sb.Append($"events='{GetJsonEventStr()}',");
         sb.Append($"isroot={(isRoot ? 1 : 0)}" + ",");
         sb.Append($"level={level},");
         sb.Append($"enableRepetInArea={(enableRepetInArea ? 1 : 0) },");
@@ -116,13 +116,18 @@ public class EventBaseData
         sb.Append($"'{desc}',");
         sb.Append($"'{GetOptionStr() }',");
         sb.Append($"'{GetChildStr()}',");
-        sb.Append($"'{jsonEvents.ToString()}',");
+        sb.Append($"'{GetJsonEventStr()}',");
         sb.Append((isRoot ? 1 : 0)  + ",");
         sb.Append(level + ",");
         sb.Append((enableRepetInArea ? 1 : 0) + ",");
         sb.Append((enableRepsetInWorld ? 1 : 0) + ",");
         sb.Append((preset ? 1 : 0));
         return sb.ToString();
+    }
+
+    private string GetJsonEventStr()
+    {
+        return jsonEvents != null ? jsonEvents.ToString() : "";
     }
 
     private string GetChildStr()
