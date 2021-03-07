@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class WorldRaidData : Singleton<WorldRaidData>
 {
@@ -16,6 +18,16 @@ public class WorldRaidData : Singleton<WorldRaidData>
     public int curPointIndex;//当前所在位置索引
 
     int cachedOption = -1;
+
+    public int worldLevel; //世界强度
+
+    List<int> lstAreaVisited = new List<int>(); //到达过的区域
+
+    List<string> lstEventVisitedInWorld = new List<string>();//遭遇过的事件
+
+    List<string> lstEnentVisitedInCurArea = new List<string>();//本区域遭遇过的事件
+
+    AreaBaseData mCurArea;
 
     public WorldRaidData()
     {
@@ -93,32 +105,44 @@ public class WorldRaidData : Singleton<WorldRaidData>
         return eventTreeHalder;
     }
 
-    public void CreateWorldGraphData(int nodeCount)
+    /// <summary>
+    /// 为一个区域生成节点
+    /// </summary>
+    /// <param name="area"></param>
+    public void CreateWorldGraphData(AreaBaseData area)
     {
+        int nodeCount = UnityEngine.Random.Range(area.minNodeCount, area.maxNodeCount);
         Node<WorldGraphNode>[] nodes = new Node<WorldGraphNode>[nodeCount];
         int indexEnd = nodes.Length - 1;
 
-        for (int i = 0; i < nodes.Length; i++)
+        EventBaseData[] eventDatas = GenEventDatasForArea(nodeCount - 1, area);
+
+        for (int i = 0; i < nodeCount - 1; i++)
         {
-            if (i == indexEnd)
-            {
-                //终点
-                nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.Get(GameCfg.ID_NEXT_AREA))));
-            }else
-            {
-                nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.GetARandomRootEvent())));
-            }
+            //if (i == indexEnd)
+            //{
+            //    //终点
+            //    nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.Get(GameCfg.ID_NEXT_AREA))));
+            //}else
+            //{
+            //    //设置节点事件
+            //    nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.GetARandomRootEvent())));
+            //}
+
+            nodes[i] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(eventDatas[i])));
+
 
             if (i == 0)
             {
                 //第一个点是可达的
                 nodes[i].Data.arrivable = true;
             }
-
         }
 
+        //设置终点
+        nodes[nodeCount - 1] = new Node<WorldGraphNode>(new WorldGraphNode(GenEventTreeHandler(EventDataer.Inst.Get(GameCfg.ID_NEXT_AREA.ToString()))));
+
         graph = new GraphAdjList<WorldGraphNode>(nodes);
-        
 
         for (int i = 0; i < nodes.Length; i++)
         {
@@ -145,18 +169,110 @@ public class WorldRaidData : Singleton<WorldRaidData>
         }
     }
 
-    public EventBaseData GetEventBaseData()
+    public List<string> GetEventLstVisitedInWorld() 
     {
-        return EventDataer.Inst.Get(1);
+        return lstEventVisitedInWorld;
     }
 
-    internal void Init(int[] roles)
+    public List<string> GetEventLstVisitedInArea()
+    {
+        return lstEnentVisitedInCurArea;
+    }
+
+    /// <summary>
+    /// 生成区域的所有事件
+    /// </summary>
+    /// <returns></returns>
+    private EventBaseData[] GenEventDatasForArea(int nodeCount, AreaBaseData areaData)
+    {
+        //TODO 生成区域的所有事件
+        EventFilter filterDef = new EventFilterInTypeAndLevel(100, "Enemy", areaData.level);
+        EventBaseData[] evenets = new EventBaseData[nodeCount];
+        var filters = areaData.GetEventFilters();
+        if (areaData.mode == EEventFilterMode.ALL_APPLY)
+        {
+            //所有节点都应用第一个过滤器
+            var filter = filters[0];
+            for (int i = 0; i < nodeCount; i++)
+            {
+                EventBaseData eventData = null;
+                if (filter.CheckOdds())
+                {
+                    //过滤器生效
+                    eventData = filter.GetData();
+                }
+
+                if (eventData == null)
+                {
+                    //使用默认过滤
+                    eventData = filterDef.GetData();
+                }
+                if (eventData != null)
+                {
+                    evenets[i] = eventData;
+                    lstEnentVisitedInCurArea.Add(eventData.ID);
+                    lstEventVisitedInWorld.Add(eventData.ID);
+                }
+                else
+                {
+                    Debug.LogError("非法的事件生成");
+                }
+            }
+        }
+        else if (areaData.mode == EEventFilterMode.IN_ORDER)
+        {
+            //依顺序应用，然后打乱顺序
+            List<EventBaseData> lst = new List<EventBaseData>();
+            for (int i = 0; i < nodeCount; i++) 
+            {
+                EventFilter filter = null;
+                if (i < filters.Length)
+                {
+                    filter = filters[i];
+                }
+                if (filter == null || !filter.CheckOdds())
+                {
+                    filter = filterDef;
+                }
+                var eventData = filter.GetData();
+                if (eventData != null)
+                {
+                    lst.Add(eventData);
+                    lstEnentVisitedInCurArea.Add(eventData.ID);
+                    lstEventVisitedInWorld.Add(eventData.ID);
+                }
+                else
+                {
+                    Debug.LogError("非法的事件生成");
+                }
+            }
+            //打乱顺序
+            var lstNew = GameUtil.RandomSortList(lst);
+            evenets = lstNew.ToArray();
+        }
+        return evenets;
+    }
+
+    public EventBaseData GetEventBaseData()
+    {
+        return EventDataer.Inst.Get("1");
+    }
+
+    internal void Init(int[] roles, int worldLevel)
     {
         InitCharacterData(roles);
         this.layer = 1;
         this.maxLayer = 10;
         curPointIndex = -1;
-        CreateANewLayerMap();
+        this.worldLevel = worldLevel;
+        GenANewAreaData();
+    }
+
+    public void Clear() 
+    {
+        lstAreaVisited.Clear();
+        lstEnentVisitedInCurArea.Clear();
+        lstEventVisitedInWorld.Clear();
     }
 
     /// <summary>
@@ -165,6 +281,7 @@ public class WorldRaidData : Singleton<WorldRaidData>
     public void ResetOnIntoAArea()
     {
         curPointIndex = -1;
+        lstEnentVisitedInCurArea.Clear();
     }
 
     /// <summary>
@@ -262,9 +379,38 @@ public class WorldRaidData : Singleton<WorldRaidData>
         }  
     }
 
-    public void CreateANewLayerMap()
+    /// <summary>
+    /// 生成新的区域数据
+    /// </summary>
+    public void GenANewAreaData()
     {
-        CreateWorldGraphData(UnityEngine.Random.Range(3,8));
+        var areaLevel = CalNextAreaLevel();
+        var areaData = GetNextAreaData(areaLevel, lstAreaVisited);
+        CreateWorldGraphData(areaData);
+        mCurArea = areaData;
+        lstAreaVisited.Add(areaData.ID);
+    }
+
+
+
+    /// <summary>
+    /// 筛选下一个区域
+    /// </summary>
+    /// <param name="areaLevel"></param>
+    /// <returns></returns>
+    private AreaBaseData GetNextAreaData(int areaLevel, List<int> lstExclude)
+    {
+        return AreaDataer.Inst.GetARandomAreaByLevelAndExclude(areaLevel, lstExclude);        
+    }
+
+    /// <summary>
+    /// 计算区域等级
+    /// </summary>
+    /// <returns></returns>
+    public int CalNextAreaLevel()
+    {
+        //TODO 区域等级==世界等级
+        return worldLevel;
     }
 
     internal void FightWin()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using DefaultNamespace;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -133,4 +134,57 @@ public static class GameUtil
 		return set;
     }
 
+    /// <summary>
+    /// 列表转成a,b,c 字符串
+    /// </summary>
+    /// <param name="lst"></param>
+    /// <returns></returns>
+    public static string GetStringLst(List<int> lst) 
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lst.Count; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(",");
+            }
+            sb.Append(lst[i]);
+        }
+        return sb.ToString();
+    }
+
+
+    /// <summary>
+    /// 列表转成a,b,c 字符串
+    /// </summary>
+    /// <param name="lst"></param>
+    /// <returns></returns>
+    public static string GetStringLst(List<string> lst)
+    {
+        if (lst == null)
+        {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lst.Count; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(",");
+            }
+            sb.Append(lst[i]);
+        }
+        return sb.ToString();
+    }
+
+    public static List<T> RandomSortList<T>(List<T> ListT)
+    {
+        System.Random random = new System.Random();
+        List<T> newList = new List<T>();
+        foreach (T item in ListT)
+        {
+            newList.Insert(random.Next(newList.Count + 1), item);
+        }
+        return newList;
+    }
 }

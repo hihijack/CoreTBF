@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public class EventDataer : Singleton<EventDataer>
 {
-    readonly Dictionary<int, EventBaseData> _dic = new Dictionary<int, EventBaseData>();
+    readonly Dictionary<string, EventBaseData> _dic = new Dictionary<string, EventBaseData>();
 
-    public EventBaseData Get(int id)
+    public EventBaseData Get(string id)
     {
         if (_dic.ContainsKey(id))
         {
@@ -32,23 +32,62 @@ public class EventDataer : Singleton<EventDataer>
     {
         var reader =  GameData.Inst.ExecuteQuery($"SELECT * FROM {GameData.Inst.TABLE_EVENTS} where isroot and level > 0 ORDER BY RANDOM() limit 1");
         if (reader.Read())
-            {
-                var eventData = new EventBaseData(reader);
-                GameData.Inst.EndQuery();
-                TryCache(eventData);
-                return eventData;
-            }
-            else
-            {
-                return null;
-            }
+        {
+            var eventData = new EventBaseData(reader);
+            GameData.Inst.EndQuery();
+            TryCache(eventData);
+            return eventData;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private void TryCache(EventBaseData eventData)
     {
        if (!_dic.ContainsKey(eventData.ID))
        {
+            UnityEngine.Debug.Log("add event:" + eventData.desc);
            _dic.Add(eventData.ID, eventData);
        }
+    }
+
+    public void InitAllEventData() 
+    {
+        var reader = GameData.Inst.ExecuteQuery($"select * from {GameData.Inst.TABLE_EVENTS}");
+        while (reader.Read())
+        {
+            var eventData = new EventBaseData(reader);
+            TryCache(eventData);
+        }
+        GameData.Inst.EndQuery();
+    }
+
+    public Dictionary<string, EventBaseData> GetDic()
+    {
+        return _dic;
+    }
+
+    public EventBaseData NewData()
+    {
+        return EventBaseData.Gen();
+    }
+
+    public void Release() 
+    {
+        _dic.Clear();
+    }
+
+    public void UpdateToDB(EventBaseData data, bool isNewAdd)
+    {
+        if (isNewAdd)
+        {
+            GameData.Inst.Execute($"instert into {GameData.Inst.TABLE_EVENTS} values({data.GetValuesStr()})");
+        }
+        else
+        {
+            GameData.Inst.Execute($"update {GameData.Inst.TABLE_EVENTS} set {data.GetKeyValueStr()} where id = {data.ID}");
+        }
     }
 }

@@ -14,6 +14,7 @@ public class GameData : Singleton<GameData>
     public readonly string TABLE_ITEMS = "items";
     public readonly string TABLE_EVENTOPTIONS = "eventopions";
     public readonly string TABLE_ROLEGROUP = "rolegroup";
+    public readonly string TABAL_AREA = "area";
 
     readonly string _sqlDBLocation = "URI=file:coretbf.db";
 
@@ -43,11 +44,13 @@ public class GameData : Singleton<GameData>
         if (_connection != null && _connection.State != ConnectionState.Closed)
             _connection.Close();
         _connection = null;
+
+        EventDataer.Inst.Release();
     }
 
     public IDataReader ExecuteQuery(string cmd)
     {
-        Debug.Log("ExecuteQuery:" + cmd);//#########
+        Debug.Log("DB>>ExecuteQuery:" + cmd);//#########
 
         _connection.Open();
         _command.CommandText = cmd;
@@ -55,7 +58,38 @@ public class GameData : Singleton<GameData>
         return _reader;
     }
 
+   public int Execute(string cmd)
+    {
+        Debug.Log("DB>>Execute:" + cmd);//#########
+
+        _connection.Open();
+        _command.CommandText = cmd;
+        int r = _command.ExecuteNonQuery();
+
+        Debug.Log("DB>>Result:" + r);
+        
+        return r;
+    }
+
+    public void SetConnect(bool connect)
+    {
+        if (connect && _connection.State == ConnectionState.Closed)
+        {
+            _connection.Open();
+        }
+
+        if (!connect && _connection.State == ConnectionState.Open)
+        {
+            _connection.Close();
+        }
+    }
+
     public IDataReader ExecuteQueryWithID(string table, int id)
+    {
+        return ExecuteQuery($"select * from '{table}' where id = {id}");
+    }
+
+    public IDataReader ExecuteQueryWithID(string table, string id)
     {
         return ExecuteQuery($"select * from '{table}' where id = {id}");
     }

@@ -1,0 +1,45 @@
+Button 
+{
+    font-size: 20px;
+    width:100px;
+    height:30;
+    margin:5;
+}
+Box.toolbar
+{
+    flex-direction: row;
+    min-height:38.56px;
+}
+
+ItemPortInfo.protListBox
+{
+    flex-direction: row;
+    min-height:38.56px;
+}
+
+Box.contenview
+{
+    flex-direction:row;
+    height: 900px;
+}
+
+#graphview
+{
+    width:1000px;
+}
+
+#inspector
+{
+    width:600px;
+    font-size:20px;
+}
+
+#portsListView
+{
+    height:600;
+}
+
+TextField.textarea
+{
+    white-space:normal;
+}

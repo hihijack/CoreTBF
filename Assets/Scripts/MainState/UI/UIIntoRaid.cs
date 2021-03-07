@@ -117,7 +117,7 @@ public class UIIntoRaid : UIBase
         GameMgr.Inst.MainState.curInWorld = EWorld.OtherWorld;
         //往玩家物品添加30个食物
         PlayerDataMgr.Inst.PlayerData.ChangeItem(2, 30);
-        WorldRaidData.Inst.Init(roles);
+        WorldRaidData.Inst.Init(roles, 1);
         WorldRaidMgr.Inst.Init();
         UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldTree);
         UIMgr.Inst.ShowUI(UITable.EUITable.UIWorldInfo);

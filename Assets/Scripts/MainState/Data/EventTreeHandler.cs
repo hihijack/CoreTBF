@@ -58,14 +58,14 @@ public class EventTreeHandler
     /// <param name="treeNode"></param>
     void AddChildForTreeNode(TreeNode<EventBaseData> treeNode)
     {
-        if (treeNode.Data.jsonChilds == null || treeNode.Data.jsonChilds.Count == 0)
+        if (treeNode.Data.lstChildID == null || treeNode.Data.lstChildID.Count == 0)
         {
             return;
         }
 
-        for (int i = 0; i < treeNode.Data.jsonChilds.Count; i++)
+        for (int i = 0; i < treeNode.Data.lstChildID.Count; i++)
         {
-            int childId = treeNode.Data.jsonChilds[i].AsInt;
+            string childId = treeNode.Data.lstChildID[i];
             treeNode.AddChild(new TreeNode<EventBaseData>(EventDataer.Inst.Get(childId)));
         }
         foreach (var child in treeNode.childs)

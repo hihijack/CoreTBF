@@ -56,9 +56,9 @@ public class WorldRaidMgr : Singleton<WorldRaidMgr>
         if (WorldRaidData.Inst.layer < WorldRaidData.Inst.maxLayer)
         {
             WorldRaidData.Inst.ResetOnIntoAArea();
-            WorldRaidData.Inst.CreateANewLayerMap();
-            UIWorldTree.Inst.Refresh();
             WorldRaidData.Inst.layer++;
+            WorldRaidData.Inst.GenANewAreaData();
+            UIWorldTree.Inst.Refresh();
             Event.Inst.Fire(Event.EEvent.RAID_LAYER_CHANGE, null);
         }
     }

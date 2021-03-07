@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+    xsi:schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd">
+  <Box class="toolbar">
+      <Button name="open" text="打开"/>
+      <Button name="add" text="新增" />
+    <Button name="save" text="保存" />
+  </Box>
+  <Box class="contenview">
+    <Box name="graphview">
+
+    </Box>
+    <Box name="inspector">
+      <Label name ="txtEventID" text="ID:0AFD"/>
+      <Toggle label="预设" name="isPresetEvent"/>
+      <uie:EnumField label="事件类型" name="txtEventType"/>
+      <TextField label="事件" class="textarea" name="txtEventEvent" multiline="true"/>
+      <Toggle label="根节点" name="isEventRoot"/>
+      <uie:IntegerField label="等级" name = "txtLevel"/>
+      <Toggle label="允许区域内重复" name="isEnableRepetInArea"/>
+      <Toggle label="允许世界重复" name="isEnableRepetInWorld"/>
+      <TextField label="描述" class="textarea" name="txtEventDesc" multiline="true" whiteSpace ="Normal"/>
+      <Label text="选项列表:"/>
+      <Button name="addPort" text="新增"/>
+      <Box name = "portsBox"/>
+    </Box>
+  </Box>
+
+</UXML>

@@ -49,9 +49,9 @@ public class UIWorldEvent : UIBase
 
     private void AddOptions()
     {
-        for (int i = 0; i < eventBaseData.jsonOptions.Count; i++)
+        for (int i = 0; i < eventBaseData.lstOptions.Count; i++)
         {
-            var strOption = eventBaseData.jsonOptions[i].ToString();
+            var strOption = eventBaseData.lstOptions[i];
             var uiItemOption = UIItemBase.Create<UIItemWorldEventOption>(gridOptions.transform, pfbOptions);
             uiItemOption.SetData(i, strOption, OnSelectOption);
             uiItemOption.Refresh();
