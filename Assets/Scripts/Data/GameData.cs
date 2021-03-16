@@ -15,6 +15,7 @@ public class GameData : Singleton<GameData>
     public readonly string TABLE_EVENTOPTIONS = "eventopions";
     public readonly string TABLE_ROLEGROUP = "rolegroup";
     public readonly string TABAL_AREA = "area";
+    public readonly string TABLE_JOBS = "jobs";
 
     readonly string _sqlDBLocation = "URI=file:coretbf.db";
 
@@ -91,7 +92,7 @@ public class GameData : Singleton<GameData>
 
     public IDataReader ExecuteQueryWithID(string table, string id)
     {
-        return ExecuteQuery($"select * from '{table}' where id = {id}");
+        return ExecuteQuery($"select * from '{table}' where id = '{id}'");
     }
 
     public void EndQuery()

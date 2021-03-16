@@ -159,7 +159,7 @@ public static class GameUtil
     /// </summary>
     /// <param name="lst"></param>
     /// <returns></returns>
-    public static string GetStringLst(List<string> lst)
+    public static string GetStringLst(List<string> lst, string format = "")
     {
         if (lst == null)
         {
@@ -172,7 +172,14 @@ public static class GameUtil
             {
                 sb.Append(",");
             }
-            sb.Append(lst[i]);
+            if (!string.IsNullOrEmpty(format))
+            {
+                sb.Append(string.Format(format, lst[i]));
+            }
+            else
+            {
+                sb.Append(lst[i]);
+            }
         }
         return sb.ToString();
     }

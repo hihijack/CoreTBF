@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,14 +8,30 @@ public class UIItemCharacterForWorldInfo : UIItemBase
     public Text txtHP;
     public Image headIcon;
 
+    public Button btn;
+
     public Color colorDying;
     public Color colorNormal;
 
     public CharacterForRaid data;
 
-    public void Set(CharacterForRaid data)
+    Action<UIItemCharacterForWorldInfo> cbClick;
+
+    public void Set(CharacterForRaid data, Action<UIItemCharacterForWorldInfo> cbClick)
     {
         this.data = data;
+        this.cbClick = cbClick;
+    }
+
+    public override void OnAwake()
+    {
+        base.OnAwake();
+        btn.onClick.AddListener(OnBtnClick);
+    }
+
+    private void OnBtnClick()
+    {
+        cbClick?.Invoke(this);
     }
 
     public override void Refresh()

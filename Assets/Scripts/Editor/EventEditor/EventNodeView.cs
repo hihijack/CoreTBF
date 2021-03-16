@@ -39,6 +39,8 @@ public class EventNodeView : Node
     /// </summary>
     public bool isNewAdded = false;
 
+    private bool _modifyDirtyFlag = false;
+
     public EventNodeView(TreeNode<EventBaseData> treeNode) 
    {
         _eventData = treeNode.Data;
@@ -50,6 +52,16 @@ public class EventNodeView : Node
     {
         _eventData = data;
         Init();
+    }
+
+    public void MarkModifyDirtyFlag(bool modifyed)
+    {
+        _modifyDirtyFlag = modifyed;
+    }
+
+    public bool IsModifyedDirty()
+    {
+        return _modifyDirtyFlag;
     }
 
     void Init()
@@ -199,7 +211,7 @@ public class EventNodeView : Node
                 string eventID = _eventData.lstChildID[i];
                 //是否有选项
                 string optDesc = "";
-                if (_eventData.lstOptions != null)
+                if (_eventData.lstOptions != null && i < _eventData.lstOptions.Count)
                 {
                     optDesc = _eventData.lstOptions[i];
                 }

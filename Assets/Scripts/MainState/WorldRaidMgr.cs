@@ -18,10 +18,10 @@ public class WorldRaidMgr : Singleton<WorldRaidMgr>
             EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_SHOW_ITEM_GET,OnEventShowItemGet);
             EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_TO_NEXT_AREA, OnEventToNextArea);
             EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_MARK_CLEAR, OnEventMarkAsClear);
+            EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_RANDOM, OnEventRandom);
         }
         hasInit = true;
     }
-
 
     /// <summary>
     /// 当选择一个选项
@@ -44,6 +44,34 @@ public class WorldRaidMgr : Singleton<WorldRaidMgr>
         var curNode = WorldRaidData.Inst.GetCurInTreeNode();
         curNode.SetClearFlag(true);
         Event.Inst.Fire(Event.EEvent.WORLD_NODE_MARK_CLEAR, null);
+    }
+
+    /// <summary>
+    /// 随机值.根据随机结果触发选项
+    /// </summary>
+    /// <param name="arg1"></param>
+    /// <param name="arg2"></param>
+    private void OnEventRandom(EventBaseData eventBaseData, JSONNode data)
+    {
+
+        //默认命中第一个
+        int indexResult = 0;
+
+        JSONNode odds = data["odds"];
+        int ranVal = UnityEngine.Random.Range(1, 100);
+        for (int i = 0; i < odds.Count; i++)
+        {
+            var val = odds[i].AsInt;
+            if (ranVal < val)
+            {
+                //hit
+                indexResult = i;
+                break;
+            }
+        }
+
+        var curNode = WorldRaidData.Inst.GetCurInTreeNode();
+        curNode.eventTreeHandler.TriSelection(indexResult);
     }
 
     /// <summary>

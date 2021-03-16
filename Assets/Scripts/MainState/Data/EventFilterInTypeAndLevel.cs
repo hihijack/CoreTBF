@@ -20,7 +20,7 @@ public class EventFilterInTypeAndLevel : EventFilter
         //type = type and level = level and isroot 
         //and (repetInArea or id not in(lstEventsInArea) 
         //and (repetInWorld or id not in(lstEventsInWorld)))
-        var reader = GameData.Inst.ExecuteQuery($"select * from {GameData.Inst.TABLE_EVENTS} where type = '{this.type}' and level = {this.level} and isroot and (enableRepetInArea or id not in({GameUtil.GetStringLst(WorldRaidData.Inst.GetEventLstVisitedInArea())}) and (enableRepetInWorld or id not in({GameUtil.GetStringLst(WorldRaidData.Inst.GetEventLstVisitedInWorld())}))) ORDER BY RANDOM() limit 1");
+        var reader = GameData.Inst.ExecuteQuery($"select * from {GameData.Inst.TABLE_EVENTS} where type = '{this.type}' and level = {this.level} and isroot and (enableRepetInArea or id not in({GameUtil.GetStringLst(WorldRaidData.Inst.GetEventLstVisitedInArea(), "'{0}'")}) and (enableRepetInWorld or id not in({GameUtil.GetStringLst(WorldRaidData.Inst.GetEventLstVisitedInWorld(), "'{0}'")}))) ORDER BY RANDOM() limit 1");
         if (reader.Read())
         {
             return new EventBaseData(reader);

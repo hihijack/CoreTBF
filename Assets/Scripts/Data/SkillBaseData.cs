@@ -88,6 +88,11 @@ namespace Data
 
         public JSONNode data;
 
+        /// <summary>
+        /// 允许的职业ID
+        /// </summary>
+        public int[] enableJob;
+
         public SkillBaseData(IDataReader reader)
         {
             ID = reader.GetInt16(0);
@@ -111,6 +116,18 @@ namespace Data
             tlAsset = reader.IsDBNull(17) ? "" : reader.GetString(17);
             tlAssetPower = reader.IsDBNull(18) ? "" : reader.GetString(18);
             data = reader.IsDBNull(19) ? null : JSONNode.Parse(reader.GetString(19));
+
+
+            JSONNode jsonJob = reader.IsDBNull(20) ? null : JSONNode.Parse(reader.GetString(20));
+            if (jsonJob != null && jsonJob.Count > 0)
+            {
+                enableJob = new int[jsonJob.Count];
+                for (int i = 0; i < jsonJob.Count; i++)
+                {
+                    string id = jsonJob[i];
+                    enableJob[i] = int.Parse(id);
+                }
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,8 @@ public class WorldRaidData : Singleton<WorldRaidData>
     List<string> lstEnentVisitedInCurArea = new List<string>();//本区域遭遇过的事件
 
     AreaBaseData mCurArea;
+
+    List<SkillBaseData> lstSkillGetted = new List<SkillBaseData>();
 
     public WorldRaidData()
     {
@@ -63,6 +66,20 @@ public class WorldRaidData : Singleton<WorldRaidData>
     public bool HasData()
     {
         return  graph != null;
+    }
+
+    /// <summary>
+    /// 添加技能获得
+    /// </summary>
+    /// <param name="skillData"></param>
+    public void AddSkillGetted(SkillBaseData skillData)
+    {
+        lstSkillGetted.Add(skillData);
+    }
+
+    public List<SkillBaseData> GetSkillsGetted()
+    {
+        return lstSkillGetted;
     }
 
     public void InitCharacterData(int[] roleIds)
@@ -261,11 +278,20 @@ public class WorldRaidData : Singleton<WorldRaidData>
     internal void Init(int[] roles, int worldLevel)
     {
         InitCharacterData(roles);
+        InitSkillGetted();
         this.layer = 1;
         this.maxLayer = 10;
         curPointIndex = -1;
         this.worldLevel = worldLevel;
         GenANewAreaData();
+    }
+
+    /// <summary>
+    /// 初始化技能获取
+    /// </summary>
+    private void InitSkillGetted()
+    {
+
     }
 
     public void Clear() 
@@ -391,7 +417,10 @@ public class WorldRaidData : Singleton<WorldRaidData>
         lstAreaVisited.Add(areaData.ID);
     }
 
-
+    public AreaBaseData GetCurArea()
+    {
+        return mCurArea;
+    }
 
     /// <summary>
     /// 筛选下一个区域

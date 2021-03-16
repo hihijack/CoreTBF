@@ -72,45 +72,115 @@ namespace DefaultNamespace
             }
         }
 
-        public Character(int dataID)
+        public Character(CharacterForRaid charaSource)
         {
-            roleData = RoleDataer.Inst.Get(dataID);
-            // var pfb = UnityEngine.Resources.Load<GameObject>($"Prefabs/Character/{roleData.model}");
-            // if (!pfb) return;
-            // var go = Object.Instantiate(pfb);
-            var go = GoPool.Inst.PopOrInst(roleData.model, "Prefabs/Character");
-            entityCtl = GameUtil.GetOrAdd<RoleEntityCtl>(go);
-            entityCtl.Init(this);
-            entityCtl.SetSprite("idle");
+            roleData = charaSource.roleData;
+
+            InitEntity(roleData);
 
             mTimeStiff = 5 / roleData.speed;
 
             State = ECharacterState.Stiff;
-            
-            lstSkillData = new List<SkillBaseData>(4);
-            foreach (var skillID in roleData.skills)
-            {
-                var skillData = SkillDataer.Inst.Get(skillID);
-                //if (skillData.quick)
-                //{
-                //    _hasQuickSkill = true;
-                //}
-                lstSkillData.Add(skillData);  
-            }
 
+            InitSkill(charaSource.GetSkillList());
+
+            InitPropData(roleData, charaSource.propData);
+
+            lstBuffs = new List<BuffBase>(10);
+        }
+
+        public Character(int dataID)
+        {
+            roleData = RoleDataer.Inst.Get(dataID);
+
+            InitEntity(roleData);
+
+            mTimeStiff = 5 / roleData.speed;
+
+            State = ECharacterState.Stiff;
+
+            InitSkill(roleData);
+
+            InitPropData(roleData, null);
+           
+            lstBuffs = new List<BuffBase>(10);
+
+            //AI
+            ai = new AI(this);
+        }
+
+        /// <summary>
+        /// 初始化属性数据
+        /// </summary>
+        private void InitPropData(RoleBaseData roleData, PropData propDataSource)
+        {
             propData = new PropData();
             propData.MaxHP = roleData.hp;
-            propData.hp = propData.MaxHP;
+            propData.hp = propDataSource != null ? propDataSource.hp : roleData.hp;
             propData.mp = propData.maxMP;
             propData.atk = roleData.atk;
             propData.def = roleData.def;
             propData.tenacityMax = roleData.tenacity;
             propData.tenacity = propData.tenacityMax;
-           
-            //AI
-            ai = new AI(this);
+        }
 
-            lstBuffs = new List<BuffBase>(10);
+        /// <summary>
+        /// 使用静态角色数据初始化技能
+        /// </summary>
+        /// <param name="roleData"></param>
+        private void InitSkill(RoleBaseData roleData)
+        {
+            lstSkillData = new List<SkillBaseData>(8);
+            foreach (var skillID in roleData.skills)
+            {
+                var skillData = SkillDataer.Inst.Get(skillID);
+                lstSkillData.Add(skillData);
+            }
+        }
+
+        private void InitSkill(List<SkillBaseData> lstSkill)
+        {
+            lstSkillData = new List<SkillBaseData>(8);
+            foreach (var skill in lstSkill)
+            {
+                if (skill != null)
+                {
+                    lstSkillData.Add(skill);
+                }
+            }
+        }
+
+        public void InitEntity(RoleBaseData roleData)
+        {
+            var go = GoPool.Inst.PopOrInst(roleData.model, "Prefabs/Character");
+            entityCtl = GameUtil.GetOrAdd<RoleEntityCtl>(go);
+            entityCtl.Init(this);
+            entityCtl.SetSprite("idle");
+        }
+
+        /// <summary>
+        /// 设定技能
+        /// </summary>
+        /// <param name="skillIndex"></param>
+        /// <param name="skillData"></param>
+        internal void SetSkill(int skillIndex, SkillBaseData skillData)
+        {
+            lstSkillData[skillIndex] = skillData;
+        }
+
+
+        /// <summary>
+        /// 是否已装备技能
+        /// </summary>
+        /// <param name="skillData"></param>
+        /// <returns></returns>
+        internal bool IsSkillEquiped(SkillBaseData skillData)
+        {
+            if (skillData == null)
+            {
+                return false;
+            }
+            return lstSkillData.Contains(skillData);
         }
 
         /// <summary>

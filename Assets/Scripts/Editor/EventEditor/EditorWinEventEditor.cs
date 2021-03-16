@@ -247,6 +247,10 @@ public class EditorWinEventEditor : EditorWindow
         bool success = true;
         foreach (var nodeView in _dicNodeViewMap.Values)
         {
+            if (!nodeView.IsModifyedDirty())
+            {
+                continue;
+            }
             nodeView.UpdateData();
             if(!EventDataer.Inst.UpdateToDB(nodeView.GetData(), nodeView.isNewAdded))
             {
@@ -290,6 +294,7 @@ public class EditorWinEventEditor : EditorWindow
         var eventDataNew = EventDataer.Inst.NewData();
         var nodeView = _graphView.AddNodeView(eventDataNew);
         nodeView.isNewAdded = true;
+        nodeView.MarkModifyDirtyFlag(true);
         _dicNodeViewMap.Add(eventDataNew.ID, nodeView);
 
         Vector2 pos = new Vector2(50, 100);
@@ -318,6 +323,7 @@ public class EditorWinEventEditor : EditorWindow
     private void OnSelectPersetEventToAdd(EventBaseData eventData)
     {
         var nodeView = _graphView.AddNodeView(eventData);
+        nodeView.MarkModifyDirtyFlag(false);//预设不保存变动
         _dicNodeViewMap.Add(eventData.ID, nodeView);
         nodeView.SetPosition(nodeView.GetPosition().SetPosition(_posCacheToAddPerset));
     }
@@ -444,6 +450,9 @@ public class EditorWinEventEditor : EditorWindow
     {
         Debug.Log("GenNodeView:" + node.Data.desc);
         var nodeView = _graphView.AddNodeView(node);
+
+        nodeView.MarkModifyDirtyFlag(true);
+
         _dicNodeViewMap.Add(node.Data.ID, nodeView);
     }
 

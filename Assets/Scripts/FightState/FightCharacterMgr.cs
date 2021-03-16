@@ -26,6 +26,19 @@ public class FightCharacterMgr
     public Character AddCharacter(int id, ECamp camp)
     {
         var chara = new Character(id);
+        InitCharacter(chara, camp);
+        return chara;
+    }
+
+    public Character AddCharacter(CharacterForRaid charaSource) 
+    {
+        var chara = new Character(charaSource);
+        InitCharacter(chara, ECamp.Ally);
+        return chara;
+    }
+
+    void InitCharacter(Character chara, ECamp camp)
+    {
         int countOfCamp = GetCharactersCount(camp);
         chara.teamLoc = countOfCamp + 1;
         chara.camp = camp;
@@ -33,7 +46,6 @@ public class FightCharacterMgr
         chara.entityCtl.transform.position = FightState.Inst.GetPosByTeamLoc(camp, chara.teamLoc);
         chara.entityCtl.face = camp == ECamp.Ally ? 1 : -1;
         lstCharacters.Add(chara);
-        return chara;
     }
 
     public List<Character> GetCharacters()

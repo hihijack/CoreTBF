@@ -14,6 +14,11 @@ public class EventProcessor : Singleton<EventProcessor>
     /// </summary>
     public const string EVENT_MARK_CLEAR = "mark_clear";
 
+    /// <summary>
+    /// 随机
+    /// </summary>
+    public const string EVENT_RANDOM = "random";
+
     Dictionary<string, Action<EventBaseData,JSONNode>> _dicActions;
 
     public void Init()

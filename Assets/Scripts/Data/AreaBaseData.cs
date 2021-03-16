@@ -64,7 +64,7 @@ public class AreaBaseData
             EventFilter filter = null;
             if (jsonNode["id"] != null)
             {
-                filter = new EventFilterInID(jsonNode["odds"].AsInt, (jsonNode["id"].ToString()));
+                filter = new EventFilterInID(jsonNode["odds"].AsInt, (jsonNode["id"]));
             }
             else if (jsonNode["type"] != null && jsonNode["level"] != null)
             {

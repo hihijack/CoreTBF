@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
+using UI;
 
 public class UIWorldInfo : UIBase
 {
@@ -11,6 +12,7 @@ public class UIWorldInfo : UIBase
     public Text txtNumOfFood;
     public Text txtNumOfGold;
     public Text txtLayer;
+    public Text txtAreaName;
 
     List<UIItemCharacterForWorldInfo> lstUIItemCharacters;
 
@@ -55,7 +57,7 @@ public class UIWorldInfo : UIBase
         {
             var data = WorldRaidData.Inst.lstCharacters[i];
             var uiItem = UIItemBase.Create<UIItemCharacterForWorldInfo>(tfGridChraracters.transform, pfbUIItemChracter);
-            uiItem.Set(data);
+            uiItem.Set(data, OnBtnClickChara);
             uiItem.Refresh();
             lstUIItemCharacters.Add(uiItem);
         }
@@ -64,9 +66,21 @@ public class UIWorldInfo : UIBase
         RefreshLayer();
     }
 
+    /// <summary>
+    /// 点击角色
+    /// </summary>
+    /// <param name="obj"></param>
+    private void OnBtnClickChara(UIItemCharacterForWorldInfo item)
+    {
+        var uiRoleInfo = UIMgr.Inst.ShowUI(UITable.EUITable.UIRoleInfo) as UIRoleInfo;
+        uiRoleInfo.SetData(item.data);
+        uiRoleInfo.Refresh();
+    }
+
     void RefreshLayer()
     {
         txtLayer.text = $"{WorldRaidData.Inst.layer}/{WorldRaidData.Inst.maxLayer}层";
+        txtAreaName.text = WorldRaidData.Inst.GetCurArea().name;
     }
 
     public override void OnHide()

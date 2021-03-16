@@ -400,9 +400,9 @@ public class FightState : GameStateBase
     {
         unitRoot = GameObject.FindGameObjectWithTag("UnitRoot");
         characterMgr.SetUnitRoot(unitRoot);
-        foreach (var item in WorldRaidData.Inst.lstCharacters)
+        foreach (var charaForRaid in WorldRaidData.Inst.lstCharacters)
         {
-            characterMgr.AddCharacter(item.roleData.ID, ECamp.Ally);
+            characterMgr.AddCharacter(charaForRaid);
         }
 
         var lstEnemy = WorldRaidData.Inst.GetEnemyLst();
