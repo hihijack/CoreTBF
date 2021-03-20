@@ -3,6 +3,7 @@ using System.Collections;
 using Data;
 using System;
 using UnityEngine.UI;
+using UI;
 
 public class UIItemSkill : UIItemBase
 {
@@ -35,11 +36,33 @@ public class UIItemSkill : UIItemBase
     [HideInInspector]
     public bool arrivable = true;
 
+    bool isUnKnowSkill = false;//未知的技能
+
+    public override void Cache()
+    {
+        Data = null;
+        this.onHoverEnter = null;
+        this.onHoverExit = null;
+        arrivable = true;
+        selected = false;
+        showSkillName = true;
+        onClick = null;
+        skillIndex = 0;
+        isUnKnowSkill = false;
+        base.Cache();
+    }
+
     public void Init(SkillBaseData data, Action<UIItemSkill> onHoverEnter, Action<UIItemSkill> onHoverExit)
     {
         Data = data;
         this.onHoverEnter = onHoverEnter;
         this.onHoverExit = onHoverExit;
+        isUnKnowSkill = false;
+    }
+
+    public void InitAsUnknowSkill()
+    {
+        isUnKnowSkill = true;
     }
 
     public void SetCBClick(Action<UIItemSkill> onClick)
@@ -47,35 +70,50 @@ public class UIItemSkill : UIItemBase
         this.onClick = onClick;
     }
 
+    public void RemoveCBClick()
+    {
+        this.onClick = null;
+    }
+
     public override void Refresh()
     {
-        if (Data != null)
+        if (!isUnKnowSkill)
         {
-            icon.SetSprite(Data.icon);
-            if (showSkillName)
+            if (Data != null)
             {
-                txtName.text = Data.name;
+                icon.SetSprite(Data.icon);
+                if (showSkillName)
+                {
+                    txtName.text = Data.name;
+                }
+                else
+                {
+                    txtName.text = "";
+                }
             }
             else
             {
-                txtName.text = "";
+                icon.sprite = null;
+                if (showSkillName)
+                {
+                    txtName.text = "-";
+                }
+                else
+                {
+                    txtName.text = "";
+                }
             }
+
+            RefreshSelected();
+            RefreshArrivable();
         }
         else
         {
-            icon.sprite = null;
-            if (showSkillName)
-            {
-                txtName.text = "-";
-            }
-            else
-            {
-                txtName.text = "";
-            }
+            //未知技能
+            icon.SetSprite("Buffs/Icon1_48");
+            txtName.text = "";
         }
-       
-        RefreshSelected();
-        RefreshArrivable();
+        
     }
 
     public void RefreshSelected()
@@ -104,12 +142,19 @@ public class UIItemSkill : UIItemBase
 
     public void OnHoverEnter()
     {
-        onHoverEnter(this);
+        if (Data != null)
+        {
+            var uiTip = UIMgr.Inst.ShowUI(UITable.EUITable.UITip) as UITip;
+            uiTip.Refresh(Data.tip);
+        }
+
+        onHoverEnter?.Invoke(this);
     }
 
     public void OnHoverExit()
     {
-        onHoverExit(this);
+        UIMgr.Inst.HideUI(UITable.EUITable.UITip);
+        onHoverExit?.Invoke(this);
     }
 
     public void OnBtnClick()

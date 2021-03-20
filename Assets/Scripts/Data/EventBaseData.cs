@@ -86,6 +86,8 @@ public class EventBaseData
                 return "Buffs/Icon4_63";
             case EEventType.NextArea:
                 return "Buffs/Icon2_58";
+            case EEventType.Other:
+                return "Buffs/Icons8_18";
             default:
                 return "";
         }

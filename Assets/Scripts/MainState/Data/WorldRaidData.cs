@@ -43,6 +43,33 @@ public class WorldRaidData : Singleton<WorldRaidData>
         lstEnemyID.Add(id);
     }
 
+    /// <summary>
+    /// 从已解锁技能池中随机获取一个技能
+    /// 不与当前已获得的重复
+    /// </summary>
+    /// <returns></returns>
+    internal SkillBaseData GetARandomNewSkill()
+    {
+        var lstSkillUnlocked = PlayerDataMgr.Inst.PlayerData.GetLstSkillIDUnlocked();
+        List<int> lstTemp = new List<int>();
+        lstTemp.AddRange(lstSkillUnlocked);
+        foreach (var skill in lstSkillGetted)
+        {
+            lstTemp.Remove(skill.ID);
+        }
+        if (lstTemp.Count > 0)
+        {
+            int ranIndex = UnityEngine.Random.Range(0, lstTemp.Count);
+            int randID = lstTemp[ranIndex];
+            return SkillDataer.Inst.Get(randID);
+        }
+        else
+        {
+            return null;
+        }
+        
+    }
+
     public List<int> GetEnemyLst() 
     {
         return lstEnemyID;

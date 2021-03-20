@@ -19,6 +19,7 @@
         UIFightLog,
         UIWorldEvent,
         UIGetItem, //物品拾取界面
-        UIRoleInfo //角色信息
+        UIRoleInfo, //角色信息
+        UISkillGet, //技能获取
     }
 }

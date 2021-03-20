@@ -9,6 +9,7 @@ public class EventProcessor : Singleton<EventProcessor>
     public const string EVENT_LEAVE_WORLD = "leaveworld";
     public const string EVENT_SHOW_ITEM_GET = "show_item_get";
     public const string EVENT_TO_NEXT_AREA = "to_next_area";
+    public const string EVENT_SHOW_SKILL_GET = "show_skill_get";
     /// <summary>
     /// 标记节点为已清理
     /// </summary>

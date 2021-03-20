@@ -19,8 +19,30 @@ public class WorldRaidMgr : Singleton<WorldRaidMgr>
             EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_TO_NEXT_AREA, OnEventToNextArea);
             EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_MARK_CLEAR, OnEventMarkAsClear);
             EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_RANDOM, OnEventRandom);
+            EventProcessor.Inst.RegistorEvent(EventProcessor.EVENT_SHOW_SKILL_GET, OnEventShowSkillGet);
         }
         hasInit = true;
+    }
+
+    /// <summary>
+    /// 显示获取技能
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <param name="data"></param>
+    private void OnEventShowSkillGet(EventBaseData eventData, JSONNode data)
+    {
+        JSONNode dataRanSkills = data["ranskills"];
+        if (dataRanSkills != null)
+        {
+            //随机技能
+            var uiSkillGet = UIMgr.Inst.ShowUI(UITable.EUITable.UISkillGet) as UISkillGet;
+            int maxCount = dataRanSkills["maxcount"].AsInt;
+            int getCount = dataRanSkills["getcount"].AsInt;
+            uiSkillGet.SetData(new DataUISkillGet() { maxCount = maxCount, getCount = getCount });
+            uiSkillGet.Refresh();
+        }
+        //TODO 指定技能
+       
     }
 
     /// <summary>

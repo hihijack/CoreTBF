@@ -93,22 +93,11 @@ public class UIIntoRaid : UIBase
             {
                 var skillData = SkillDataer.Inst.Get(skillID);
                 var skillItem = UIItemBase.Create<UIItemSkill>(gridSkill.transform, pfbSkillItem);
-                skillItem.Init(skillData, OnHoverEnterSkillItem, OnHoverExitSkillItem);
+                skillItem.Init(skillData, null, null);
                 skillItem.Refresh();
                 lstUIItemSkill.Add(skillItem);
             }
         }
-    }
-
-    private void OnHoverExitSkillItem(UIItemSkill obj)
-    {
-        UIMgr.Inst.HideUI(UITable.EUITable.UITip);    
-    }
-
-    private void OnHoverEnterSkillItem(UIItemSkill obj)
-    {
-        var uiTip =  UIMgr.Inst.ShowUI(UITable.EUITable.UITip) as UITip;
-        uiTip.Refresh(obj.Data.tip);
     }
 
     private void OnBtnComfirm()

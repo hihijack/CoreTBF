@@ -64,7 +64,7 @@ public class UIRoleInfo : UIBase
         {
             SkillBaseData skillData  = lstSkillEquiped[i];
             var skillItem = UIItemBase.Create<UIItemSkill>(gridSkills.transform, pfbSkill);
-            skillItem.Init(skillData, OnHoverEnterSkillItem, OnHoverExitSkillItem);
+            skillItem.Init(skillData, null, null);
             skillItem.skillIndex = i;
             skillItem.SetCBClick(OnClickSkillItemEquiped);
             skillItem.Refresh();
@@ -81,7 +81,7 @@ public class UIRoleInfo : UIBase
                 skillData = lstSkillsGetted[i];
             }
             var skillItem = UIItemBase.Create<UIItemSkill>(gridEnableSkill.transform, pfbSkill);
-            skillItem.Init(skillData, OnHoverEnterSkillItem, OnHoverExitSkillItem);
+            skillItem.Init(skillData, null, null);
             skillItem.showSkillName = false;
             skillItem.SetCBClick(OnClickSkillItemNotEquiped);
             if (mCurSelectedChara.IsSkillEquiped(skillData))
@@ -134,20 +134,6 @@ public class UIRoleInfo : UIBase
         uiitem.selected = true;
         uiitem.RefreshSelected();
         mCurSelectedUIItemSkill = uiitem;
-    }
-
-    private void OnHoverExitSkillItem(UIItemSkill obj)
-    {
-        UIMgr.Inst.HideUI(UITable.EUITable.UITip);
-    }
-
-    private void OnHoverEnterSkillItem(UIItemSkill obj)
-    {
-        if (obj.Data != null)
-        {
-            var uiTip = UIMgr.Inst.ShowUI(UITable.EUITable.UITip) as UITip;
-            uiTip.Refresh(obj.Data.tip);
-        }
     }
 
     public override void OnShow()

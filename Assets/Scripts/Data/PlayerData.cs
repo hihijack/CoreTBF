@@ -19,6 +19,8 @@ public class PlayerData
 {
     public List<int> LstCharacterIDUnlocked { get; private set; }
 
+    private List<int> lstSkillIDUnlocked;
+
     public Dictionary<int, PlayerItem> dicItems;
 
     public int curLayerInRaid = 1;
@@ -26,8 +28,24 @@ public class PlayerData
     public PlayerData()
     {
         LstCharacterIDUnlocked = new List<int>();
+        lstSkillIDUnlocked = new List<int>();
         dicItems = new Dictionary<int, PlayerItem>();
     }
+
+    public List<int> GetLstSkillIDUnlocked()
+    {
+        return lstSkillIDUnlocked;
+    }
+
+    public void AddSkillUnlocked(int skillID)
+    {
+        if (!lstSkillIDUnlocked.Contains(skillID))
+        {
+            lstSkillIDUnlocked.Add(skillID);
+        }
+    }
+
+
 
     /// <summary>
     /// 设置默认初始数据
@@ -36,6 +54,10 @@ public class PlayerData
     {
         //默认角色
         LstCharacterIDUnlocked.Add(1);
+        //默认技能解锁
+        lstSkillIDUnlocked.Add(3);
+        lstSkillIDUnlocked.Add(4);
+        lstSkillIDUnlocked.Add(5);
     }
 
     internal int GetItemCount(int id)
