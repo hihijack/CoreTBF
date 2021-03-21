@@ -28,6 +28,8 @@ public class WorldRaidData : Singleton<WorldRaidData>
 
     List<string> lstEnentVisitedInCurArea = new List<string>();//本区域遭遇过的事件
 
+    List<int> lstEnemyGroupVisited = new List<int>(); //遭遇过的敌人
+
     AreaBaseData mCurArea;
 
     List<SkillBaseData> lstSkillGetted = new List<SkillBaseData>();
@@ -41,6 +43,15 @@ public class WorldRaidData : Singleton<WorldRaidData>
     public void AddEnemy(int id) 
     {
         lstEnemyID.Add(id);
+    }
+
+    public void AddEnemyGroup(RoleGroupData rgd)
+    {
+        if (rgd != null)
+        {
+            lstEnemyID.AddRange(rgd.roles);
+            CacheEnemyGroupVisited(rgd.ID);
+        }
     }
 
     /// <summary>
@@ -224,6 +235,20 @@ public class WorldRaidData : Singleton<WorldRaidData>
     }
 
     /// <summary>
+    /// 遭遇过的敌人组猎豹
+    /// </summary>
+    /// <returns></returns>
+    internal List<int> GetEnemyGroupVisitedLst()
+    {
+        return lstEnemyGroupVisited;
+    }
+
+    public void CacheEnemyGroupVisited(int groupID)
+    {
+        lstEnemyGroupVisited.Add(groupID);
+    }
+
+    /// <summary>
     /// 生成区域的所有事件
     /// </summary>
     /// <returns></returns>
@@ -326,6 +351,8 @@ public class WorldRaidData : Singleton<WorldRaidData>
         lstAreaVisited.Clear();
         lstEnentVisitedInCurArea.Clear();
         lstEventVisitedInWorld.Clear();
+        lstSkillGetted.Clear();
+        lstEnemyGroupVisited.Clear();
     }
 
     /// <summary>

@@ -124,38 +124,54 @@ public class WorldRaidMgr : Singleton<WorldRaidMgr>
     {
         WorldRaidData.Inst.ClearEnemy();
         JSONNode dataEnemys = data["enemys"];
-        int count = dataEnemys.Count;
-        for (int i = 0; i < count; i++)
+        if (dataEnemys["grouplevel"] != null)
         {
-            JSONNode dataEnemy = dataEnemys[i];
-            if (dataEnemy["id"] != null)
+            //指定等级随机
+            //排除已经遇到过的
+            int groupLevel = dataEnemys["grouplevel"].AsInt;
+            bool isElite = false;
+            if (dataEnemys["elite"] != null)
             {
-                WorldRaidData.Inst.AddEnemy(dataEnemy["id"].AsInt);
+                isElite = dataEnemys["elite"].AsBool;
             }
-            else if (dataEnemy["group"] != null)
-            {
-                JSONNode dataGroup = GameData.Inst.GetSimpleData(GameData.Inst.TABLE_ROLEGROUP, dataEnemy["group"].AsInt);
-                int countEnemy = dataGroup.Count;
-                for (int j = 0; j < countEnemy; j++)
-                {
-                    int enemyID = dataGroup[j].AsInt;
-                    WorldRaidData.Inst.AddEnemy(enemyID);
-                }
-            }
-            else if (dataEnemy["rangroup"] != null)
-            {
-                JSONNode dataRanGroup = dataEnemy["rangroup"];
-                int ranGroupID = dataRanGroup[UnityEngine.Random.Range(0, dataRanGroup.Count)].AsInt;
-                JSONNode dataGroup = GameData.Inst.GetSimpleData(GameData.Inst.TABLE_ROLEGROUP, ranGroupID);
-                int countEnemy = dataGroup.Count;
-                for (int j = 0; j < countEnemy; j++)
-                {
-                    int enemyID = dataGroup[j].AsInt;
-                    WorldRaidData.Inst.AddEnemy(enemyID);
-                }
-            }
-
+            RoleGroupData rgd = RoleGroupDataer.Inst.GetRandom(groupLevel, isElite, WorldRaidData.Inst.GetEnemyGroupVisitedLst());
+            WorldRaidData.Inst.AddEnemyGroup(rgd);
         }
+        else
+        {
+            int count = dataEnemys.Count;
+            for (int i = 0; i < count; i++)
+            {
+                JSONNode dataEnemy = dataEnemys[i];
+                if (dataEnemy["id"] != null)
+                {
+                    WorldRaidData.Inst.AddEnemy(dataEnemy["id"].AsInt);
+                }
+                else if (dataEnemy["group"] != null)
+                {
+                    JSONNode dataGroup = GameData.Inst.GetSimpleData(GameData.Inst.TABLE_ROLEGROUP, dataEnemy["group"].AsInt);
+                    int countEnemy = dataGroup.Count;
+                    for (int j = 0; j < countEnemy; j++)
+                    {
+                        int enemyID = dataGroup[j].AsInt;
+                        WorldRaidData.Inst.AddEnemy(enemyID);
+                    }
+                }
+                else if (dataEnemy["rangroup"] != null)
+                {
+                    JSONNode dataRanGroup = dataEnemy["rangroup"];
+                    int ranGroupID = dataRanGroup[UnityEngine.Random.Range(0, dataRanGroup.Count)].AsInt;
+                    JSONNode dataGroup = GameData.Inst.GetSimpleData(GameData.Inst.TABLE_ROLEGROUP, ranGroupID);
+                    int countEnemy = dataGroup.Count;
+                    for (int j = 0; j < countEnemy; j++)
+                    {
+                        int enemyID = dataGroup[j].AsInt;
+                        WorldRaidData.Inst.AddEnemy(enemyID);
+                    }
+                }
+            }
+        }
+        
         GameMgr.Inst.ToState(EGameState.Fight);
     }
 

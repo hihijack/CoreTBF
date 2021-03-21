@@ -72,7 +72,11 @@ namespace DefaultNamespace
             
             if (_dicCached.ContainsKey(key))
             {
-                _dicCached[key].Enqueue(go);
+                if (!_dicCached[key].Contains(go))
+                {
+                    //防止重复进队
+                    _dicCached[key].Enqueue(go);
+                }
             }
             else
             {
