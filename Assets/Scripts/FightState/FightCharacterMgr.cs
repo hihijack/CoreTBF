@@ -37,10 +37,121 @@ public class FightCharacterMgr
         return chara;
     }
 
-    void InitCharacter(Character chara, ECamp camp)
+    /// <summary>
+    /// 刷新阵营的所有角色位置
+    /// </summary>
+    /// <param name="camp"></param>
+    internal void RefreshAllUnitPos(ECamp camp)
     {
-        int countOfCamp = GetCharactersCount(camp);
-        chara.teamLoc = countOfCamp + 1;
+        foreach (var chara in lstCharacters)
+        {
+            chara.entityCtl.transform.position = FightState.Inst.GetPosByTeamLoc(chara.camp, chara.teamLoc);
+        }
+    }
+
+    /// <summary>
+    /// 添加一个角色
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="camp"></param>
+    /// <param name="isAhead">是否往前添加，冲突的角色往后移动。否则往后添加，冲突的角色往前移动</param>
+    /// <returns></returns>
+    public Character AddCharacter(int id, ECamp camp, bool isAhead)
+    {
+        Debug.Log("AddCharacter:" + id + "," + camp + "," + isAhead);//#########
+        if (GetValidCharacterCount(camp) >= GameCfg.MAX_CHARACTER_PER_CAMP)
+        {
+            //满员,无法继续添加
+            return null;
+        }
+        var chara = new Character(id);
+        int newLoc = AdjustCharacterLocForNew(camp, isAhead);
+        InitCharacter(chara, camp, newLoc);
+        return chara;
+    }
+
+    /// <summary>
+    /// 为新角色加入调整角色站位，并返回新角色的站位loc
+    /// </summary>
+    /// <param name="camp"></param>
+    /// <param name="isAhead"></param>
+    /// <returns></returns>
+    private int AdjustCharacterLocForNew(ECamp camp, bool isAhead)
+    {
+        int newLoc = 0;
+        if (isAhead)
+        {
+            newLoc = 1;
+            //移动冲突的角色
+            InsertToLocByMoveBack(newLoc, camp);
+        }
+        else
+        {
+            newLoc = GetCharactersCount(camp) + 1;
+            //移动冲突的角色
+            InsertToLocByMoveAhead(newLoc, camp);
+        }
+        return newLoc;
+    }
+
+    /// <summary>
+    /// 往loc位置插入一个新单位，已存在的单位往后移，并往新loc插入
+    /// </summary>
+    /// <param name="loc"></param>
+    void InsertToLocByMoveBack(int loc, ECamp camp)
+    {
+        Character chara = GetAliveCharacter(camp, loc);
+        if (chara != null)
+        {
+            if (loc == GameCfg.MAX_CHARACTER_PER_CAMP)
+            {
+                //最后位置有人，不能再往后插入了
+                return;
+            }
+            InsertToLocByMoveBack(chara.teamLoc + 1, camp);
+            chara.teamLoc++;
+        }
+    }
+
+    void InsertToLocByMoveAhead(int loc, ECamp camp)
+    {
+        Character chara = GetAliveCharacter(camp, loc);
+        if (chara != null)
+        {
+            if (loc == 1)
+            {
+                //最前位置有人，不能再往前插入了
+                return;
+            }
+            InsertToLocByMoveAhead(chara.teamLoc - 1, camp);
+            chara.teamLoc--;
+        }
+    }
+
+    private Character GetCharacter(ECamp camp, int loc)
+    {
+        foreach (var chara in lstCharacters)
+        {
+            if (chara.camp == camp && chara.teamLoc == loc)
+            {
+                return chara;
+            }
+        }
+        return null;
+    }
+
+    void InitCharacter(Character chara, ECamp camp, int teamLoc = 0)
+    {
+        if (teamLoc > 0)
+        {
+            chara.teamLoc = teamLoc;
+        }
+        else
+        {
+            int countOfCamp = GetCharactersCount(camp);
+            chara.teamLoc = countOfCamp + 1;
+        }
+       
         chara.camp = camp;
         chara.entityCtl.transform.SetParent(unitRoot.transform);
         chara.entityCtl.transform.position = FightState.Inst.GetPosByTeamLoc(camp, chara.teamLoc);
@@ -113,6 +224,19 @@ public class FightCharacterMgr
         return count;
     }
 
+    public int GetValidCharacterCount(ECamp camp)
+    {
+        int count = 0;
+        foreach (var t in lstCharacters)
+        {
+            if (t.camp == camp && t.IsAlive())
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     /// <summary>
     /// 还有行动者友军可以选择行动
     /// </summary>
@@ -138,6 +262,7 @@ public class FightCharacterMgr
             if (chr.camp == character.camp && chr != character && chr.teamLoc > character.teamLoc)
             {
                 chr.teamLoc--;
+                chr.RefreshPos(true);
             }
         }
     }
@@ -301,6 +426,7 @@ public class FightCharacterMgr
     internal void OnCharacterDead(Character character)
     {
         ChangeTeamLocOnSomeOneDie(character);
+        Event.Inst.Fire(Event.EEvent.CHARACTER_DIE, character);
     }
 
     /// <summary>

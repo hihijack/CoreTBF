@@ -9,8 +9,8 @@ public class BuffFactory
         var buffData = BuffDataer.Inst.Get(buffID);
         switch (buffData.logic)
         {
-            case EBuffLogic.ChangeDef:
-                return new BuffChangeDef(buffData, target, caster, 1, dur);
+            case EBuffLogic.ChangeProp:
+                return new BuffChangeProp(buffData, target, caster, 1, dur);
             case EBuffLogic.Break:
                 return new BuffBreak(buffData, target, caster, 1, dur);
             default:

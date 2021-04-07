@@ -1,4 +1,6 @@
-﻿using UI;
+﻿using Data;
+using System.Collections.Generic;
+using UI;
 using UnityEngine.UIElements;
 
 namespace DefaultNamespace
@@ -8,6 +10,11 @@ namespace DefaultNamespace
     /// </summary>
     public class FightActionAtk : FightActionBase
     {
+        public FightActionAtk(Character caster, SkillBaseData skill, List<Character> targets) : base(caster, skill, targets)
+        {
+
+        }
+
         public override void Act()
         {
             base.Act();
@@ -54,15 +61,18 @@ namespace DefaultNamespace
 
                 UIHPRoot.Inst.RefreshTarget(caster);
 
-                foreach (var target in targets)
-                {
-                    caster.DamageTarget(target, new DmgData() { dmgPrecent = skill.dmg, timeAtkStiff = skill.timeAtkStiff, tenAtk = skill.dmgTenacity });
-                    if (skill.data != null && skill.data["buff"] != null)
-                    {
-                        //添加buff
-                        target.AddABuff(skill.data["buff"].AsInt, skill.data["dur"].AsFloat, caster);
-                    }
-                }
+                //技能效果
+                //foreach (var target in targets)
+                //{
+                //    caster.DamageTarget(target, new DmgData() { dmgPrecent = skill.dmg, timeAtkStiff = skill.timeAtkStiff, tenAtk = skill.dmgTenacity });
+                //    if (skill.data != null && skill.data["buff"] != null)
+                //    {
+                //        //添加buff
+                //        target.AddABuff(skill.data["buff"].AsInt, skill.data["dur"].AsFloat, caster);
+                //    }
+                //}
+
+                ProcActEffect();
 
                 //后摇硬直
                 caster.State = ECharacterState.Stiff;

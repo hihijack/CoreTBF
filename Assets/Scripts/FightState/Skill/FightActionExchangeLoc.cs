@@ -4,9 +4,16 @@ using DefaultNamespace;
 using DG.Tweening;
 using UI;
 using System;
+using Data;
+using System.Collections.Generic;
 
 public class FightActionExchangeLoc : FightActionBase
 {
+    public FightActionExchangeLoc(Character caster, SkillBaseData skill, List<Character> targets) : base(caster, skill, targets)
+    {
+
+    }
+
     public override void Act()
     {
 

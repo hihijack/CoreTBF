@@ -34,10 +34,27 @@ public class WorldRaidData : Singleton<WorldRaidData>
 
     List<SkillBaseData> lstSkillGetted = new List<SkillBaseData>();
 
+    string nextEventKeyDebug;//调试用。下一个事件key
+    WorldGraphNode debugCurInGraphNode;//调试用。当前所在节点
+
     public WorldRaidData()
     {
         Event.Inst.Register(Event.EEvent.FIGHT_WIN, OnFightWin);
         Event.Inst.Register(Event.EEvent.FIGHT_FAIL, OnFightFail);
+    }
+
+    /// <summary>
+    /// 调试。设置下一个事件
+    /// </summary>
+    /// <param name="nextEventKey"></param>
+    internal void DebugSetNextEventKey(string nextEventKey)
+    {
+        nextEventKeyDebug = nextEventKey;
+    }
+
+    public string GetDebugNextEventKey()
+    {
+        return nextEventKeyDebug;
     }
 
     public void AddEnemy(int id) 
@@ -147,6 +164,20 @@ public class WorldRaidData : Singleton<WorldRaidData>
             var curNode = GetCurInTreeNode();
             curNode.eventTreeHandler.TriSelection(cachedOption);
         }
+    }
+
+    /// <summary>
+    /// 调试。调整节点数据
+    /// </summary>
+    /// <param name="node"></param>
+    internal void DebugSetWorldGraphNode(WorldGraphNode node)
+    {
+        if (string.IsNullOrEmpty(nextEventKeyDebug))
+        {
+            return;
+        }
+        var t = GenEventTreeHandler(EventDataer.Inst.Get(nextEventKeyDebug));
+        node.eventTreeHandler = t;
     }
 
     /// <summary>

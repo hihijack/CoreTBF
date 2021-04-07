@@ -12,6 +12,8 @@ public class Event : Singleton<Event>
         RAID_LAYER_CHANGE,
         WORLD_NODE_MARK_CLEAR,//节点标记清理
         WORLD_TREE_STATE_UPDATE,
+        CHARACTER_DIE,
+        CHARACTER_TEAMLOC_CHANGED,
     }
 
     Dictionary<EEvent, Action<object>> _dic = new Dictionary<EEvent, Action<object>>();

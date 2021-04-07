@@ -1,6 +1,7 @@
 ﻿using DefaultNamespace;
 using System;
 using System.Collections.Generic;
+using System.Data.Odbc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,31 @@ namespace UI
             base.OnAwake();
             Inst = this;
             rtTransform = gameObject.GetComponent<RectTransform>();
+            //Event.Inst.Register(Event.EEvent.CHARACTER_DIE, OnCharacterDie);
+            //Event.Inst.Register(Event.EEvent.CHARACTER_TEAMLOC_CHANGED, OnCharacterTeamLocChanged);
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            //Event.Inst.UnRegister(Event.EEvent.CHARACTER_DIE, OnCharacterDie);
+            //Event.Inst.UnRegister(Event.EEvent.CHARACTER_TEAMLOC_CHANGED, OnCharacterTeamLocChanged);
+        }
+
+        private void OnCharacterDie(object obj)
+        {
+            Character unit = obj as Character;
+
+        }
+
+        /// <summary>
+        /// 角色队伍序列号改变
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnCharacterTeamLocChanged(object obj)
+        {
+            Character unit = obj as Character;
+
         }
 
         public RectTransform GetRect()
@@ -54,6 +80,34 @@ namespace UI
             lstAINextActions = new List<UIAINextAction>();
         }
 
+        /// <summary>
+        /// 新增一个角色
+        /// </summary>
+        /// <param name="character"></param>
+        public void RefreshCharacter(Character character)
+        {
+            var uiItem = UIItemBase.Create<UIFightItemCharacter>(itemRoot.transform, "Prefabs/UI", "ItemCharacter");
+
+            uiItem.SetData(character);
+
+            lstItems.Add(uiItem);
+
+            var uiBuffRoot = UIBuffRoot.Create<UIBuffRoot>(transform, "Prefabs/UI", "UIBuff");
+            uiBuffRoot.SetTarget(character);
+            uiBuffRoot.Refresh();
+
+            lstBuffRoots.Add(uiBuffRoot);
+
+            if (character.camp == ECamp.Enemy)
+            {
+                var uiItemAINextAction = UIAINextAction.Create<UIAINextAction>(transform, "Prefabs/UI", "ItemAINextAction");
+                uiItemAINextAction.SetTarget(character);
+                uiItemAINextAction.SetRtParent(rtTransform);
+                uiItemAINextAction.Refresh();
+                lstAINextActions.Add(uiItemAINextAction);
+            }
+        }
+
         public override void OnShow()
         {
             base.OnShow();
@@ -61,27 +115,8 @@ namespace UI
             var lstCharacters = FightState.Inst.characterMgr.GetCharacters();
             foreach (var character in lstCharacters)
             {
-                // var go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/ItemCharacter"), itemRoot.transform);
-                // var uiItem = go.GetComponent<UIFightItemCharacter>();
-
-                var uiItem = UIFightItemCharacter.Create<UIFightItemCharacter>(itemRoot.transform, "Prefabs/UI", "ItemCharacter");
-
-                uiItem.SetData(character);
-
-                lstItems.Add(uiItem);
-
-                //buffUI
-                // var goBuff = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UIBuff"), transform);
-                // var uiBuffRoot = goBuff.GetComponent<UIBuffRoot>();
-                // uiBuffRoot.SetTarget(character);
-                var uiBuffRoot = UIBuffRoot.Create<UIBuffRoot>(transform, "Prefabs/UI", "UIBuff");
-                uiBuffRoot.SetTarget(character);
-                uiBuffRoot.Refresh();
-
-                lstBuffRoots.Add(uiBuffRoot);
+                RefreshCharacter(character);
             }
-
-            InitAINexts();
         }
 
         public override void OnHide()

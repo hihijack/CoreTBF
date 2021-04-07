@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Data;
+using DG.Tweening;
 using Sirenix.Serialization;
 using UI;
 using UnityEngine;
@@ -118,7 +119,7 @@ namespace DefaultNamespace
             propData.MaxHP = roleData.hp;
             propData.hp = propDataSource != null ? propDataSource.hp : roleData.hp;
             propData.mp = propData.maxMP;
-            propData.atk = roleData.atk;
+            propData.atk = roleData.atk ;
             propData.def = roleData.def;
             propData.tenacityMax = roleData.tenacity;
             propData.tenacity = propData.tenacityMax;
@@ -282,6 +283,23 @@ namespace DefaultNamespace
             }
         }
 
+        /// <summary>
+        /// 根据teamLoc刷新位置
+        /// </summary>
+        internal void RefreshPos(bool withAnim)
+        {
+            if (withAnim)
+            {
+                var toPosTarget = FightState.Inst.GetPosByTeamLoc(camp, teamLoc);
+                entityCtl.transform.DOMove(toPosTarget, 0.5f);
+            }
+            else
+            {
+                entityCtl.SetPos(FightState.Inst.GetPosByTeamLoc(camp, teamLoc));
+            }
+            
+        }
+
         void RefreshBuff()
         {
             foreach (var buff in lstBuffs)
@@ -407,6 +425,16 @@ namespace DefaultNamespace
             {
                 dmg = 0;
             }
+
+            //调试用。降低100倍伤害
+            if (DebugCMD.isInvincible)
+            {
+                if (camp == ECamp.Enemy)
+                {
+                    dmg = Mathf.FloorToInt(dmg * 0.01f);
+                }
+            }
+
 
             //计算抗性
             var targetDef = (float)target.propData.Def;
@@ -546,7 +574,7 @@ namespace DefaultNamespace
 
         private int CalDmg(float skillDmg)
         {
-            return Mathf.CeilToInt(skillDmg * propData.atk);
+            return Mathf.CeilToInt(skillDmg * propData.Atk);
         }
 
         /// <summary>

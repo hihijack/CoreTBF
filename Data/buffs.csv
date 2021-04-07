@@ -1,0 +1,7 @@
+#id,逻辑,名字,描述,,,
+id,logic,name,desc,icon,maxLayer,data
+1,ChangeProp,破甲,降低防御,Icons8_83,1,"{prop:def_phy,valAdd:0,valMul:-1}"
+2,Break,BREAK,,Icons8_84,1,{val:1.5}
+3,ChangeProp,迸发,提高攻击力,Icons8_85,1,"{prop:atk,valAdd:0,valMul:1}"
+4,ChangeProp,剑舞,提高攻击力,Icons8_86,1,"{prop:atk,valAdd:0,valMul:1}"
+5,ChangeProp,剑舞2,提高攻击力,Icons8_86,1,"{prop:atk,valAdd:0,valMul:1}"

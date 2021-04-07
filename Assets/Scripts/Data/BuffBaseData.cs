@@ -9,7 +9,7 @@ public enum EBuffLogic
     /// <summary>
     /// 改变防御
     /// </summary>
-    ChangeDef, 
+    ChangeProp, 
     Break
 }
 

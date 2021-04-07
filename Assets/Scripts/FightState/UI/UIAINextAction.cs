@@ -20,9 +20,14 @@ public class UIAINextAction : UIItemBase
         rtParent = rt;
     }
 
+    private void Update()
+    {
+        Refresh();
+    }
+
     public override void Refresh()
     {
-        if (target.IsEnableAction)
+        if (target != null && target.IsEnableAction)
         {
             var nextSkill = target.ai.GetNextSkillToCast();
             text.text = "Next:" + nextSkill.name;

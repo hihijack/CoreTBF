@@ -1,6 +1,7 @@
 ﻿using Data;
 using Mono.Data.SqliteClient;
 using SimpleJSON;
+using System;
 using System.Data;
 using UnityEngine;
 
@@ -17,18 +18,21 @@ public class GameData : Singleton<GameData>
     public readonly string TABAL_AREA = "area";
     public readonly string TABLE_JOBS = "jobs";
 
-    readonly string _sqlDBLocation = "URI=file:coretbf.db";
+    readonly string _sqlDBLocation = "URI=file:Data/coretbf.db";
 
     /// <summary>
     /// DB objects
     /// </summary>
-    private IDbConnection _connection = null;
+    private SqliteConnection _connection = null;
     private IDbCommand _command = null;
     private IDataReader _reader = null;
 
     public void Init()
     {
         _connection = new SqliteConnection(_sqlDBLocation);
+
+        //var uri = new Uri(_sqlDBLocation);
+        //Debug.Log("数据库连接:" + uri.AbsolutePath);
         _command = _connection.CreateCommand();
     }
 

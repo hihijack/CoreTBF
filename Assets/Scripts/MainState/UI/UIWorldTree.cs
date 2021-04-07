@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using SimpleJSON;
+using Sirenix.Serialization;
 
 public class UIWorldTree : UIBase
 {
@@ -133,6 +134,8 @@ public class UIWorldTree : UIBase
 
     private void OnClickNodeItem(int index, WorldGraphNode node)
     {
+        WorldRaidData.Inst.DebugSetWorldGraphNode(node);
+
         if (node.arrivable)
         {
             // WorldRaidData.Inst.curPointIndex = index;

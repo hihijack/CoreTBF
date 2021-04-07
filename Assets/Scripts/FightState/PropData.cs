@@ -29,11 +29,22 @@ namespace DefaultNamespace
 
         public float dmgHurtedMul = 1f;//受到的伤害增加;计算防御之前
 
+        public int atkParamAdd;
+        public float atkParmaMul = 1f;
+
         public int Def
         {
             get
             {
                 return Mathf.CeilToInt((def + defParamAdd) * defParamMul);
+            }
+        }
+
+        public int Atk
+        {
+            get
+            {
+                return Mathf.CeilToInt((atk + atkParamAdd) * atkParmaMul);
             }
         }
 

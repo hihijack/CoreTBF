@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using DefaultNamespace.FightStages;
 using UI;
-using UnityEditorInternal;
-using System;
 
 public enum EFightStage
 {

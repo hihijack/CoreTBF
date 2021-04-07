@@ -1,9 +1,16 @@
-﻿using UI;
+﻿using Data;
+using System.Collections.Generic;
+using UI;
 
 namespace DefaultNamespace
 {
     public class FightActionDef : FightActionBase
     {
+        public FightActionDef(Character caster, SkillBaseData skill, List<Character> targets) : base(caster, skill, targets)
+        {
+
+        }
+
         public override void Act()
         {
             base.Act();
@@ -12,15 +19,7 @@ namespace DefaultNamespace
         public override void RealAct()
         {
             base.RealAct();
-            caster.State = ECharacterState.Def;
-            //韧性改变至指定百分比;0不改变
-            if (skill.tenChangeTo > 0)
-            {
-                caster.propData.SetTenacityPercent(skill.tenChangeTo);
-            }
-
-            UIHPRoot.Inst.RefreshTarget(caster);
-            caster.mTimeStiff = skill.backswing;
+            this.ProcActEffect();
         }
     }
 }

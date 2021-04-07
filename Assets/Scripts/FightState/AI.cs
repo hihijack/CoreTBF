@@ -146,7 +146,7 @@ namespace DefaultNamespace
                 {
                     _index = 0;
                 }
-                skillData = _character.lstSkillData[arrSkillIndexToAction[_index]];
+                skillData = _character.lstSkillData[arrSkillIndexToAction[_index] - 1];
             }
             
             //主动循环使用技能
@@ -166,7 +166,7 @@ namespace DefaultNamespace
             {
                 t = 0;
             }
-            var skillData = _character.lstSkillData[arrSkillIndexToAction[t]];
+            var skillData = _character.lstSkillData[arrSkillIndexToAction[t] - 1];
             return skillData;
         }
 

@@ -66,11 +66,14 @@ namespace Data
             if (!reader.IsDBNull(21))
             {
                 JSONNode aiData = JSONNode.Parse(reader.GetString(21));
-                int count = aiData.Count;
-                aiSkillIndexs = new int[count];
-                for (int i = 0; i < count; i++)
+                if (aiData != null)
                 {
-                    aiSkillIndexs[i] = aiData[i].AsInt;
+                    int count = aiData.Count;
+                    aiSkillIndexs = new int[count];
+                    for (int i = 0; i < count; i++)
+                    {
+                        aiSkillIndexs[i] = aiData[i].AsInt;
+                    }
                 }
             }
         }

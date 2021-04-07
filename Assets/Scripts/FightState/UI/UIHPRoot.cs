@@ -4,6 +4,7 @@ using Boo.Lang;
 using UI;
 using DefaultNamespace;
 using System.Collections.Generic;
+using System;
 
 public class UIHPRoot : UIBase
 {
@@ -24,6 +25,52 @@ public class UIHPRoot : UIBase
     {
         base.OnAwake();
         Inst = this;
+        Event.Inst.Register(Event.EEvent.CHARACTER_DIE, OnCharacterDie);
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Event.Inst.UnRegister(Event.EEvent.CHARACTER_DIE, OnCharacterDie);
+    }
+
+    private void OnCharacterDie(object obj)
+    {
+        Character unit = obj as Character;
+        if (unit.camp == ECamp.Ally)
+        {
+            var playerInfo = GetPlayerInfo(unit);
+            if (playerInfo != null)
+            {
+                playerInfo.Cache();
+            }
+        }
+        else if (unit.camp == ECamp.Enemy)
+        {
+            var playerInfo = GetEnemyPlayerInfo(unit);
+            if (playerInfo != null)
+            {
+                playerInfo.Cache();
+            }
+        }
+    }
+
+    UIPlayerInfo GetPlayerInfo(Character unit)
+    {
+        if (_dicPlayerInfo.ContainsKey(unit))
+        {
+            return _dicPlayerInfo[unit];
+        }
+        return null;
+    }
+
+    UIEnemyPlayerInfo GetEnemyPlayerInfo(Character unit)
+    {
+        if (_dicEnemyInfo.ContainsKey(unit))
+        {
+            return _dicEnemyInfo[unit];
+        }
+        return null;
     }
 
     public void RefreshMP()

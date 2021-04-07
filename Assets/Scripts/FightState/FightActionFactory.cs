@@ -23,15 +23,7 @@ namespace DefaultNamespace
 
         private FightActionFactory()
         {
-            _dicActions = new Dictionary<int, FightActionBase>();
-            _dicActions.Add(1, new FightActionWait());
-            _dicActions.Add(2, new FightActionDef());
-            var atks = new[]{3,4,6,7,9};
-            var actionAtk = new FightActionAtk();
-            foreach (var t in atks)
-            {
-                _dicActions.Add(t, actionAtk);
-            }
+           
         }
         #endregion
         
@@ -40,13 +32,13 @@ namespace DefaultNamespace
             switch (skill.logic)
             {
                 case ESkillLogic.Wait:
-                    return new FightActionWait {caster = caster,skill = skill, targets = targets};
+                    return new FightActionWait(caster,skill,targets);
                 case ESkillLogic.Def:
-                    return new FightActionDef {caster = caster,skill = skill, targets = targets};
+                    return new FightActionDef (caster, skill, targets);
                 case ESkillLogic.Atk:
-                    return new FightActionAtk {caster = caster,skill = skill, targets = targets};
+                    return new FightActionAtk(caster, skill, targets);
                 case ESkillLogic.ExchangeLoc:
-                    return new FightActionExchangeLoc { caster = caster, skill = skill, targets = targets };
+                    return new FightActionExchangeLoc(caster, skill, targets);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
