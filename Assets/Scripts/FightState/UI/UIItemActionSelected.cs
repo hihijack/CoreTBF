@@ -19,8 +19,8 @@ namespace UI
 
         private void Refresh()
         {
-            GameUtil.SetSprite(headIcon, _action.caster.roleData.headicon);
-            skillName.text = _action.skill.name;
+            GameUtil.SetSprite(headIcon, _action.Caster.roleData.headicon);
+            skillName.text = _action.skill.GetBaseData().name;
         }
     }
 }

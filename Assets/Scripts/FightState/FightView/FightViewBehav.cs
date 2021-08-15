@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Playables;
-using System;
 using UnityEngine.Rendering.PostProcessing;
 using DefaultNamespace;
 using DG.Tweening;
-using Boo.Lang;
 using DefaultNamespace.FightStages;
-using UI;
 using UnityEngine.Timeline;
+using System.Collections.Generic;
+using System;
 
 public class FightViewBehav 
 {
@@ -17,12 +15,19 @@ public class FightViewBehav
 
     GameObject _goEffRoot;
 
-    List<GameObject> _lstEffectsCache;
+    List<FightViewCmdBase> _lstCmdCache;//表现命令缓存
+
+    Queue<FightViewCmdBase> _queueViewCmd;
+
+    Action onViewPlayComplete;
+
+    FightViewCmdBase _curRunningCmd;
 
     public FightViewBehav(PlayableDirector director, PostProcessVolume ppv)
     {
         _timeLineCtl = new TimeLineCtl(director);
-        _lstEffectsCache = new List<GameObject>(10);
+        _lstCmdCache = new List<FightViewCmdBase>();
+        _queueViewCmd = new Queue<FightViewCmdBase>();
         _ppv = ppv;
     }
 
@@ -48,8 +53,94 @@ public class FightViewBehav
 
     public void DoUpate()
     {
-
+        if (_curRunningCmd != null)
+        {
+            _curRunningCmd.Update(Time.deltaTime);
+        }
     }
+
+    /// <summary>
+    /// 缓存表现命令
+    /// </summary>
+    /// <param name="cmd"></param>
+    public void CacheViewCmd(FightViewCmdBase cmd)
+    {
+        Debug.Log("t>>ViewCmd:" + cmd);
+        _lstCmdCache.Add(cmd);
+    }
+
+    /// <summary>
+    /// 开始播放缓存表现命令
+    /// </summary>
+    public void StartPlayCachedViewCmd(Action onComplete)
+    {
+        this.onViewPlayComplete = onComplete;
+        PreHandleViewCmd();
+        PlayNextCmd();
+    }
+
+    private void PlayNextCmd()
+    {
+        if (_queueViewCmd.Count > 0)
+        {
+            var cmd = _queueViewCmd.Dequeue();
+            cmd.SetEndCB(OnOneViewCmdComplete);
+            _curRunningCmd = cmd;
+            cmd.Play();
+        }
+        else
+        {
+            _curRunningCmd = null;
+            OnViewCmdComplete();
+        }
+    }
+
+    void OnOneViewCmdComplete(FightViewCmdBase cmd)
+    {
+        PlayNextCmd();
+    }
+
+    /// <summary>
+    /// 所有表现完成
+    /// </summary>
+    void OnViewCmdComplete()
+    {
+        ClearViewCmd();
+        onViewPlayComplete?.Invoke();
+    }
+
+    /// <summary>
+    /// 预处理表现命令
+    /// </summary>
+    private void PreHandleViewCmd()
+    {
+        FightViewCmdBase lastSkillCastCmd = null; 
+        foreach (var cmd in _lstCmdCache)
+        {
+            if (cmd.GetType() == typeof(FightViewCmdCastSkill))
+            {
+                lastSkillCastCmd = cmd;
+            }
+            if (cmd.GetType() == typeof(FightViewCmdHPChanged) || cmd.GetType() == typeof(FightViewCmdTenacityChange))
+            {
+                if (lastSkillCastCmd != null)
+                {
+                    lastSkillCastCmd.AddChildCmd(cmd);
+                }
+            }
+            else
+            {
+                _queueViewCmd.Enqueue(cmd);
+            }
+        }
+    }
+
+    void ClearViewCmd()
+    {
+        _lstCmdCache.Clear();
+        _queueViewCmd.Clear();
+    }
+
 
     public void Play(TimelineAsset asset)
     {
@@ -63,88 +154,33 @@ public class FightViewBehav
 
     internal void OnPlayableEventLogic(EEventLogic enentType)
     {
-        switch (enentType)
+        if (_curRunningCmd != null)
         {
-            case EEventLogic.End:
-                FightState.Inst.OnEndPlayView();
-                break;
-            case EEventLogic.RealAct:
-                FightStageActionAct.curAction.RealAct();
-                break;
-            case EEventLogic.RemoveEffects:
-                //移除战斗特效
-                foreach (var goEff in _lstEffectsCache)
-                {
-                    GoPool.Inst.Cache(goEff);
-                }
-                _lstEffectsCache.Clear();
-                break;
-            default:
-                break;
+            _curRunningCmd.OnPlayableEventLogic(enentType);
         }
     }
 
     internal void OnPlayableSetSprite(PBParamSetCharacterSprite param)
     {
-        if (param.target == ETargetType.Atker)
+        if (_curRunningCmd != null)
         {
-            var taretEntity = FightState.Inst.GetAtkerEntityCtl();
-            taretEntity.SetSprite(param.spriteName);
-        }
-        else if (param.target == ETargetType.Targets)
-        {
-            var targetCharacters = FightState.Inst.GetCurTargets();
-            foreach (var character in targetCharacters)
-            {
-                if (character.State == ECharacterState.Power && param.spriteName != "power")
-                {
-                    continue;
-                }
-                if (((character.State == ECharacterState.Stiff || character.State == ECharacterState.Dying || character.State == ECharacterState.Dead) && param.spriteName == "hited") || param.spriteName != "hited")
-                {
-                    character.entityCtl.SetSprite(param.spriteName);
-                }
-            }
+            _curRunningCmd.OnPlayableSetSprite(param);
         }
     }
 
     internal void OnPlayableCreateEff(PBParamCreateEff param)
     {
-        if (param.target == ETargetType.Atker)
+        if (_curRunningCmd != null)
         {
-            Character targetCharacter = FightState.Inst.GetCurCaster();
-            var goEff = EffectMgr.CreateEffForUnit(targetCharacter.entityCtl, new ParamEffectCreate() 
-            { effName = param.effName, offsetPos = param.posOffset, bind = param.bind });
-            _lstEffectsCache.Add(goEff);
-        }
-        else if (param.target == ETargetType.Targets)
-        {
-            var targetsCharacters = FightState.Inst.GetCurTargets();
-            foreach (var targetCharacter in targetsCharacters)
-            {
-                var goEff = EffectMgr.CreateEffForUnit(targetCharacter.entityCtl, new ParamEffectCreate()
-                { effName = param.effName, offsetPos = param.posOffset, bind = param.bind });
-                _lstEffectsCache.Add(goEff);
-            }
+            _curRunningCmd.OnPlayableCreateEff(param);
         }
     }
 
     internal void OnPlayableMoveCharacter(PBParamMoveCharacter param)
     {
-        if (param.targetType == ETargetType.Atker)
+        if (_curRunningCmd != null)
         {
-            Character targetCharacter = FightState.Inst.GetCurCaster();
-            MoveACharacter(targetCharacter, param, 1);
-        }
-        else if (param.targetType == ETargetType.Targets)
-        {
-            var targetsCharacters = FightState.Inst.GetCurTargets();
-            int index = 0;
-            foreach (var targetCharacter in targetsCharacters)
-            {
-                index++;
-                MoveACharacter(targetCharacter, param, index);
-            }
+            _curRunningCmd.OnPlayableMoveCharacter(param);
         }
     }
 
@@ -154,7 +190,7 @@ public class FightViewBehav
     /// <param name="target"></param>
     /// <param name="param"></param>
     /// <param name="index">从1开始</param>
-    void MoveACharacter(Character targetCharacter, PBParamMoveCharacter param, int index)
+    public void MoveACharacter(Character targetCharacter, PBParamMoveCharacter param, int index)
     {
         Vector3 pos = Vector3.zero; ;
         if (param.pointType == EPointType.CloseUp)

@@ -9,17 +9,18 @@ using System.Collections.Generic;
 
 public class FightActionExchangeLoc : FightActionBase
 {
-    public FightActionExchangeLoc(Character caster, SkillBaseData skill, List<Character> targets) : base(caster, skill, targets)
+    public FightActionExchangeLoc(Skill skill, ActionContent content) : base(skill, content)
     {
 
     }
 
     public override void Act()
     {
+        var caster = actionContent.caster;
+        var target = actionContent.targets[0];
+        var skillBaseData = skill.GetBaseData();
+        UIFightLog.Inst.AppendLog($"{caster.roleData.name}发动了{skillBaseData.name}");
 
-        UIFightLog.Inst.AppendLog($"{caster.roleData.name}发动了{skill.name}");
-
-        var target = targets[0];
         var t = caster.teamLoc;
         caster.teamLoc = target.teamLoc;
         target.teamLoc = t;
@@ -29,7 +30,7 @@ public class FightActionExchangeLoc : FightActionBase
         target.entityCtl.transform.DOMove(toPosTarget, 0.5f);
         //后摇硬直
         caster.State = ECharacterState.Stiff;
-        caster.mTimeStiff = skill.backswing;
+        caster.mTimeStiff = skillBaseData.backswing;
     }
 
     private void OnAnimEnd()

@@ -13,7 +13,7 @@ namespace UI
 
         public UIFightAction uiFightAction;
 
-        private SkillBaseData  _skillData;
+        private Skill  _skill;
 
         private Character _character;
 
@@ -26,9 +26,9 @@ namespace UI
             _btn = GetComponent<Button>();
         }
 
-        public void SetData(SkillBaseData skillData, Character character, bool actionEnable)
+        public void SetData(Skill skill, Character character, bool actionEnable)
         {
-            _skillData = skillData;
+            _skill = skill;
             _character = character;
             _actionEnable = actionEnable;
             Refresh();
@@ -36,12 +36,12 @@ namespace UI
 
         private void Refresh()
         {
-            string nameDesc = _skillData.name;
-            int cost = _skillData.cost;
+            string nameDesc = _skill.GetBaseData().name;
+            int cost = _skill.GetBaseData().cost;
             //发动蓄力技能
-            if (_character.mSkillPowering == _skillData)
+            if (_character.mSkillPowering == _skill)
             {
-                nameDesc = "!发动-" + _skillData.name;
+                nameDesc = "!发动-" + _skill.GetBaseData().name;
                 cost = 0;
             }
             txtName.text = nameDesc;
@@ -61,7 +61,8 @@ namespace UI
         public void OnHoverIn()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(_skillData.name);
+            var skillData = _skill.GetBaseData();
+            sb.AppendLine(skillData.name);
 
             //仇恨溢出提示
             //if (_character.camp == ECamp.Ally && _actionEnable)
@@ -71,43 +72,43 @@ namespace UI
             //        sb.AppendLine("<color=red>>>将引起仇恨<<</color>");
             //    }
             //}
-            if (_skillData.distance == 1)
+            if (skillData.distance == 1)
             {
                 sb.AppendLine($"<color=yellow>近距离</color>");
             }
-            else if (_skillData.distance > 1)
+            else if (skillData.distance > 1)
             {
                 sb.AppendLine($"<color=yellow>远距离</color>");
             }
 
-            if (_skillData.cost > 0)
+            if (skillData.cost > 0)
             {
-                sb.AppendLine($"<color=cyan>消耗:{_skillData.cost / UIHPRoot.MPPerPoint}格</color>");
+                sb.AppendLine($"<color=cyan>消耗:{skillData.cost / UIHPRoot.MPPerPoint}格</color>");
             }
 
-            if (_skillData.dmg > 0)
+            if (skillData.dmg > 0)
             {
-                sb.AppendLine($"伤害:{_skillData.dmg * 100}%");
+                sb.AppendLine($"伤害:{skillData.dmg * 100}%");
             }
-            if (_skillData.dmgFire > 0)
+            if (skillData.dmgFire > 0)
             {
-                sb.AppendLine($"火焰伤害:{_skillData.dmgFire * 100}%");
+                sb.AppendLine($"火焰伤害:{skillData.dmgFire * 100}%");
             }
-            if (_skillData.timePower > 0)
+            if (skillData.timePower > 0)
             {
-                sb.AppendLine($"蓄力时间:{_skillData.timePower}S");
+                sb.AppendLine($"蓄力时间:{skillData.timePower}S");
             }
-            if (_skillData.backswing > 0)
+            if (skillData.backswing > 0)
             {
-                sb.AppendLine($"后摇时间:{_skillData.backswing}S");
+                sb.AppendLine($"后摇时间:{skillData.backswing}S");
             }
-            if (_skillData.timeAtkStiff > 0)
+            if (skillData.timeAtkStiff > 0)
             {
-                sb.AppendLine($"攻击造成硬直:{_skillData.timeAtkStiff}S");
+                sb.AppendLine($"攻击造成硬直:{skillData.timeAtkStiff}S");
             }
-            if (_skillData.dmgTenacity > 0)
+            if (skillData.dmgTenacity > 0)
             {
-                sb.AppendLine($"削韧:{_skillData.dmgTenacity}");
+                sb.AppendLine($"削韧:{skillData.dmgTenacity}");
             }
            
             //if (_skillData.hatred > 0)
@@ -119,13 +120,13 @@ namespace UI
             //    sb.AppendLine(">>速攻<<");
             //}
             sb.AppendLine();
-            sb.AppendLine(_skillData.tip);
+            sb.AppendLine(skillData.tip);
             //UITip.Inst.Show(sb.ToString());
             UITip uiTip = UIMgr.Inst.ShowUI(UITable.EUITable.UITip) as UITip;
             uiTip.Refresh(sb.ToString());
-            if (_skillData.backswing > 0)
+            if (skillData.backswing > 0)
             {
-                UIFight.Inst.ShowTimeTip(_skillData.backswing);
+                UIFight.Inst.ShowTimeTip(skillData.backswing);
             }
         }
 
@@ -141,9 +142,9 @@ namespace UI
             uiFightAction.OnSkillClick(this);
         }
         
-        public SkillBaseData GetData()
+        public Skill GetData()
         {
-            return  _skillData;
+            return  _skill;
         }
     }
 }

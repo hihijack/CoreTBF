@@ -30,7 +30,7 @@ public class UIAINextAction : UIItemBase
         if (target != null && target.IsEnableAction)
         {
             var nextSkill = target.ai.GetNextSkillToCast();
-            text.text = "Next:" + nextSkill.name;
+            text.text = nextSkill.name;
             var posEntityHead = target.entityCtl.GetPos() + new Vector3(0, target.entityCtl.GetHeight(), 0);
             var screenPos = FightState.Inst.cameraMain.WorldToScreenPoint(posEntityHead);
             Vector2 locPos;

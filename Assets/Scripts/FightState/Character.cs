@@ -35,12 +35,17 @@ namespace DefaultNamespace
         public int tenAtk;//韧性伤害
     }
 
-    public class Character
+    public struct DmgResult
+    {
+        public int dmg;
+    }
+
+    public class Character : ITriggedable
     {
         public RoleEntityCtl entityCtl;
         public RoleBaseData roleData;
         public PropData propData;
-        public List<SkillBaseData> lstSkillData;
+        public List<Skill> lstSkill;
         public int teamLoc;
         public ECamp camp;
 
@@ -50,7 +55,7 @@ namespace DefaultNamespace
 
         public float mTimePower;
 
-        public SkillBaseData mSkillPowering;//正在蓄力的技能
+        public Skill mSkillPowering;//正在蓄力的技能
         
         private bool _hasQuickSkill = false;
 
@@ -69,6 +74,7 @@ namespace DefaultNamespace
 
             set
             {
+                Debug.Log($"{roleData.name},State=>{value}");//##########
                 state = value;
             }
         }
@@ -131,22 +137,22 @@ namespace DefaultNamespace
         /// <param name="roleData"></param>
         private void InitSkill(RoleBaseData roleData)
         {
-            lstSkillData = new List<SkillBaseData>(8);
+            lstSkill = new List<Skill>(8);
             foreach (var skillID in roleData.skills)
             {
                 var skillData = SkillDataer.Inst.Get(skillID);
-                lstSkillData.Add(skillData);
+                lstSkill.Add(new Skill(this, skillData));
             }
         }
 
         private void InitSkill(List<SkillBaseData> lstSkill)
         {
-            lstSkillData = new List<SkillBaseData>(8);
+            this.lstSkill = new List<Skill>(8);
             foreach (var skill in lstSkill)
             {
                 if (skill != null)
                 {
-                    lstSkillData.Add(skill);
+                    this.lstSkill.Add(new Skill(this, skill));
                 }
             }
         }
@@ -159,29 +165,9 @@ namespace DefaultNamespace
             entityCtl.SetSprite("idle");
         }
 
-        /// <summary>
-        /// 设定技能
-        /// </summary>
-        /// <param name="skillIndex"></param>
-        /// <param name="skillData"></param>
-        internal void SetSkill(int skillIndex, SkillBaseData skillData)
+        public void PlayAnim(string animName)
         {
-            lstSkillData[skillIndex] = skillData;
-        }
-
-
-        /// <summary>
-        /// 是否已装备技能
-        /// </summary>
-        /// <param name="skillData"></param>
-        /// <returns></returns>
-        internal bool IsSkillEquiped(SkillBaseData skillData)
-        {
-            if (skillData == null)
-            {
-                return false;
-            }
-            return lstSkillData.Contains(skillData);
+            entityCtl.PlayAnim(animName);
         }
 
         /// <summary>
@@ -283,23 +269,6 @@ namespace DefaultNamespace
             }
         }
 
-        /// <summary>
-        /// 根据teamLoc刷新位置
-        /// </summary>
-        internal void RefreshPos(bool withAnim)
-        {
-            if (withAnim)
-            {
-                var toPosTarget = FightState.Inst.GetPosByTeamLoc(camp, teamLoc);
-                entityCtl.transform.DOMove(toPosTarget, 0.5f);
-            }
-            else
-            {
-                entityCtl.SetPos(FightState.Inst.GetPosByTeamLoc(camp, teamLoc));
-            }
-            
-        }
-
         void RefreshBuff()
         {
             foreach (var buff in lstBuffs)
@@ -359,10 +328,11 @@ namespace DefaultNamespace
             OnActionSelected(mSkillPowering, target);
         }
         
-        public void OnActionSelected(SkillBaseData skillData, Character target)
+        public void OnActionSelected(Skill skill, Character target)
         {
             //计算技能目标
             var targets = new List<Character>();
+            var skillData = skill.GetBaseData();
             if (skillData.targetCount == 1)
             {
                 targets.Add(target);
@@ -371,8 +341,8 @@ namespace DefaultNamespace
             {
                 targets = FightState.Inst.characterMgr.GetCharactersOfCamp(GetEnemyCamp());
             }
-            
-            FightState.Inst.CaheAction(FightActionFactory.Inst.CreateFightAction(this, skillData, targets));
+            ActionContent content = FightActionFactory.Inst.CreateActionContent(this,skill, targets);
+            FightState.Inst.CaheAction(FightActionFactory.Inst.CreateFightAction(skill, content));
             FightState.Inst.ToNextStage();
         }
 
@@ -402,14 +372,12 @@ namespace DefaultNamespace
             }
         }
 
-        public void DamageTarget(Character target, DmgData dmgData)
+        public DmgResult DamageTarget(Character target, DmgData dmgData)
         {
-
-            Debug.Log("DamageTarget:");
-            
-
             int dmg = CalDmg(dmgData.dmgPrecent);
 
+            Debug.Log("t>>DmgTarget:" + roleData.name + "->" + target.roleData.name + ":" + dmg);//#######
+           
             //计算增伤减伤
             dmg = Mathf.CeilToInt(dmg * target.propData.DmgHurtedMul);
 
@@ -440,7 +408,7 @@ namespace DefaultNamespace
             var targetDef = (float)target.propData.Def;
             dmg = Mathf.CeilToInt(dmg * (1 - targetDef * 6 / (100 + targetDef * 6)));
 
-            UIFightLog.Inst.AppendLog($"{roleData.name}对{target.roleData.name}造成了{dmg}点伤害!");
+            //UIFightLog.Inst.AppendLog($"{roleData.name}对{target.roleData.name}造成了{dmg}点伤害!");
             target.Hurted(dmg);
 
             if (target.IsEnableAction)
@@ -457,7 +425,8 @@ namespace DefaultNamespace
                 }
             }
 
-            UIHPRoot.Inst.RefreshTarget(target);
+            return new DmgResult() { dmg = dmg };
+            //UIHPRoot.Inst.RefreshTarget(target);
         }
 
         /// <summary>
@@ -480,8 +449,9 @@ namespace DefaultNamespace
             propData.ChangeHP(-1 * dmg);
         }
 
-        public void HandleHPState()
+        public void HandleHPState(ActionContent content)
         {
+            Debug.Log($"HandleHPState,{roleData.name },{propData.hp},{State}");//##########
             //死亡处理
             if (propData.hp <= 0)
             {
@@ -495,6 +465,7 @@ namespace DefaultNamespace
                     else if (State == ECharacterState.Dying)
                     {
                         //完全死亡
+                        OnDie(content);
                         ToDead();
                     }
                 }
@@ -502,7 +473,8 @@ namespace DefaultNamespace
                 {
                     if (State != ECharacterState.Dead)
                     {
-                        //进入濒死
+                        //死亡
+                        OnDie(content);
                         ToDead();
                     }
                 }
@@ -523,6 +495,7 @@ namespace DefaultNamespace
             mTimePower = 0f;
             //清空buff,所有buff层数归0
             ClearAllBuff();
+            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCharacterDie(this));
             FightState.Inst.characterMgr.OnCharacterDead(this);
         }
 
@@ -551,6 +524,8 @@ namespace DefaultNamespace
             //hp上限为50%,并恢复满血
             propData.MaxHPParamMul -= 0.5f;
             propData.hp = propData.MaxHP;
+            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdHPChanged(this, 0, propData.hp));
+            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCharacterDying(this));
         }
 
         /// <summary>
@@ -584,6 +559,112 @@ namespace DefaultNamespace
         internal bool IsAlive()
         {
             return State != ECharacterState.Dead;
+        }
+
+        /// <summary>
+        /// 死亡时
+        /// </summary>
+        /// <param name="sourceContent"></param>
+        public void OnDie(ActionContent sourceContent)
+        {
+            Debug.Log("t>>死亡触发" + this.roleData.name);//##########
+            foreach (var skill in lstSkill)
+            {
+                skill.OnDie(sourceContent);
+            }
+            foreach (var buff in lstBuffs)
+            {
+                buff.OnDie(sourceContent);
+            }
+        }
+
+        /// <summary>
+        /// 受击时
+        /// </summary>
+        /// <param name="sourceContent"></param>
+        public void OnHitted(ActionContent sourceContent)
+        {
+            foreach (var skill in lstSkill)
+            {
+                skill.OnHitted(sourceContent);
+            }
+            foreach (var buff in lstBuffs)
+            {
+                buff.OnHitted(sourceContent);
+            }
+        }
+
+        /// <summary>
+        /// 受伤时
+        /// </summary>
+        /// <param name="sourceContent"></param>
+        public void OnHurtd(ActionContent sourceContent)
+        {
+            Debug.Log("t>>受伤触发" + this.roleData.name);//##########
+            foreach (var skill in lstSkill)
+            {
+                skill.OnHurtd(sourceContent);
+            }
+            foreach (var buff in lstBuffs)
+            {
+                buff.OnHurtd(sourceContent);
+            }
+        }
+
+        /// <summary>
+        /// 攻击宣言时
+        /// </summary>
+        /// <param name="sourceContent"></param>
+        public void OnStartAttack(ActionContent sourceContent)
+        {
+            foreach (var skill in lstSkill)
+            {
+                skill.OnStartAttack(sourceContent);
+            }
+            foreach (var buff in lstBuffs)
+            {
+                buff.OnStartAttack(sourceContent);
+            }
+        }
+
+        public void OnStartAttacked(ActionContent sourceContent)
+        {
+            foreach (var skill in lstSkill)
+            {
+                skill.OnStartAttacked(sourceContent);
+            }
+            foreach (var buff in lstBuffs)
+            {
+                buff.OnStartAttacked(sourceContent);
+            }
+        }
+
+        internal List<FightSkillProcessorBase> GetProcOfPassiveTried(string tri, ActionContent content)
+        {
+            List<FightSkillProcessorBase> lst = new List<FightSkillProcessorBase>();
+            foreach (var skill in lstSkill)
+            {
+                var lstProc = skill.GetPros();
+                foreach (var proc in lstProc)
+                {
+                    if (proc.IsTried(tri))
+                    {
+                        lst.Add(proc);
+                    }
+                }
+            }
+            foreach (var buff in lstBuffs)
+            {
+                var lstProc = buff.GetProcs();
+                foreach (var proc in lstProc)
+                {
+                    if (proc.IsTried(tri))
+                    {
+                        lst.Add(proc);
+                    }
+                }
+            }
+            return lst;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using Data;
-using System.Collections.Generic;
-using UI;
-using UnityEngine.UIElements;
+﻿using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -10,9 +7,28 @@ namespace DefaultNamespace
     /// </summary>
     public class FightActionAtk : FightActionBase
     {
-        public FightActionAtk(Character caster, SkillBaseData skill, List<Character> targets) : base(caster, skill, targets)
+        public FightActionAtk(Skill skill, ActionContent actionContent) : base(skill, actionContent)
         {
 
+        }
+
+        /// <summary>
+        /// 宣言阶段处理
+        /// </summary>
+        public override void PreAct()
+        {
+            base.PreAct();
+            this.actionContent.caster.OnStartAttack(this.actionContent);
+            var lstTargets = this.actionContent.targets;
+            foreach (var target in lstTargets)
+            {
+                target.OnStartAttacked(this.actionContent);
+            }
+        }
+
+        public override void PostAct()
+        {
+            base.PostAct();
         }
 
         public override void Act()
@@ -24,22 +40,24 @@ namespace DefaultNamespace
         {
             base.RealAct();
             bool isPowerAct = IsPowerAct();
+            var caster = actionContent.caster;
+            var skillBaseData = skill.GetBaseData();
 
             if (isPowerAct)
             {
                 //蓄力技能
                 //蓄力开始
                 caster.State = ECharacterState.Power;
-                caster.mTimeStiff = skill.timePower;
+                caster.mTimeStiff = skillBaseData.timePower;
                 caster.mSkillPowering = skill;
                 //蓄力改变韧性
-                if (skill.tenChangeToPower > 0)
+                if (skillBaseData.tenChangeToPower > 0)
                 {
-                    caster.propData.SetTenacityPercent(skill.tenChangeToPower);
-                    UIHPRoot.Inst.RefreshTarget(caster);
+                    caster.propData.SetTenacityPercent(skillBaseData.tenChangeToPower);
+                    //UIHPRoot.Inst.RefreshTarget(caster);
                 }
                
-                UIFightLog.Inst.AppendLog($"{caster.roleData.name}开始蓄力:{skill.name}!!");
+                //UIFightLog.Inst.AppendLog($"{caster.roleData.name}开始蓄力:{skillBaseData.name}!!");
             }
             else
             {
@@ -50,33 +68,25 @@ namespace DefaultNamespace
                 //mp恢复
                 if (caster.camp == ECamp.Ally)
                 {
-                    PlayerRolePropDataMgr.Inst.ChangeMP(skill.mpGet);
+                    PlayerRolePropDataMgr.Inst.ChangeMP(skillBaseData.mpGet);
                 }
 
                 //韧性改变至指定百分比;0不改变
-                if (skill.tenChangeTo > 0)
+                if (skillBaseData.tenChangeTo > 0)
                 {
-                    caster.propData.SetTenacityPercent(skill.tenChangeTo);
+                    caster.propData.SetTenacityPercent(skillBaseData.tenChangeTo);
                 }
 
-                UIHPRoot.Inst.RefreshTarget(caster);
-
-                //技能效果
-                //foreach (var target in targets)
-                //{
-                //    caster.DamageTarget(target, new DmgData() { dmgPrecent = skill.dmg, timeAtkStiff = skill.timeAtkStiff, tenAtk = skill.dmgTenacity });
-                //    if (skill.data != null && skill.data["buff"] != null)
-                //    {
-                //        //添加buff
-                //        target.AddABuff(skill.data["buff"].AsInt, skill.data["dur"].AsFloat, caster);
-                //    }
-                //}
+                //UIHPRoot.Inst.RefreshTarget(caster);
 
                 ProcActEffect();
 
                 //后摇硬直
-                caster.State = ECharacterState.Stiff;
-                caster.mTimeStiff = skill.backswing;
+                if (caster.IsEnableAction)
+                {
+                    caster.State = ECharacterState.Stiff;
+                    caster.mTimeStiff = skillBaseData.backswing;
+                }
             }
         }
     }

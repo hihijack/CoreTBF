@@ -9,49 +9,96 @@ using UnityEngine.Timeline;
 
 public class FightActionBase
 {
-    public Character caster;
-    public SkillBaseData skill;
-    public List<Character> targets;
+    public Skill skill;
+    public ActionContent actionContent;//选择的目标。对自身释放的为空
 
     public Action actionActEnd;
 
-    public List<FightSkillProcessorBase> lstProcessor;
-
-    public FightActionBase(Character caster, SkillBaseData skill, List<Character> targets)
+    public FightActionBase(Skill skill, ActionContent actionContent)
     {
-        this.caster = caster;
         this.skill = skill;
-        this.targets = targets;
-        ParseProcessor();
+        this.actionContent = actionContent;
+    }
+
+    public Character Caster
+    {
+        get
+        {
+            return actionContent.caster;
+        }
+    }
+
+    public List<Character> Targets
+    {
+        get
+        {
+            return actionContent.targets;
+        }
     }
 
     public virtual void Act()
     {
-        UIFightLog.Inst.AppendLog($"{caster.roleData.name}发动了{skill.name}");
+        //var caster = actionContent.caster;
+        //var skillBaseData = skill.GetBaseData();
+
+        //UIFightLog.Inst.AppendLog($"{caster.roleData.name}发动了{skillBaseData.name}");
 
 
-        TimelineAsset tlAssetToPlay;
+        //TimelineAsset tlAssetToPlay;
 
-        if (IsPowerAct())
-        {
-            //蓄力表现
-            tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skill.tlAssetPower}");
-        }
-        else
-        {
-            tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skill.tlAsset}");
-        }
+        //if (IsPowerAct())
+        //{
+        //    //蓄力表现
+        //    tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skillBaseData.tlAssetPower}");
+        //}
+        //else
+        //{
+        //    tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skillBaseData.tlAsset}");
+        //}
 
-        if (tlAssetToPlay != null)
+        //if (tlAssetToPlay != null)
+        //{
+        //    //UI关闭AI提示显示
+        //    UIFight.Inst.SetAIItemsVisible(false);
+        //    FightState.Inst.fightViewBehav.Play(tlAssetToPlay);
+        //}
+        //else
+        //{
+        //    RealAct();
+        //    EndAct();
+        //    FightState.Inst.characterMgr.HandleHPState();
+        //    ECamp camDieOut;
+        //    if (FightState.Inst.CheckATeamDieOut(out camDieOut))
+        //    {
+        //        FightState.Inst.OnTeamDieOut(camDieOut);
+        //    }
+        //}
+
+        FightState.Inst.fightViewBehav.CacheViewCmd(
+            new FightViewCmdPreCastSkill(new FightViewCmdPreCastSkillData() { target = this.Caster, skill = this.skill}));
+        //预处理阶段
+        PreAct();
+
+        FightState.Inst.fightViewBehav.CacheViewCmd(
+            new FightViewCmdCastSkill(new FightViewCmdCastSkillData() { caster = this.Caster, targets = this.Targets, skill = this.skill}));
+        //效果发生
+        RealAct();
+
+        //生命状态处理
+        //FightState.Inst.characterMgr.HandleHPState(actionContent);
+
+        FightState.Inst.fightViewBehav.StartPlayCachedViewCmd(OnViewPlayEnd);
+    }
+
+    private void OnViewPlayEnd()
+    {
+        EndAct();
+
+        //队伍全灭
+        ECamp camDieOut;
+        if (FightState.Inst.CheckATeamDieOut(out camDieOut))
         {
-            //UI关闭AI提示显示
-            UIFight.Inst.SetAIItemsVisible(false);
-            FightState.Inst.fightViewBehav.Play(tlAssetToPlay);
-        }
-        else
-        {
-            RealAct();
-            EndAct();
+            FightState.Inst.OnTeamDieOut(camDieOut);
         }
     }
 
@@ -61,7 +108,9 @@ public class FightActionBase
     /// <returns></returns>
     public bool IsPowerAct()
     {
-        return skill.timePower > 0 && caster.mTimePower < skill.timePower;
+        var skillBaseData = skill.GetBaseData();
+        var caster = actionContent.caster;
+        return skillBaseData.timePower > 0 && caster.mTimePower < skillBaseData.timePower;
     }
 
     public virtual void RealAct()
@@ -72,55 +121,26 @@ public class FightActionBase
     public virtual void EndAct() { actionActEnd(); }
 
     /// <summary>
+    /// 宣言阶段处理
+    /// </summary>
+    public virtual void PreAct()
+    {
+
+    }
+
+    /// <summary>
+    /// 后处理阶段处理
+    /// </summary>
+    public virtual void PostAct()
+    {
+
+    }
+
+    /// <summary>
     /// 处理技能效果
     /// </summary>
     protected void ProcActEffect()
     {
-        if (lstProcessor == null)
-        {
-            return;
-        }
-        foreach (var skillProc in lstProcessor)
-        {
-            skillProc.Proc();
-        }
-    }
-
-    /// <summary>
-    /// 技能效果处理器构建
-    /// </summary>
-    protected void ParseProcessor()
-    {
-        if (skill.data == null)
-        {
-            return;
-        }
-        lstProcessor = new List<FightSkillProcessorBase>();
-        for (int i = 0; i < skill.data.Count; i++)
-        {
-            JSONNode node = skill.data[i];
-            FightSkillConditionBase condition = null;
-            if (node[FightSkillProcKey.CONDITION] == null)
-            {
-                condition = new FightSkillConditionNone(this, node);
-            }
-            switch (node[FightSkillProcKey.EFFECT])
-            {
-                case FightSkillProcVal.EFFECT_DEF:
-                    lstProcessor.Add(new FightSkillProcDef(this, node, condition));
-                    break;
-                case FightSkillProcVal.EFFECT_DMG_TARGET:
-                    lstProcessor.Add(new FightSkillProcDmgTarget(this, node, condition));
-                    break;
-                case FightSkillProcVal.ADD_BUFF:
-                    lstProcessor.Add(new FightSkillProcAddBuff(this, node, condition));
-                    break;
-                case FightSkillProcVal.SUMMON:
-                    lstProcessor.Add(new FightSkillProcSummon(this, node, condition));
-                    break;
-                default:
-                    break;
-            }
-        }
+        skill.Proc(actionContent);
     }
 }

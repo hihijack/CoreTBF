@@ -131,6 +131,10 @@ namespace UI
         /// <param name="offset"></param>
         internal void AddPointHeight(int offset)
         {
+            if (rtPointer == null)
+            {
+                return;
+            }
             var t = rtPointer.sizeDelta;
             t.y = oriPointerHeight + offset;
             rtPointer.sizeDelta = t;

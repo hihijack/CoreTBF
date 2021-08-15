@@ -1,5 +1,5 @@
-﻿using SimpleJSON;
-using System;
+﻿using DefaultNamespace;
+using SimpleJSON;
 using System.Collections.Generic;
 using UI;
 
@@ -10,16 +10,21 @@ public class FightSkillProcSummon : FightSkillProcessorBase
 {
     int[] roleIds;
     bool isAhead;
-    public FightSkillProcSummon(FightActionBase fightAction, JSONNode jsonData, FightSkillConditionBase condition) : base(fightAction, jsonData, condition)
+    public FightSkillProcSummon(ISkillProcOwner owner, JSONNode jsonData, FightSkillConditionBase condition) : base(owner, jsonData, condition)
     {
 
     }
 
-    public override void Proc()
+    public override List<Character> GetTargets(ActionContent content)
+    {
+        return null;
+    }
+
+    public override SkillProcResult Proc(ActionContent content)
     {
         foreach (var roleId in roleIds)
         {
-            var character = FightState.Inst.characterMgr.AddCharacter(roleId, fightAction.caster.camp, isAhead);
+            var character = FightState.Inst.characterMgr.AddCharacter(roleId, content.caster.camp, isAhead);
             if (character != null)
             {
                 //血条
@@ -31,8 +36,9 @@ public class FightSkillProcSummon : FightSkillProcessorBase
                 break;
             }
         }
-        FightState.Inst.characterMgr.RefreshAllUnitPos(fightAction.caster.camp);
+        FightState.Inst.characterMgr.RefreshAllUnitPos(content.caster.camp);
         UIMgr.Inst.GetUI<UIFight>(UITable.EUITable.UIFight).RefreshAIItems();
+        return new SkillProcResult();
     }
 
     protected override void ParseFrom(JSONNode jsonData)

@@ -15,7 +15,7 @@ public class UITargetSelectPanel : MonoBehaviour
     public UIFightAction uiFightAction;
 
     Character caster;
-    SkillBaseData skillData;
+    Skill skill;
 
     private void Start()
     {
@@ -23,14 +23,15 @@ public class UITargetSelectPanel : MonoBehaviour
     }
 
 
-    public void SetData(Character caster, SkillBaseData skillData)
+    public void SetData(Character caster, Skill skill)
     {
         this.caster = caster;
-        this.skillData = skillData;
+        this.skill = skill;
     }
 
     public void Refresh()
     {
+        var skillData = skill.GetBaseData();
         txtSkillName.text = skillData.name;
 
         GameUtil.CacheChildren(goGrid);
@@ -60,7 +61,7 @@ public class UITargetSelectPanel : MonoBehaviour
 
     internal void OnTargetCick(UIItemTarget uiItemtarget)
     {
-        uiFightAction.OnSkillTargetClick(skillData, uiItemtarget.target);
+        uiFightAction.OnSkillTargetClick(skill, uiItemtarget.target);
     }
 
     public void SetVisible(bool visible)

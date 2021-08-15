@@ -9,40 +9,49 @@ public class FightSkillProcAddBuff : FightSkillProcessorBase
     public float dur;
     public string targetType;
 
-    public FightSkillProcAddBuff(FightActionBase fightAction, JSONNode jsonData, FightSkillConditionBase condition) : base(fightAction, jsonData, condition)
+    public FightSkillProcAddBuff(ISkillProcOwner owner, JSONNode jsonData, FightSkillConditionBase condition) : base(owner, jsonData, condition)
     {
 
     }
 
-    public override void Proc()
+    public override List<Character> GetTargets(ActionContent content)
     {
-        var targets = fightAction.targets;
-        var caster = fightAction.caster;
-        var skill = fightAction.skill;
-
-        List<Character> lstTarget = null;
-
+        if (m_cacheTargets != null)
+        {
+            return m_cacheTargets;
+        }
+        List<Character> targets = null;
+        var selfCharacter = owner.GetOwnerCharacter();
         switch (targetType)
         {
             case SkillProcTarget.Targets:
-                lstTarget = targets;
+                targets = content.targets;
                 break;
             case SkillProcTarget.Self:
-                lstTarget = new List<Character>();
-                lstTarget.Add(caster);
+                targets = new List<Character>();
+                targets.Add(selfCharacter);
                 break;
             case SkillProcTarget.RanTarget:
-                //TODO 随机目标
+                targets = FightState.Inst.characterMgr.GetRandomOfCamp(1, selfCharacter.GetEnemyCamp());
+                break;
+            default:
                 break;
         }
+        return targets;
+    }
 
+    public override SkillProcResult Proc(ActionContent content)
+    {
+        var selfCharacter = owner.GetOwnerCharacter();
+        var lstTarget = GetTargets(content);
         if (lstTarget != null)
         {
             foreach (var target in lstTarget)
             {
-                target.AddABuff(buffTID, dur, caster);
+                target.AddABuff(buffTID, dur, selfCharacter);
             }
         }
+        return new SkillProcResult() { targets = lstTarget };
     }
 
     protected override void ParseFrom(JSONNode jsonData)

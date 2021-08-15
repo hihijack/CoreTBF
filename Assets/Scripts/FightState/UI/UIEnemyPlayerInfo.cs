@@ -33,5 +33,16 @@ namespace UI
             sldHP.value = (float)target.propData.hp / target.propData.MaxHP;
             sldTen.value = (float)target.propData.tenacity / target.propData.tenacityMax;
         }
+
+        public void RefreshHP(int targetVal)
+        {
+            sldHP.value = (float)targetVal / target.propData.MaxHP;
+            //txtHP.text = targetVal + "/" + target.propData.MaxHP;
+        }
+
+        public void RefreshTen(int targetVal)
+        {
+            sldTen.value = (float)targetVal / target.propData.tenacityMax;
+        }
     }
 }

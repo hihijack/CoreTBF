@@ -10,3 +10,4 @@ id,name,job,model,headicon,hp,atk,def,resFire,resThunder,resDark,resMagic,tenaci
 9,骷髅战士,1,soliderSkeleton,hd_solider_skeleton,60,80,0,0,0,0,0,100,10,3.5,1,18,19,0,0,0,"[1,1,2]"
 10,熔火傀儡,1,aby,hd_aby,150,100,20,20,0,0,0,120,20,3,1,22,23,24,0,0,"[1,1,2,3]"
 11,风暴领主,2,alakir,hd_alakir,100,80,10,0,30,0,0,100,10,3,1,25,13,0,0,0,"[1,2]"
+12,闪电球,1,thunder,hd_thunder,50,200,0,0,0,0,0,100,100,3,1,26,27,0,0,0,[1]

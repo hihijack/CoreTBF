@@ -77,8 +77,9 @@ namespace UI
             //    headIcon.color = Color.white;
             //}
             //action列表
-            foreach (var skillData in _character.lstSkillData)
+            foreach (var skill in _character.lstSkill)
             {
+                var skillData = skill.GetBaseData();
                 if (skillData == null)
                 {
                     continue;
@@ -95,7 +96,7 @@ namespace UI
                     actionEnable = false;
                 }
 
-                if (_character.mSkillPowering != null && _character.mSkillPowering != skillData)
+                if (_character.mSkillPowering != null && _character.mSkillPowering != skill)
                 {
                     //有正在蓄力的技能,只能使用正在蓄力的技能
                     actionEnable = false;
@@ -108,7 +109,7 @@ namespace UI
                 //能量不足,无法选择
                 int cost = skillData.cost;
                 //发动蓄力,不需要能量消耗
-                if (_character.mSkillPowering == skillData)
+                if (_character.mSkillPowering == skill)
                 {
                     cost = 0;
                 }
@@ -124,7 +125,7 @@ namespace UI
                     actionEnable = false;
                 }
 
-                itemAction.SetData(skillData, _character, actionEnable);
+                itemAction.SetData(skill, _character, actionEnable);
             }
 
             //默认隐藏目标选择面板
@@ -135,7 +136,8 @@ namespace UI
         {
             bool needShowTargetSelectUI = true;
 
-            var skillData = uiItemAction.GetData();
+            var skill = uiItemAction.GetData();
+            var skillData = skill.GetBaseData();
             if (skillData.targetType == ESkillTarget.Self)
             {
                 //不需要选择目标
@@ -146,7 +148,7 @@ namespace UI
             if (needShowTargetSelectUI)
             {
                 uiTargetSelectPanel.SetVisible(true);
-                uiTargetSelectPanel.SetData(_character, skillData);
+                uiTargetSelectPanel.SetData(_character, skill);
                 uiTargetSelectPanel.Refresh();
             }
             else
@@ -158,15 +160,15 @@ namespace UI
             }
         }
 
-        private void RealSkillCast(SkillBaseData skillData, Character target)
+        private void RealSkillCast(Skill skill, Character target)
         {
-            _character.OnActionSelected(skillData, target);
+            _character.OnActionSelected(skill, target);
             UIMgr.Inst.HideUI(UITable.EUITable.UIFightActionPanel);
         }
 
-        internal void OnSkillTargetClick(SkillBaseData skillData, Character target)
+        internal void OnSkillTargetClick(Skill skill, Character target)
         {
-            RealSkillCast(skillData, target);
+            RealSkillCast(skill, target);
         }
     }
 }

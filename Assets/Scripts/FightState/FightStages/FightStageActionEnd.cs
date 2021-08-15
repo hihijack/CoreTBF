@@ -13,6 +13,7 @@ namespace DefaultNamespace.FightStages
         public override void OnEnter()
         {
             base.OnEnter();
+            UIFight.Inst.SetAIItemsVisible(true);
             if (FightState.Inst.IsSkipEndStage)
             {
                 FightState.Inst.ToNextStage();

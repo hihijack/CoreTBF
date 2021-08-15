@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 public class FightSkillConditionNone : FightSkillConditionBase
 {
-    public FightSkillConditionNone(FightActionBase fightAction, JSONNode jsonData) : base(fightAction,  jsonData)
+    public FightSkillConditionNone(JSONNode jsonData) : base(jsonData)
     {
     }
     public override bool IsTrue()

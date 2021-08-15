@@ -46,6 +46,28 @@ public class TreeNode<T>
         child.parent = this;
     }
 
+    internal TreeNode<T> GetChild(int index)
+    {
+        if (childs != null && childs.Count > index)
+        {
+            return childs[index];
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 取下个兄弟
+    /// </summary>
+    /// <returns></returns>
+    public TreeNode<T> GetNextBorther()
+    {
+        if (parent != null)
+        {
+            return parent.GetChild(index + 1);
+        }
+        return null;
+    }
+
     /// <summary>
     /// 是否叶子节点
     /// </summary>

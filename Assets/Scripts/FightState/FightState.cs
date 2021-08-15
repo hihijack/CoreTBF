@@ -42,6 +42,8 @@ public class FightState : GameStateBase
 
     public FightCharacterMgr characterMgr;
 
+    public SkillActionCastMgr skillActionCastMgr;
+
     public static FightState Inst { get; private set; }
 
     /// <summary>
@@ -68,17 +70,17 @@ public class FightState : GameStateBase
     /// </summary>
     internal void OnEndPlayView()
     {
-        FightStageActionAct.curAction.EndAct();
-        UIFight.Inst.SetAIItemsVisible(true);
-        characterMgr.HandleHPState();
-        ECamp camDieOut;
-        if (CheckATeamDieOut(out camDieOut))
-        {
-            OnTeamDieOut(camDieOut);
-        }
+        //FightStageActionAct.curAction.EndAct();//回合结束
+        //UIFight.Inst.SetAIItemsVisible(true);
+        //characterMgr.HandleHPState();
+        //ECamp camDieOut;
+        //if (CheckATeamDieOut(out camDieOut))
+        //{
+        //    OnTeamDieOut(camDieOut);
+        //}
     }
 
-    bool CheckATeamDieOut(out ECamp campDieOut)
+    public bool CheckATeamDieOut(out ECamp campDieOut)
     {
         campDieOut = ECamp.Ally;
         bool r = false;
@@ -184,7 +186,7 @@ public class FightState : GameStateBase
     public void CaheAction(FightActionBase action)
     {
 
-        Debug.Log("CacheAction:" + action.caster.roleData.name + "," + action.skill.name);//###########
+        Debug.Log("CacheAction:" + action.Caster.roleData.name + "," + action.skill.GetBaseData().name);//###########
 
         if (action == null)
         {
@@ -194,7 +196,7 @@ public class FightState : GameStateBase
 
         for (int i = lstActionData.Count - 1; i >= 0; i--)
         {
-            if (lstActionData[i].caster == action.caster)
+            if (lstActionData[i].Caster == action.Caster)
             {
                 lstActionData.RemoveAt(i);
                 break;
@@ -338,24 +340,24 @@ public class FightState : GameStateBase
 
     public Character GetCurCaster()
     {
-        return FightStageActionAct.curAction.caster;
+        return FightStageActionAct.curAction.Caster;
     }
 
     public List<Character> GetCurTargets()
     {
-        return FightStageActionAct.curAction.targets;
+        return FightStageActionAct.curAction.Targets;
     }
 
 
     public RoleEntityCtl GetAtkerEntityCtl()
     {
-        return FightStageActionAct.curAction.caster.entityCtl;
+        return FightStageActionAct.curAction.Caster.entityCtl;
     }
 
     public List<RoleEntityCtl> GetTargetsEntityCtl()
     {
         List<RoleEntityCtl> r = new List<RoleEntityCtl>();
-        foreach (var t in FightStageActionAct.curAction.targets)
+        foreach (var t in FightStageActionAct.curAction.Targets)
         {
             r.Add(t.entityCtl);
         }
@@ -446,6 +448,7 @@ public class FightState : GameStateBase
         _activeCharacter = null;
         lstActionData.Clear();
         fightViewBehav.Clear();
+        skillActionCastMgr.Clear();
     }
 
     public override void Init()
@@ -455,9 +458,20 @@ public class FightState : GameStateBase
             Inst = this;
             characterMgr = new FightCharacterMgr();
             lstActionData = new List<FightActionBase>();
+            skillActionCastMgr = new SkillActionCastMgr();
             //战斗视图初始化
             fightViewBehav = new FightViewBehav(director, ppv);
         }
         hasInit = true;
+    }
+
+    /// <summary>
+    /// 是否是蓄力开始行动
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPowerAct(Skill skill, Character caster)
+    {
+        var skillBaseData = skill.GetBaseData();
+        return skillBaseData.timePower > 0 && caster.mTimePower < skillBaseData.timePower;
     }
 }

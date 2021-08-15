@@ -34,18 +34,19 @@ namespace DefaultNamespace.FightStages
                 if (_queueAction.Count > 0)
                 {
                     var action = _queueAction.Dequeue();
-
-                    if (action.caster != null && action.caster.IsInReady())
+                    var caster = action.actionContent.caster;
+                    var skillData = action.skill.GetBaseData();
+                    if (caster != null && caster.IsInReady())
                     {
                         _idleFlag = false;
                         action.actionActEnd = OnAActionEnd;
                         curAction = action;
 
                         //能量消耗
-                        if (action.caster.camp == ECamp.Ally)
+                        if (caster.camp == ECamp.Ally)
                         {
-                            int cost = action.skill.cost;
-                            if (action.caster.mSkillPowering == action.skill)
+                            int cost = skillData.cost;
+                            if (caster.mSkillPowering == action.skill)
                             {
                                 //发动蓄力技能
                                 cost = 0;
@@ -54,7 +55,7 @@ namespace DefaultNamespace.FightStages
                         }
 
                         //缓存到已行动列表
-                        FightState.Inst.characterMgr.CacheToActed(action.caster);
+                        FightState.Inst.characterMgr.CacheToActed(caster);
 
                         action.Act();
                         

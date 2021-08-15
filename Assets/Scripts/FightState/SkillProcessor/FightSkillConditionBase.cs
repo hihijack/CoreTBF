@@ -6,9 +6,8 @@ using System.Collections.Generic;
 public abstract class FightSkillConditionBase
 {
     protected FightActionBase fightAction;
-    public FightSkillConditionBase(FightActionBase fightAction, JSONNode jsonData)
+    public FightSkillConditionBase(JSONNode jsonData)
     {
-        this.fightAction = fightAction;
         ParseFrom(jsonData);
     }
     public abstract bool IsTrue();

@@ -203,11 +203,11 @@ public class FightCharacterMgr
         return lst;
     }
 
-    internal void HandleHPState()
+    internal void HandleHPState(ActionContent content)
     {
         foreach (var t in lstCharacters)
         {
-            t.HandleHPState();
+            t.HandleHPState(content);
         }
     }
 
@@ -262,7 +262,7 @@ public class FightCharacterMgr
             if (chr.camp == character.camp && chr != character && chr.teamLoc > character.teamLoc)
             {
                 chr.teamLoc--;
-                chr.RefreshPos(true);
+                FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdRefChrPos(chr, true));
             }
         }
     }
@@ -380,7 +380,7 @@ public class FightCharacterMgr
     /// </summary>
     /// <param name="count"></param>
     /// <returns></returns>
-    List<Character> GetRandomOfCamp(int count, ECamp camp)
+    public List<Character> GetRandomOfCamp(int count, ECamp camp)
     {
         if (count == 0)
         {

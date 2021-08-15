@@ -133,11 +133,11 @@ namespace DefaultNamespace
         /// <returns></returns>
         public FightActionBase ActionForMain()
         {
-            SkillBaseData skillData = null;
+            Skill skill = null;
             if (_character.mSkillPowering != null)
             {
                 //正在蓄力,只能使用蓄力技能
-                skillData = _character.mSkillPowering;
+                skill = _character.mSkillPowering;
             }
             else
             {
@@ -146,12 +146,13 @@ namespace DefaultNamespace
                 {
                     _index = 0;
                 }
-                skillData = _character.lstSkillData[arrSkillIndexToAction[_index] - 1];
+                skill = _character.lstSkill[arrSkillIndexToAction[_index] - 1];
             }
-            
+
             //主动循环使用技能
             //TODO AI防御处理
-            return FightActionFactory.Inst.CreateFightAction(_character, skillData, GetSkillTargets(skillData));
+            ActionContent content = FightActionFactory.Inst.CreateActionContent(_character, skill, GetSkillTargets(skill));
+            return FightActionFactory.Inst.CreateFightAction(skill, content);
         }
 
         /// <summary>
@@ -166,8 +167,8 @@ namespace DefaultNamespace
             {
                 t = 0;
             }
-            var skillData = _character.lstSkillData[arrSkillIndexToAction[t] - 1];
-            return skillData;
+            var skill = _character.lstSkill[arrSkillIndexToAction[t] - 1];
+            return skill.GetBaseData();
         }
 
         /// <summary>
@@ -180,42 +181,11 @@ namespace DefaultNamespace
             return null;
         }
 
-        List<Character> GetSkillTargets(SkillBaseData skillData)
+        List<Character> GetSkillTargets(Skill skill)
         {
-            var targets = new List<Character>();
-            //if (skillData.targetCount == 1)
-            //{
-            //    if (skillData.targetType == ESkillTarget.Enemy)
-            //    {
-            //        if (skillData.targetTeamLocs > 0)
-            //        {
-            //            targets.Add(GameMgr.Inst.GetAllyCharacterByTeamLoc(skillData.targetTeamLocs));
-            //        }
-            //        else
-            //        {
-            //            targets.Add(GameMgr.Inst.GetARandomAllyCharacter());
-            //        }
-            //    }else if (skillData.targetType == ESkillTarget.Ally)
-            //    {
-            //        targets = GetRandomOfCamp(1, _character.camp);
-            //    }else if (skillData.targetType == ESkillTarget.Self)
-            //    {
-            //        targets.Add(_character);
-            //    }
+            var skillData = skill.GetBaseData();
 
-            //}else if (skillData.targetCount > 1)
-            //{
-            //    if (skillData.targetType == ESkillTarget.Enemy)
-            //    {
-            //        targets = GetRandomOfCamp(skillData.targetCount, _character.GetEnemyCamp());
-            //    }else if (skillData.targetType == ESkillTarget.Ally)
-            //    {
-            //        targets = GetRandomOfCamp(skillData.targetCount, _character.camp);
-            //    }else if (skillData.targetType == ESkillTarget.Self)
-            //    {
-            //        targets.Add(_character);
-            //    }
-            //}
+            var targets = new List<Character>();
 
             //TODO AI目标获取
             if (skillData.targetType == ESkillTarget.Enemy)

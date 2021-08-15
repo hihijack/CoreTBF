@@ -5,7 +5,7 @@ namespace DefaultNamespace
 {
     public class FightActionWait : FightActionBase
     {
-        public FightActionWait(Character caster, SkillBaseData skill, List<Character> targets) : base(caster, skill, targets)
+        public FightActionWait(Skill skill, ActionContent content) : base(skill, content)
         {
 
         }
@@ -18,6 +18,7 @@ namespace DefaultNamespace
         public override void RealAct()
         {
             base.RealAct();
+            var caster = actionContent.caster;
             caster.State = ECharacterState.Wait;
         }
     }

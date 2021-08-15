@@ -22,10 +22,19 @@ namespace Data
         Self
     }
     
+    public enum ESkillType
+    {
+        Active, //主动技能
+        Passive, //被动技能
+        Temp //触发马甲技能
+    }
+
     public class SkillBaseData
     {
         public int ID;
         public string name;
+
+        public ESkillType type;
 
         public string icon;
 
@@ -97,28 +106,29 @@ namespace Data
         {
             ID = reader.GetInt16(0);
             name = reader.GetString(1);
-            icon = reader.GetString(2);
-            logic = (ESkillLogic)Enum.Parse(typeof(ESkillLogic), reader.GetString(3));
-            targetType = (ESkillTarget)Enum.Parse(typeof(ESkillTarget), reader.GetString(4));
-            dmg = reader.GetInt16(5) / 100f;
-            dmgFire = reader.GetInt16(6) / 100f;
-            dmgTenacity = reader.GetInt16(7);
-            targetCount = reader.GetInt16(8);
-            timePower = reader.GetFloat(9);
-            backswing = reader.GetFloat(10);
-            timeAtkStiff = reader.GetFloat(11);
-            cost = reader.GetInt16(12);
-            tenChangeTo = reader.GetFloat(13);
-            tenChangeToPower = reader.GetFloat(14);
-            distance = reader.GetInt16(15);
+            type = (ESkillType)Enum.Parse(typeof(ESkillType), reader.GetString(2));
+            icon = reader.GetString(3);
+            logic = (ESkillLogic)Enum.Parse(typeof(ESkillLogic), reader.GetString(4));
+            targetType = (ESkillTarget)Enum.Parse(typeof(ESkillTarget), reader.GetString(5));
+            dmg = reader.GetInt16(6) / 100f;
+            dmgFire = reader.GetInt16(7) / 100f;
+            dmgTenacity = reader.GetInt16(8);
+            targetCount = reader.GetInt16(9);
+            timePower = reader.GetFloat(10);
+            backswing = reader.GetFloat(11);
+            timeAtkStiff = reader.GetFloat(12);
+            cost = reader.GetInt16(13);
+            tenChangeTo = reader.GetFloat(14);
+            tenChangeToPower = reader.GetFloat(15);
+            distance = reader.GetInt16(16);
            
-            tip = reader.GetString(16);
-            tlAsset = reader.IsDBNull(17) ? "" : reader.GetString(17);
-            tlAssetPower = reader.IsDBNull(18) ? "" : reader.GetString(18);
-            data = reader.IsDBNull(19) ? null : JSONNode.Parse(reader.GetString(19));
+            tip = reader.GetString(17);
+            tlAsset = reader.IsDBNull(18) ? "" : reader.GetString(18);
+            tlAssetPower = reader.IsDBNull(19) ? "" : reader.GetString(19);
+            data = reader.IsDBNull(20) ? null : JSONNode.Parse(reader.GetString(20));
 
 
-            JSONNode jsonJob = reader.IsDBNull(20) ? null : JSONNode.Parse(reader.GetString(20));
+            JSONNode jsonJob = reader.IsDBNull(21) ? null : JSONNode.Parse(reader.GetString(21));
             if (jsonJob != null && jsonJob.Count > 0)
             {
                 enableJob = new int[jsonJob.Count];

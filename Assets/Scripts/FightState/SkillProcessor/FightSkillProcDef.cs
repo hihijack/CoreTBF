@@ -7,22 +7,29 @@ public class FightSkillProcDef : FightSkillProcessorBase
 {
     public float phy;
 
-    public FightSkillProcDef(FightActionBase fightAction, JSONNode jsonData, FightSkillConditionBase condition) : base(fightAction, jsonData, condition)
+    public FightSkillProcDef(ISkillProcOwner owner, JSONNode jsonData, FightSkillConditionBase condition) : base(owner, jsonData, condition)
     {
         
     }
 
-    public override void Proc()
+    public override List<Character> GetTargets(ActionContent content)
     {
-        fightAction.caster.State = ECharacterState.Def;
+        return null;
+    }
+
+    public override SkillProcResult Proc(ActionContent content)
+    {
+        content.caster.State = ECharacterState.Def;
+        var skillBaseData = content.skill.GetBaseData();
         //韧性改变至指定百分比;0不改变
-        if (fightAction.skill.tenChangeTo > 0)
+        if (skillBaseData.tenChangeTo > 0)
         {
-            fightAction.caster.propData.SetTenacityPercent(fightAction.skill.tenChangeTo);
+            content.caster.propData.SetTenacityPercent(skillBaseData.tenChangeTo);
         }
 
-        UIHPRoot.Inst.RefreshTarget(fightAction.caster);
-        fightAction.caster.mTimeStiff = fightAction.skill.backswing;
+        UIHPRoot.Inst.RefreshTarget(content.caster);
+        content.caster.mTimeStiff = skillBaseData.backswing;
+        return new SkillProcResult();
     }
 
     protected override void ParseFrom(JSONNode jsonData)

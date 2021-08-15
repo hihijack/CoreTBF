@@ -96,6 +96,42 @@ public class UIHPRoot : UIBase
         }
     }
 
+    public void RefreshTargetHPWithVal(Character target, int targetVal)
+    {
+        if (target.camp == ECamp.Ally)
+        {
+            if (_dicPlayerInfo.ContainsKey(target))
+            {
+                _dicPlayerInfo[target].RefreshHP(targetVal);
+            }
+        }
+        else if (target.camp == ECamp.Enemy)
+        {
+            if (_dicEnemyInfo.ContainsKey(target))
+            {
+                _dicEnemyInfo[target].RefreshHP(targetVal);
+            }
+        }
+    }
+
+    public void RefreshTargetTenWithVal(Character target, int targetVal)
+    {
+        if (target.camp == ECamp.Ally)
+        {
+            if (_dicPlayerInfo.ContainsKey(target))
+            {
+                _dicPlayerInfo[target].RefreshTen(targetVal);
+            }
+        }
+        else if (target.camp == ECamp.Enemy)
+        {
+            if (_dicEnemyInfo.ContainsKey(target))
+            {
+                _dicEnemyInfo[target].RefreshTen(targetVal);
+            }
+        }
+    }
+
     public void RefreshTarget(Character target)
     {
         if (target.camp == ECamp.Ally)

@@ -6,7 +6,7 @@ namespace DefaultNamespace
 {
     public class FightActionDef : FightActionBase
     {
-        public FightActionDef(Character caster, SkillBaseData skill, List<Character> targets) : base(caster, skill, targets)
+        public FightActionDef(Skill skill, ActionContent content) : base(skill, content)
         {
 
         }

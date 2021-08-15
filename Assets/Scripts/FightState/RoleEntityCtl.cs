@@ -10,11 +10,21 @@ namespace DefaultNamespace
         public int face; //朝向.向右为1,左为-1
         Character _character;
         SpriteRenderer _spriteRenderer;
-        
+        Animator _anim;
         public void Init(Character character)
         {
             this._character = character;
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            //添加动画状态机
+            _anim = GameUtil.GetOrAdd<Animator>(gameObject);
+            if (_anim.runtimeAnimatorController == null)
+            {
+                GameResLoader.Load<RuntimeAnimatorController>("comm_character.controller", (a) => { _anim.runtimeAnimatorController = a; });
+            }
+            else
+            {
+                PlayAnim("idle");
+            }
         }
 
         internal Vector3 GetPos()
@@ -40,6 +50,14 @@ namespace DefaultNamespace
         internal void Cache()
         {
            GoPool.Inst.Cache(gameObject);
+        }
+
+        public void PlayAnim(string animName)
+        {
+            if (_anim.runtimeAnimatorController)
+            {
+                _anim.Play(animName, 0, 0);
+            }
         }
     }
 }

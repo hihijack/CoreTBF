@@ -34,5 +34,24 @@ namespace UI
                 }
             }
         }
+
+        public void RefreshHP(int targetVal)
+        {
+            sldHP.value = (float)targetVal / data.propData.MaxHP;
+            txtHP.text = targetVal + "/" + data.propData.MaxHP;
+            if (data.State == ECharacterState.Dying)
+            {
+                sldHP.targetGraphic.color = colorDying;
+            }
+            else
+            {
+                sldHP.targetGraphic.color = colorNormal;
+            }
+        }
+
+        public void RefreshTen(int targetVal)
+        {
+            sldTen.value = (float)targetVal / data.propData.tenacityMax;
+        }
     }
 }
