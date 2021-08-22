@@ -7,7 +7,7 @@ id,name,type,icon,logic,targetType,dmg,dmgFire,dmgTenacity,targetCount,timePower
 6,黑暗箭,Active,Buffs/Icon1_47,Atk,Enemy,100,0,50,1,0,1.2,1,0,0,0,3,目标:前排\n对目标造成伤害,common_atk,,,[2]
 7,黑暗冲击波,Active,Buffs/Icon1_47,Atk,Enemy,100,0,60,3,1,2,1,0,0,1,3,对所有敌人造成毁灭性打击,common_atk,common_pow,,[2]
 8,横扫,Active,Buffs/Icon1_47,Atk,Enemy,100,0,5,3,0,0.8,0,10,0,0,1,对所有敌人进行一次攻击,common_atk,,"[{""effect"":""dmg_target"",""target"":""target""}]",[1]
-9,能量,Active,Buffs/Icon1_47,Atk,Self,0,0,0,0,0,1,0,0,0,0,0,获得1格能量点,common_atk,,,[1]
+9,能量,Active,Buffs/Icon1_47,Atk,Self,0,0,0,0,0,1,0,0,0,0,0,获得1格能量点,common_atk,,"[{""effect"":""get_mp"",""val"":10,""target"":""self""}]",[1]
 10,破甲,Active,Buffs/Icon1_47,Atk,Enemy,50,0,10,1,0,0.8,0,10,0,0,1,降低目标防御,common_atk,,"[{""effect"":""dmg_target"",""target"":""target""}]",[1]
 11,强力黑暗箭,Active,Buffs/Icon1_47,Atk,Enemy,0,0,30,1,0,1.5,2,70,0,0,3,强力的黑暗箭攻击即使防御也会出现大硬直,common_atk,,"[{""effect"":""dmg_target"",""target"":""target""}]",[2]
 12,换位,Active,Buffs/Icon1_47,ExchangeLoc,Ally,0,0,0,1,0,0.1,0,0,0,0,0,"与队友交互位置.处于危险情况的前排队友,可以与其交互位置",,,,
@@ -25,4 +25,4 @@ id,name,type,icon,logic,targetType,dmg,dmgFire,dmgTenacity,targetCount,timePower
 24,熔岩践踏,Active,Buffs/Icon1_47,Atk,Enemy,0,150,80,3,1,1.5,1.2,0,0,0,0,全体AOE火焰伤害，毁天灭地！,common_atk2,common_pow,"[{""effect"":""dmg_target"",""target"":""target""}]",[1]
 25,召唤闪电球,Active,Buffs/Icon1_47,Atk,Self,0,0,0,0,0,0.8,0,0,0,0,0,召唤闪电球,common_atk,,"[{""effect"":""summon"",""role_ids"":[12,12],""ahead"":true}]",[1]
 26,自爆,Active,Buffs/Icon1_47,Atk,Self,10000,0,0,0,0,1,0,0,0,0,0,自爆,,,"[{""effect"":""dmg_target"",""target"":""self""}]",[1]
-27,雷暴,Passive,Buffs/Icon1_47,Atk,Enemy,100,0,50,1,0,0,0.2,0,0,0,1,死亡时对随机单位造成伤害,thunder_bomb,,"[{""tris"":[""die""],""effect"":""dmg_target"",""target"":""rantarget""}]",[1]
+27,雷暴,Passive,Buffs/Icon1_47,Atk,Enemy,100,0,50,1,0,0,0.2,0,0,0,1,死亡时对随机单位造成伤害,thunder_bomb,,"[{""tris"":[""die""],""effect"":""dmg_target"",""target"":""tank""}]",[1]

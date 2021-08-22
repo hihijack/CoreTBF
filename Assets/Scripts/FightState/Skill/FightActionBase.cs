@@ -38,42 +38,6 @@ public class FightActionBase
 
     public virtual void Act()
     {
-        //var caster = actionContent.caster;
-        //var skillBaseData = skill.GetBaseData();
-
-        //UIFightLog.Inst.AppendLog($"{caster.roleData.name}发动了{skillBaseData.name}");
-
-
-        //TimelineAsset tlAssetToPlay;
-
-        //if (IsPowerAct())
-        //{
-        //    //蓄力表现
-        //    tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skillBaseData.tlAssetPower}");
-        //}
-        //else
-        //{
-        //    tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skillBaseData.tlAsset}");
-        //}
-
-        //if (tlAssetToPlay != null)
-        //{
-        //    //UI关闭AI提示显示
-        //    UIFight.Inst.SetAIItemsVisible(false);
-        //    FightState.Inst.fightViewBehav.Play(tlAssetToPlay);
-        //}
-        //else
-        //{
-        //    RealAct();
-        //    EndAct();
-        //    FightState.Inst.characterMgr.HandleHPState();
-        //    ECamp camDieOut;
-        //    if (FightState.Inst.CheckATeamDieOut(out camDieOut))
-        //    {
-        //        FightState.Inst.OnTeamDieOut(camDieOut);
-        //    }
-        //}
-
         FightState.Inst.fightViewBehav.CacheViewCmd(
             new FightViewCmdPreCastSkill(new FightViewCmdPreCastSkillData() { target = this.Caster, skill = this.skill}));
         //预处理阶段

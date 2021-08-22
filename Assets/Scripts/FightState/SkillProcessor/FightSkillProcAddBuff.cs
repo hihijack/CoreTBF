@@ -34,6 +34,11 @@ public class FightSkillProcAddBuff : FightSkillProcessorBase
             case SkillProcTarget.RanTarget:
                 targets = FightState.Inst.characterMgr.GetRandomOfCamp(1, selfCharacter.GetEnemyCamp());
                 break;
+            case SkillProcTarget.Tank:
+                //敌方最前排目标
+                targets = new List<Character>();
+                targets.Add(FightState.Inst.characterMgr.GetTankCharacter(selfCharacter.GetEnemyCamp()));
+                break;
             default:
                 break;
         }

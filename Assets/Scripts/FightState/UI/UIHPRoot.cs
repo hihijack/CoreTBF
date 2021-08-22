@@ -75,8 +75,13 @@ public class UIHPRoot : UIBase
 
     public void RefreshMP()
     {
-        int mpCount = PlayerRolePropDataMgr.Inst.propData.mp / MPPerPoint;
-        int mpLeft = PlayerRolePropDataMgr.Inst.propData.mp % MPPerPoint;
+        RefreshMPWithVal(PlayerRolePropDataMgr.Inst.propData.mp);
+    }
+
+    public void RefreshMPWithVal(int val)
+    {
+        int mpCount = val / MPPerPoint;
+        int mpLeft = val % MPPerPoint;
         int uiPointCount = mpLeft > 0 ? mpCount + 1 : mpCount;
         GameUtil.CacheChildren(goGridMP);
         for (int i = 0; i < uiPointCount; i++)

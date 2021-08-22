@@ -241,13 +241,14 @@ namespace DefaultNamespace
                 }
 
                 //等待恢复MP
-                if (State == ECharacterState.Wait)
-                {
-                    if (Time.frameCount % 60 == 0)
-                    {
-                        PlayerRolePropDataMgr.Inst.ChangeMP(5);
-                    }
-                }
+                //if (State == ECharacterState.Wait)
+                //{
+                //    if (Time.frameCount % 60 == 0)
+                //    {
+                //        PlayerRolePropDataMgr.Inst.ChangeMP(5);
+                //        FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdMPChange(0,PlayerRolePropDataMgr.Inst.propData.mp));
+                //    }
+                //}
             }
 
             //更新图片

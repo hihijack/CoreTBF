@@ -50,6 +50,35 @@ public class FightCharacterMgr
     }
 
     /// <summary>
+    /// 取坦克角色：活着的最前排单位
+    /// </summary>
+    /// <param name="eCamp"></param>
+    /// <returns></returns>
+    internal Character GetTankCharacter(ECamp eCamp)
+    {
+        Character chr = null;
+
+        foreach (var charaT in lstCharacters)
+        {
+            if (charaT.camp == eCamp && charaT.IsAlive())
+            {
+                if (chr == null)
+                {
+                    chr = charaT;
+                }
+                else
+                {
+                    if (charaT.teamLoc < chr.teamLoc)
+                    {
+                        chr = charaT;
+                    }
+                }
+            }
+        }
+        return chr;
+    }
+
+    /// <summary>
     /// 添加一个角色
     /// </summary>
     /// <param name="id"></param>

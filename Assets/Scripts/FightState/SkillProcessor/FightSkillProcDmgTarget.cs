@@ -13,30 +13,7 @@ public class FightSkillProcDmgTarget : FightSkillProcessorBase
 
     public override List<Character> GetTargets(ActionContent content)
     {
-        if (m_cacheTargets != null)
-        {
-            return m_cacheTargets;
-        }
-
-        List<Character> targets = null;
-        var selfCharacter = owner.GetOwnerCharacter();
-        switch (targetType)
-        {
-            case SkillProcTarget.Targets:
-                targets = content.targets;
-                break;
-            case SkillProcTarget.Self:
-                targets = new List<Character>();
-                targets.Add(selfCharacter);
-                break;
-            case SkillProcTarget.RanTarget:
-                targets = FightState.Inst.characterMgr.GetRandomOfCamp(1, selfCharacter.GetEnemyCamp());
-                break;
-            default:
-                break;
-        }
-
-        return targets;
+        return base.GetTargets(targetType, content);
     }
 
     public override SkillProcResult Proc(ActionContent content)

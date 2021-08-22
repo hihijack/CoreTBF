@@ -54,7 +54,7 @@ namespace DefaultNamespace
                 if (skillBaseData.tenChangeToPower > 0)
                 {
                     caster.propData.SetTenacityPercent(skillBaseData.tenChangeToPower);
-                    //UIHPRoot.Inst.RefreshTarget(caster);
+                    FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdTenacityChange(caster, 0, caster.propData.tenacity));
                 }
                
                 //UIFightLog.Inst.AppendLog($"{caster.roleData.name}开始蓄力:{skillBaseData.name}!!");
@@ -65,19 +65,12 @@ namespace DefaultNamespace
                 caster.mTimePower = 0;
                 caster.State = ECharacterState.Acting;
 
-                //mp恢复
-                if (caster.camp == ECamp.Ally)
-                {
-                    PlayerRolePropDataMgr.Inst.ChangeMP(skillBaseData.mpGet);
-                }
-
                 //韧性改变至指定百分比;0不改变
                 if (skillBaseData.tenChangeTo > 0)
                 {
                     caster.propData.SetTenacityPercent(skillBaseData.tenChangeTo);
+                    FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdTenacityChange(caster, 0, caster.propData.tenacity));
                 }
-
-                //UIHPRoot.Inst.RefreshTarget(caster);
 
                 ProcActEffect();
 

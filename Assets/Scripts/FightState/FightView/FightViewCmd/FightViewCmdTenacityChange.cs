@@ -16,7 +16,6 @@ public class FightViewCmdTenacityChange : FightViewCmdBase
 
     public override void Play()
     {
-        Debug.Log("t>>TenViewCmd:" + curVal);//########
         UIHPRoot.Inst.RefreshTargetTenWithVal(target, curVal);
         End();
     }

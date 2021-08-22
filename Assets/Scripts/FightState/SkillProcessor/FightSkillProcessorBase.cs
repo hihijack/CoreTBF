@@ -18,6 +18,7 @@ public static class FightSkillProcVal
     public const string EFFECT_DMG_TARGET = "dmg_target";
     public const string ADD_BUFF = "add_buff";
     public const string SUMMON = "summon";
+    public const string GET_MP = "get_mp";
     public const string CONDITION_NONE = "none";
 }
 
@@ -42,6 +43,7 @@ public static class SkillProcTarget
     public const string Targets = "target"; //所有目标
     public const string Self = "self"; //自身
     public const string RanTarget = "rantarget"; //随机目标
+    public const string Tank = "tank"; //敌方最前排单位
 }
 
 /// <summary>
@@ -80,6 +82,39 @@ public abstract class FightSkillProcessorBase
     public abstract SkillProcResult Proc(ActionContent content);
 
     public abstract List<Character> GetTargets(ActionContent content);
+
+    public virtual List<Character> GetTargets(string targetType, ActionContent content) 
+    {
+        if (m_cacheTargets != null)
+        {
+            return m_cacheTargets;
+        }
+
+        List<Character> targets = null;
+        var selfCharacter = owner.GetOwnerCharacter();
+        switch (targetType)
+        {
+            case SkillProcTarget.Targets:
+                targets = content.targets;
+                break;
+            case SkillProcTarget.Self:
+                targets = new List<Character>();
+                targets.Add(selfCharacter);
+                break;
+            case SkillProcTarget.RanTarget:
+                targets = FightState.Inst.characterMgr.GetRandomOfCamp(1, selfCharacter.GetEnemyCamp());
+                break;
+            case SkillProcTarget.Tank:
+                //敌方最前排目标
+                targets = new List<Character>();
+                targets.Add(FightState.Inst.characterMgr.GetTankCharacter(selfCharacter.GetEnemyCamp()));
+                break;
+            default:
+                break;
+        }
+
+        return targets;
+    }
 
     internal void AddTri(string tri)
     {

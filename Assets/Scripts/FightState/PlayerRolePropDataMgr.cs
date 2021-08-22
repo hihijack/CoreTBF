@@ -34,7 +34,6 @@ namespace DefaultNamespace
         public void ChangeMP(int mpchange)
         {
             propData.ChangeMP(mpchange);
-            UIHPRoot.Inst.RefreshMP();
         }
     }
 }

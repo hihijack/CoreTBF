@@ -151,6 +151,9 @@ public class BuffBase : ITriggedable,ISkillProcOwner
                 case FightSkillProcVal.SUMMON:
                     processor = (new FightSkillProcSummon(this, node, condition));
                     break;
+                case FightSkillProcVal.GET_MP:
+                    processor = new FightSkillProcGetMP(this, node, condition);
+                    break;
                 default:
                     break;
             }

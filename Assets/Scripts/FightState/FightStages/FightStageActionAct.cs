@@ -51,7 +51,11 @@ namespace DefaultNamespace.FightStages
                                 //发动蓄力技能
                                 cost = 0;
                             }
-                            PlayerRolePropDataMgr.Inst.ChangeMP(-1 * cost);
+                            if (cost > 0)
+                            {
+                                PlayerRolePropDataMgr.Inst.ChangeMP(-1 * cost);
+                                FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdMPChange(0, PlayerRolePropDataMgr.Inst.propData.mp));
+                            }
                         }
 
                         //缓存到已行动列表
