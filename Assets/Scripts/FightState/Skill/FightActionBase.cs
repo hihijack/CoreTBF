@@ -38,18 +38,17 @@ public class FightActionBase
 
     public virtual void Act()
     {
+
+        Debug.Log("释放技能:" + Caster.roleData.name + ",skill:" + skill.GetBaseData().name);//##########
+
         FightState.Inst.fightViewBehav.CacheViewCmd(
             new FightViewCmdPreCastSkill(new FightViewCmdPreCastSkillData() { target = this.Caster, skill = this.skill}));
         //预处理阶段
         PreAct();
 
-        FightState.Inst.fightViewBehav.CacheViewCmd(
-            new FightViewCmdCastSkill(new FightViewCmdCastSkillData() { caster = this.Caster, targets = this.Targets, skill = this.skill}));
+        FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCastSkill(Caster, Targets, skill, IsPowerAct()));
         //效果发生
         RealAct();
-
-        //生命状态处理
-        //FightState.Inst.characterMgr.HandleHPState(actionContent);
 
         FightState.Inst.fightViewBehav.StartPlayCachedViewCmd(OnViewPlayEnd);
     }
@@ -73,8 +72,7 @@ public class FightActionBase
     public bool IsPowerAct()
     {
         var skillBaseData = skill.GetBaseData();
-        var caster = actionContent.caster;
-        return skillBaseData.timePower > 0 && caster.mTimePower < skillBaseData.timePower;
+        return skillBaseData.timePower > 0 && Caster.mTimePower < skillBaseData.timePower;
     }
 
     public virtual void RealAct()

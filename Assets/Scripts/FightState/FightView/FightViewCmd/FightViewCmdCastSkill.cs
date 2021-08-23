@@ -5,26 +5,24 @@ using UI;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public struct FightViewCmdCastSkillData
-{
-    public Character caster;
-    public List<Character> targets;
-    public Skill skill;
-}
-
 /// <summary>
 /// 释放技能
 /// </summary>
 public class FightViewCmdCastSkill : FightViewCmdBase
 {
-    FightViewCmdCastSkillData data;
-
     List<GameObject> _lstEffectsCache;
+    private readonly Character caster;
+    private readonly List<Character> targets;
+    private readonly Skill skill;
+    private readonly bool isPowStartAct;
 
-    public FightViewCmdCastSkill(FightViewCmdCastSkillData data)
+    public FightViewCmdCastSkill(Character caster, List<Character> targets, Skill skill, bool isPowStartAct)
     {
-        this.data = data;
         _lstEffectsCache = new List<GameObject>(10);
+        this.caster = caster;
+        this.targets = targets;
+        this.skill = skill;
+        this.isPowStartAct = isPowStartAct;
     }
 
     public override void Play()
@@ -33,14 +31,14 @@ public class FightViewCmdCastSkill : FightViewCmdBase
         //播放TimeLine
         TimelineAsset tlAssetToPlay;
 
-        if (FightState.Inst.IsPowerAct(data.skill, data.caster))
+        if (isPowStartAct)
         {
             //蓄力表现
-            tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{data.skill.GetBaseData().tlAssetPower}");
+            tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skill.GetBaseData().tlAssetPower}");
         }
         else
         {
-            tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{data.skill.GetBaseData().tlAsset}");
+            tlAssetToPlay = Resources.Load<TimelineAsset>($"TimeLines/{skill.GetBaseData().tlAsset}");
         }
 
         if (tlAssetToPlay != null)
@@ -51,6 +49,11 @@ public class FightViewCmdCastSkill : FightViewCmdBase
         }
         else
         {
+            //防御表现
+            if (skill.GetBaseData().logic == Data.ESkillLogic.Def)
+            {
+                caster.entityCtl.SetSprite("def");
+            }
             End();
         }
     }
@@ -89,12 +92,12 @@ public class FightViewCmdCastSkill : FightViewCmdBase
     {
         if (param.target == ETargetType.Atker)
         {
-            var taretEntity = data.caster.entityCtl;
+            var taretEntity = caster.entityCtl;
             taretEntity.SetSprite(param.spriteName);
         }
         else if (param.target == ETargetType.Targets)
         {
-            var targetCharacters = data.targets;
+            var targetCharacters = targets;
             foreach (var character in targetCharacters)
             {
                 if (character.State == ECharacterState.Power && param.spriteName != "power")
@@ -113,14 +116,14 @@ public class FightViewCmdCastSkill : FightViewCmdBase
     {
         if (param.target == ETargetType.Atker)
         {
-            Character targetCharacter = data.caster;
+            Character targetCharacter = caster;
             var goEff = EffectMgr.CreateEffForUnit(targetCharacter.entityCtl, new ParamEffectCreate()
             { effName = param.effName, offsetPos = param.posOffset, bind = param.bind });
             _lstEffectsCache.Add(goEff);
         }
         else if (param.target == ETargetType.Targets)
         {
-            var targetsCharacters = data.targets;
+            var targetsCharacters = targets;
             foreach (var targetCharacter in targetsCharacters)
             {
                 var goEff = EffectMgr.CreateEffForUnit(targetCharacter.entityCtl, new ParamEffectCreate()
@@ -134,7 +137,7 @@ public class FightViewCmdCastSkill : FightViewCmdBase
     {
         if (param.targetType == ETargetType.Atker)
         {
-            Character targetCharacter = data.caster;
+            Character targetCharacter = caster;
             FightState.Inst.fightViewBehav.MoveACharacter(targetCharacter, param, 1);
         }
         else if (param.targetType == ETargetType.Targets)
@@ -144,7 +147,7 @@ public class FightViewCmdCastSkill : FightViewCmdBase
             foreach (var targetCharacter in targetsCharacters)
             {
                 index++;
-                FightState.Inst.fightViewBehav.MoveACharacter(targetCharacter, param, 1);
+                FightState.Inst.fightViewBehav.MoveACharacter(targetCharacter, param, index);
             }
         }
     }

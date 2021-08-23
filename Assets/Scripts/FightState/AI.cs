@@ -155,12 +155,23 @@ namespace DefaultNamespace
             return FightActionFactory.Inst.CreateFightAction(skill, content);
         }
 
+        public struct DataNextSkillToCas
+        {
+            public SkillBaseData skillBaseData;
+            public bool isPower; //发动蓄力技能
+        }
         /// <summary>
         /// 即将使用的技能
         /// </summary>
         /// <returns></returns>
-        public SkillBaseData GetNextSkillToCast()
+        public DataNextSkillToCas GetNextSkillToCast()
         {
+            //蓄力技能
+            if (_character.mSkillPowering != null)
+            {
+                return new DataNextSkillToCas() { skillBaseData = _character.mSkillPowering.GetBaseData(), isPower = true };
+            }
+
             int t = _index;
             t++;
             if (t > arrSkillIndexToAction.Length - 1)
@@ -168,7 +179,7 @@ namespace DefaultNamespace
                 t = 0;
             }
             var skill = _character.lstSkill[arrSkillIndexToAction[t] - 1];
-            return skill.GetBaseData();
+            return new DataNextSkillToCas() { skillBaseData = skill.GetBaseData(), isPower = false} ;
         }
 
         /// <summary>

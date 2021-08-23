@@ -19,7 +19,8 @@ namespace Data
     {
         Ally,
         Enemy,
-        Self
+        Self,
+        SelfOrAlly
     }
     
     public enum ESkillType
@@ -138,6 +139,16 @@ namespace Data
                     enableJob[i] = int.Parse(id);
                 }
             }
+        }
+
+        public bool IsTargetTypeContainAlly()
+        {
+            return targetType == ESkillTarget.Ally || targetType == ESkillTarget.SelfOrAlly;
+        }
+
+        public bool IsTargetTypeContainSelf()
+        {
+            return targetType == ESkillTarget.Self || targetType == ESkillTarget.SelfOrAlly;
         }
     }
 }

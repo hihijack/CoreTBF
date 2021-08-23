@@ -19,7 +19,6 @@ namespace DefaultNamespace
     public enum ECharacterState
     {
         Stiff,
-        Active,//当前进入触发
         Wait,
         Def,
         Power,
@@ -45,6 +44,7 @@ namespace DefaultNamespace
         public RoleEntityCtl entityCtl;
         public RoleBaseData roleData;
         public PropData propData;
+
         public List<Skill> lstSkill;
         public int teamLoc;
         public ECamp camp;
@@ -304,7 +304,7 @@ namespace DefaultNamespace
         /// </summary>
         public void ActiveAction()
         {
-            State = ECharacterState.Active;
+            //State = ECharacterState.Active;
             //从break中恢复
             var buffBreak = GetBuff(2);
             if (buffBreak != null && buffBreak.IsValid())
@@ -373,12 +373,16 @@ namespace DefaultNamespace
             }
         }
 
+        internal void HealTarget(Character target, float heal)
+        {
+            target.Healed(CalHeal(heal));
+            //TODO 濒死治疗
+        }
+
         public DmgResult DamageTarget(Character target, DmgData dmgData)
         {
             int dmg = CalDmg(dmgData.dmgPrecent);
 
-            Debug.Log("t>>DmgTarget:" + roleData.name + "->" + target.roleData.name + ":" + dmg);//#######
-           
             //计算增伤减伤
             dmg = Mathf.CeilToInt(dmg * target.propData.DmgHurtedMul);
 
@@ -409,7 +413,6 @@ namespace DefaultNamespace
             var targetDef = (float)target.propData.Def;
             dmg = Mathf.CeilToInt(dmg * (1 - targetDef * 6 / (100 + targetDef * 6)));
 
-            //UIFightLog.Inst.AppendLog($"{roleData.name}对{target.roleData.name}造成了{dmg}点伤害!");
             target.Hurted(dmg);
 
             if (target.IsEnableAction)
@@ -427,7 +430,6 @@ namespace DefaultNamespace
             }
 
             return new DmgResult() { dmg = dmg };
-            //UIHPRoot.Inst.RefreshTarget(target);
         }
 
         /// <summary>
@@ -450,9 +452,13 @@ namespace DefaultNamespace
             propData.ChangeHP(-1 * dmg);
         }
 
+        private void Healed(int heal)
+        {
+            propData.ChangeHP(heal);
+        }
+
         public void HandleHPState(ActionContent content)
         {
-            Debug.Log($"HandleHPState,{roleData.name },{propData.hp},{State}");//##########
             //死亡处理
             if (propData.hp <= 0)
             {
@@ -549,6 +555,11 @@ namespace DefaultNamespace
         }
 
         private int CalDmg(float skillDmg)
+        {
+            return Mathf.CeilToInt(skillDmg * propData.Atk);
+        }
+
+        int CalHeal(float skillDmg)
         {
             return Mathf.CeilToInt(skillDmg * propData.Atk);
         }

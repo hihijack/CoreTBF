@@ -34,8 +34,6 @@ public class Skill : ITriggedable,ISkillProcOwner
             return;
         }
 
-        Debug.Log("t>>解析技能:" + baseData.name + "," + owner.roleData.name);//########
-
         lstProcessor = new List<FightSkillProcessorBase>();
         for (int i = 0; i < baseData.data.Count; i++)
         {
@@ -65,6 +63,9 @@ public class Skill : ITriggedable,ISkillProcOwner
                     break;
                 case FightSkillProcVal.GET_MP:
                     processor = new FightSkillProcGetMP(this, node, condition);
+                    break;
+                case FightSkillProcVal.HEAL_TARGET:
+                    processor = new FightSkillProcHealTarget(this, node, condition);
                     break;
                 default:
                     break;
@@ -150,7 +151,7 @@ public class Skill : ITriggedable,ISkillProcOwner
 
         if (tried)
         {
-            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCastSkill(new FightViewCmdCastSkillData() { caster = this.owner, targets = targets, skill = this}));
+            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCastSkill(this.owner, targets, this, false));
         }
 
         foreach (var proc in lstProcessor)

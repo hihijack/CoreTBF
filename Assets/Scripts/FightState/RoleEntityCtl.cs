@@ -39,7 +39,13 @@ namespace DefaultNamespace
 
         public void SetSprite(string name)
         {
-            _spriteRenderer.sprite = Resources.Load<Sprite>($"Sprites/{GameUtil.ToTitleCase(_character.roleData.model)}/{name}");
+            var path = $"Sprites/{GameUtil.ToTitleCase(_character.roleData.model)}/{name}";
+            var sprite = Resources.Load<Sprite>(path);
+            if (sprite == null)
+            {
+                Debug.LogError("null sprite:" + path);
+            }
+            _spriteRenderer.sprite = sprite;
         }
 
         internal void SetPos(Vector3 pos)

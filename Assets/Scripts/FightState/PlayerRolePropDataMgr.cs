@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using Data;
+﻿using Data;
 using UI;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -34,6 +34,7 @@ namespace DefaultNamespace
         public void ChangeMP(int mpchange)
         {
             propData.ChangeMP(mpchange);
+            Debug.Log("mp:" + propData.mp);//#######
         }
     }
 }

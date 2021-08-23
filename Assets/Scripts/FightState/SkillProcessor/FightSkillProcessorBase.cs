@@ -16,6 +16,7 @@ public static class FightSkillProcVal
     public const string EFFECT_NONE = "none";
     public const string EFFECT_DEF = "def";
     public const string EFFECT_DMG_TARGET = "dmg_target";
+    public const string HEAL_TARGET = "heal_target";//治疗目标
     public const string ADD_BUFF = "add_buff";
     public const string SUMMON = "summon";
     public const string GET_MP = "get_mp";

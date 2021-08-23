@@ -154,6 +154,9 @@ public class BuffBase : ITriggedable,ISkillProcOwner
                 case FightSkillProcVal.GET_MP:
                     processor = new FightSkillProcGetMP(this, node, condition);
                     break;
+                case FightSkillProcVal.HEAL_TARGET:
+                    processor = new FightSkillProcHealTarget(this, node, condition);
+                    break;
                 default:
                     break;
             }

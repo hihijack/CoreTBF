@@ -192,7 +192,7 @@ public class FightViewBehav
     /// <param name="index">从1开始</param>
     public void MoveACharacter(Character targetCharacter, PBParamMoveCharacter param, int index)
     {
-        Vector3 pos = Vector3.zero; ;
+        Vector3 pos = Vector3.zero;
         if (param.pointType == EPointType.CloseUp)
         {
             pos = FightState.Inst.GetCloseUpPos(targetCharacter.camp, index) + param.offsetPos * targetCharacter.entityCtl.face;

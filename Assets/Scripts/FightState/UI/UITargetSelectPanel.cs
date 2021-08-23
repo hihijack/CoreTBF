@@ -42,20 +42,37 @@ public class UITargetSelectPanel : MonoBehaviour
             {
                 continue;
             }
-            if (character.camp == ECamp.Ally && skillData.targetType == ESkillTarget.Ally || character.camp == ECamp.Enemy && skillData.targetType == ESkillTarget.Enemy)
+
+            if (!skillData.IsTargetTypeContainSelf() && character == caster)
+            {
+                continue;
+            }
+
+            if (!skillData.IsTargetTypeContainAlly() && character.camp == caster.camp)
+            {
+                continue;
+            }
+
+            if (skillData.targetType != ESkillTarget.Enemy && character.camp != caster.camp)
+            {
+                continue;
+            }
+
+            if (skillData.targetType == ESkillTarget.Enemy)
             {
                 if (skillData.distance == 1 && character.teamLoc > 1)
                 {
                     //近距离.无法选择2/3号位
                     continue;
                 }
-                var goUIItem = GameUtil.PopOrInst(pfbTargetItem);
-                goUIItem.transform.SetParent(goGrid.transform, false);
-                var uiItemTarget = goUIItem.GetComponent<UIItemTarget>();
-                uiItemTarget.target = character;
-                uiItemTarget.selectPanel = this;
-                uiItemTarget.Refresh();
             }
+
+            var goUIItem = GameUtil.PopOrInst(pfbTargetItem);
+            goUIItem.transform.SetParent(goGrid.transform, false);
+            var uiItemTarget = goUIItem.GetComponent<UIItemTarget>();
+            uiItemTarget.target = character;
+            uiItemTarget.selectPanel = this;
+            uiItemTarget.Refresh();
         }
     }
 

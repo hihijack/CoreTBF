@@ -29,8 +29,8 @@ public class UIAINextAction : UIItemBase
     {
         if (target != null && target.IsEnableAction)
         {
-            var nextSkill = target.ai.GetNextSkillToCast();
-            text.text = nextSkill.name;
+            var nextSkillData = target.ai.GetNextSkillToCast();
+            text.text = nextSkillData.isPower ? $"发动!{nextSkillData.skillBaseData.name}": nextSkillData.skillBaseData.name;
             var posEntityHead = target.entityCtl.GetPos() + new Vector3(0, target.entityCtl.GetHeight(), 0);
             var screenPos = FightState.Inst.cameraMain.WorldToScreenPoint(posEntityHead);
             Vector2 locPos;

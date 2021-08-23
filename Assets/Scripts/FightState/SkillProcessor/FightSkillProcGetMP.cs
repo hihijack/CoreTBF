@@ -23,7 +23,7 @@ public class FightSkillProcGetMP : FightSkillProcessorBase
 
     public override SkillProcResult Proc(ActionContent content)
     {
-        PlayerRolePropDataMgr.Inst.ChangeMP(1);
+        PlayerRolePropDataMgr.Inst.ChangeMP(val);
         FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdMPChange(0, PlayerRolePropDataMgr.Inst.propData.mp));
         return new SkillProcResult() { targets = null };
     }
