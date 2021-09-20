@@ -36,37 +36,10 @@ public class UITargetSelectPanel : MonoBehaviour
 
         GameUtil.CacheChildren(goGrid);
 
-        foreach (var character in FightState.Inst.characterMgr.GetCharacters())
+        var targetLst = FightState.Inst.characterMgr.GetSkillTargets(skillData, caster);
+
+        foreach (var character in targetLst)
         {
-            if (character.State == ECharacterState.Dead)
-            {
-                continue;
-            }
-
-            if (!skillData.IsTargetTypeContainSelf() && character == caster)
-            {
-                continue;
-            }
-
-            if (!skillData.IsTargetTypeContainAlly() && character.camp == caster.camp)
-            {
-                continue;
-            }
-
-            if (skillData.targetType != ESkillTarget.Enemy && character.camp != caster.camp)
-            {
-                continue;
-            }
-
-            if (skillData.targetType == ESkillTarget.Enemy)
-            {
-                if (skillData.distance == 1 && character.teamLoc > 1)
-                {
-                    //近距离.无法选择2/3号位
-                    continue;
-                }
-            }
-
             var goUIItem = GameUtil.PopOrInst(pfbTargetItem);
             goUIItem.transform.SetParent(goGrid.transform, false);
             var uiItemTarget = goUIItem.GetComponent<UIItemTarget>();

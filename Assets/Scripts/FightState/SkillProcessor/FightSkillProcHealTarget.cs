@@ -8,15 +8,8 @@ using System.Collections.Generic;
 /// </summary>
 public class FightSkillProcHealTarget : FightSkillProcessorBase
 {
-    public string targetType;
-
     public FightSkillProcHealTarget(ISkillProcOwner owner, JSONNode jsonData, FightSkillConditionBase condition) : base(owner, jsonData, condition)
     {
-    }
-
-    public override List<Character> GetTargets(ActionContent content)
-    {
-        return base.GetTargets(targetType, content);
     }
 
     public override SkillProcResult Proc(ActionContent content)
@@ -37,6 +30,5 @@ public class FightSkillProcHealTarget : FightSkillProcessorBase
 
     protected override void ParseFrom(JSONNode jsonData)
     {
-        targetType = jsonData["target"];
     }
 }

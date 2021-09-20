@@ -2,18 +2,13 @@
 using SimpleJSON;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class FightSkillProcDmgTarget : FightSkillProcessorBase
 {
-    public string targetType;
     public FightSkillProcDmgTarget(ISkillProcOwner owner, JSONNode jsonData, FightSkillConditionBase condition) : base(owner, jsonData, condition)
     {
 
-    }
-
-    public override List<Character> GetTargets(ActionContent content)
-    {
-        return base.GetTargets(targetType, content);
     }
 
     public override SkillProcResult Proc(ActionContent content)
@@ -34,7 +29,9 @@ public class FightSkillProcDmgTarget : FightSkillProcessorBase
 
             FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdHPChanged(target, oriHP, curHP));
             FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdTenacityChange(target, oriTenacity, curTenacity));
-            
+
+            Debug.Log($"Damage Prco:{selfCharacter.roleData.name}->{target.roleData.name}:{result.dmg}");//#########
+
             if (result.dmg > 0 && target.IsAlive())
             {
                 target.OnHurtd(content);
@@ -46,6 +43,6 @@ public class FightSkillProcDmgTarget : FightSkillProcessorBase
 
     protected override void ParseFrom(JSONNode jsonData)
     {
-        targetType = jsonData["target"];
+
     }
 }

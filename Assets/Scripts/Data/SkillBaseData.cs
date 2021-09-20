@@ -17,6 +17,7 @@ namespace Data
 
     public enum ESkillTarget
     {
+        None, //不选取目标
         Ally,
         Enemy,
         Self,
@@ -43,6 +44,8 @@ namespace Data
         /// 逻辑
         /// </summary>
         public ESkillLogic logic;
+
+        public int timeLimit;
 
         /// <summary>
         /// 目标类型
@@ -98,6 +101,8 @@ namespace Data
 
         public JSONNode data;
 
+        public JSONNode ai;
+
         /// <summary>
         /// 允许的职业ID
         /// </summary>
@@ -111,33 +116,30 @@ namespace Data
             icon = reader.GetString(3);
             logic = (ESkillLogic)Enum.Parse(typeof(ESkillLogic), reader.GetString(4));
             targetType = (ESkillTarget)Enum.Parse(typeof(ESkillTarget), reader.GetString(5));
-            dmg = reader.GetInt16(6) / 100f;
-            dmgFire = reader.GetInt16(7) / 100f;
-            dmgTenacity = reader.GetInt16(8);
-            targetCount = reader.GetInt16(9);
-            timePower = reader.GetFloat(10);
-            backswing = reader.GetFloat(11);
-            timeAtkStiff = reader.GetFloat(12);
-            cost = reader.GetInt16(13);
-            tenChangeTo = reader.GetFloat(14);
-            tenChangeToPower = reader.GetFloat(15);
-            distance = reader.GetInt16(16);
+            timeLimit = reader.GetInt16(6);
+            dmg = reader.GetInt16(7) / 100f;
+            dmgFire = reader.GetInt16(8) / 100f;
+            dmgTenacity = reader.GetInt16(9);
+            targetCount = reader.GetInt16(10);
+            timePower = reader.GetFloat(11);
+            backswing = reader.GetFloat(12);
+            timeAtkStiff = reader.GetFloat(13);
+            cost = reader.GetInt16(14);
+            tenChangeTo = reader.GetFloat(15);
+            tenChangeToPower = reader.GetFloat(16);
+            distance = reader.GetInt16(17);
            
-            tip = reader.GetString(17);
-            tlAsset = reader.IsDBNull(18) ? "" : reader.GetString(18);
-            tlAssetPower = reader.IsDBNull(19) ? "" : reader.GetString(19);
-            data = reader.IsDBNull(20) ? null : JSONNode.Parse(reader.GetString(20));
+            tip = reader.GetString(18);
+            tlAsset = reader.IsDBNull(19) ? "" : reader.GetString(19);
+            tlAssetPower = reader.IsDBNull(20) ? "" : reader.GetString(20);
+            data = reader.IsDBNull(21) ? null : JSONNode.Parse(reader.GetString(21));
 
+            ai = reader.IsDBNull(22) ? null : JSONNode.Parse(reader.GetString(22));
 
-            JSONNode jsonJob = reader.IsDBNull(21) ? null : JSONNode.Parse(reader.GetString(21));
-            if (jsonJob != null && jsonJob.Count > 0)
+            JSONNode jsonJob = reader.IsDBNull(23) ? null : JSONNode.Parse(reader.GetString(23));
+            if (jsonJob != null)
             {
-                enableJob = new int[jsonJob.Count];
-                for (int i = 0; i < jsonJob.Count; i++)
-                {
-                    string id = jsonJob[i];
-                    enableJob[i] = int.Parse(id);
-                }
+                enableJob = jsonJob.AsArray.ToIntArr();
             }
         }
 
@@ -149,6 +151,11 @@ namespace Data
         public bool IsTargetTypeContainSelf()
         {
             return targetType == ESkillTarget.Self || targetType == ESkillTarget.SelfOrAlly;
+        }
+
+        public bool IsNeedSelectTarget()
+        {
+            return targetType != ESkillTarget.None;
         }
     }
 }

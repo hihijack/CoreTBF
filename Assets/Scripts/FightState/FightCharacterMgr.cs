@@ -4,6 +4,7 @@ using DefaultNamespace;
 using UI;
 using System;
 using System.Collections.Generic;
+using Data;
 
 public class FightCharacterMgr
 {
@@ -28,6 +29,18 @@ public class FightCharacterMgr
         var chara = new Character(id);
         InitCharacter(chara, camp);
         return chara;
+    }
+
+    internal Character GetCharacterByID(int roleID)
+    {
+        foreach (var chara in lstCharacters)
+        {
+            if (chara.roleData.ID == roleID)
+            {
+                return chara;
+            }
+        }
+        return null;
     }
 
     public Character AddCharacter(CharacterForRaid charaSource) 
@@ -157,6 +170,36 @@ public class FightCharacterMgr
         }
     }
 
+    /// <summary>
+    /// 将目标变更到指定loc，调整其他冲突单位的loc
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="loc"></param>
+    public bool ChangeToLoc(Character target, int loc)
+    {
+        if (target.teamLoc == loc)
+        {
+            return false;
+        }
+        //往前换位，其他人需要往后移动
+        //往后换位，其他人需要往前移动
+        bool isMoveAHead = loc < target.teamLoc;
+        //先设置为其他阵营，在其他人调整位置时让出
+        ECamp oriCamp = target.camp;
+        target.camp = target.GetEnemyCamp();
+        if (isMoveAHead)
+        {
+            InsertToLocByMoveBack(loc, oriCamp);
+        }
+        else
+        {
+            InsertToLocByMoveAhead(loc, oriCamp);
+        }
+        target.camp = oriCamp;
+        target.teamLoc = loc;
+        return true;
+    }
+
     private Character GetCharacter(ECamp camp, int loc)
     {
         foreach (var chara in lstCharacters)
@@ -191,6 +234,57 @@ public class FightCharacterMgr
     public List<Character> GetCharacters()
     {
         return lstCharacters;
+    }
+
+    /// <summary>
+    /// 获取技能允许的目标
+    /// </summary>
+    /// <param name="skillData"></param>
+    /// <param name="caster"></param>
+    /// <returns></returns>
+    public List<Character> GetSkillTargets(SkillBaseData skillData, Character caster)
+    {
+        List<Character> result = new List<Character>();
+
+        if (!skillData.IsNeedSelectTarget())
+        {
+            return result;
+        }
+
+        foreach (var character in FightState.Inst.characterMgr.GetCharacters())
+        {
+            if (character.State == ECharacterState.Dead)
+            {
+                continue;
+            }
+
+            if (!skillData.IsTargetTypeContainSelf() && character == caster)
+            {
+                continue;
+            }
+
+            if (!skillData.IsTargetTypeContainAlly() && character.camp == caster.camp)
+            {
+                continue;
+            }
+
+            if (skillData.targetType != ESkillTarget.Enemy && character.camp != caster.camp)
+            {
+                continue;
+            }
+
+            if (skillData.targetType == ESkillTarget.Enemy)
+            {
+                if (skillData.distance == 1 && character.teamLoc > 1)
+                {
+                    //近距离.无法选择2/3号位
+                    continue;
+                }
+            }
+
+            result.Add(character);
+        }
+        return result;
     }
 
     internal void CacheAllAIAction()

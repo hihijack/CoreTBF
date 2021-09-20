@@ -40,14 +40,29 @@ public class Skill : ITriggedable,ISkillProcOwner
             JSONNode node = baseData.data[i];
             
             FightSkillConditionBase condition = null;
-            if (node[FightSkillProcKey.CONDITION] == null)
+
+            var conditonNode = node[FightSkillProcKey.CONDITION];
+            if (conditonNode == null)
             {
-                condition = new FightSkillConditionNone(node);
+                condition = new FightSkillConditionNone(null);
+            }
+            else
+            {
+                var conditonType = conditonNode["type"].Value;
+                if (conditonType.Equals(FightSkillConditionVal.HP_LINE))
+                {
+                    condition = new FightSkillConditionHPLine(conditonNode);
+                }
+                else
+                {
+                    Debug.LogError("错误的条件类型:" + conditonType);
+                }
             }
 
             FightSkillProcessorBase processor = null;
 
-            switch (node[FightSkillProcKey.EFFECT])
+            var effectKey = node[FightSkillProcKey.EFFECT].Value;
+            switch (effectKey)
             {
                 case FightSkillProcVal.EFFECT_DEF:
                     processor = (new FightSkillProcDef(this, node, condition));
@@ -58,6 +73,9 @@ public class Skill : ITriggedable,ISkillProcOwner
                 case FightSkillProcVal.ADD_BUFF:
                     processor = (new FightSkillProcAddBuff(this, node, condition));
                     break;
+                case FightSkillProcVal.REMOVE_BUFF:
+                    processor = new FightSkillProcRemoveBuff(this, node, condition);
+                    break;
                 case FightSkillProcVal.SUMMON:
                     processor = (new FightSkillProcSummon(this, node, condition));
                     break;
@@ -67,7 +85,14 @@ public class Skill : ITriggedable,ISkillProcOwner
                 case FightSkillProcVal.HEAL_TARGET:
                     processor = new FightSkillProcHealTarget(this, node, condition);
                     break;
+                case FightSkillProcVal.CHANGE_LOC:
+                    processor = new FightSkillProcChangeLoc(this, node, condition);
+                    break;
+                case FightSkillProcVal.CHANGE_AI:
+                    processor = new FightSkillProcChangeAI(this, node, condition);
+                    break;
                 default:
+                    Debug.LogError("无效的处理器:" + effectKey);
                     break;
             }
 
@@ -131,13 +156,19 @@ public class Skill : ITriggedable,ISkillProcOwner
             return;
         }
 
+        ///触发次数限制
+        if (!owner.procTimeMgr.CheckTimeLimit(this))
+        {
+            return;
+        }
+
         bool tried = false;
 
         List<Character> targets = null;
 
         foreach (var proc in lstProcessor)
         {
-            if (proc.IsTried(tri))
+            if (proc.IsTried(tri) && proc.CheckConditon())
             {
                 tried = true;
                 var targetsT = proc.GetTargets(content);
@@ -156,13 +187,17 @@ public class Skill : ITriggedable,ISkillProcOwner
 
         foreach (var proc in lstProcessor)
         {
-            if (proc.IsTried(tri))
+            if (proc.IsTried(tri) && proc.CheckConditon())
             {
-                tried = true;
                 Debug.Log("t>>" + owner.roleData.name + "被动触发:" + tri);//##########
                 proc.Proc(content);
                 proc.CacheTarget(null);
             }
+        }
+
+        if (tried)
+        {
+            owner.OnSkillProc(this);
         }
     }
 
@@ -176,12 +211,22 @@ public class Skill : ITriggedable,ISkillProcOwner
         {
             return;
         }
+
+        bool success = false;
+
         foreach (var proc in lstProcessor)
         {
-            if (proc.IsActive())
+            if (proc.IsActive() && proc.CheckConditon())
             {
                 proc.Proc(content);
+                success = true;
             }
+        }
+
+        if (success)
+        {
+            //成功发动
+            owner.OnSkillProc(this);
         }
     }
 
@@ -193,5 +238,19 @@ public class Skill : ITriggedable,ISkillProcOwner
     public Skill GetOwnerSkill()
     {
         return this;
+    }
+
+    /// <summary>
+    /// 次数限制
+    /// </summary>
+    /// <returns></returns>
+    public bool IsTimeLimitEnable()
+    {
+        return GetOwnerCharacter().procTimeMgr.CheckTimeLimit(this);
+    }
+
+    public void OnBeforeEndTurn(ActionContent sourceContent)
+    {
+        PassiveTried(FightSkillTriType.BEFORE_END_TRUN, sourceContent);
     }
 }

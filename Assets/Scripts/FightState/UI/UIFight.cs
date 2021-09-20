@@ -258,7 +258,7 @@ namespace UI
         /// 刷新仇恨目标
         /// </summary>
         /// <param name="target"></param>
-        internal void RefreshHatredTarget(DefaultNamespace.Character target)
+        internal void RefreshHatredTarget(Character target)
         {
             foreach (var t in lstItems)
             {

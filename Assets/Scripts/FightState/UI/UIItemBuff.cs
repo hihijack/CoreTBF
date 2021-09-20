@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UI;
 
 public class UIItemBuff : MonoBehaviour
 {
@@ -29,11 +30,15 @@ public class UIItemBuff : MonoBehaviour
 
     public void OnHoverIn()
     {
-
+        if (data != null)
+        {
+            var uiTip = UIMgr.Inst.ShowUI(UITable.EUITable.UITip) as UITip;
+            uiTip.Refresh(data.GetBuffData().desc);
+        }
     }
 
     public void OnHoverOut()
     {
-
+        UIMgr.Inst.HideUI(UITable.EUITable.UITip);
     }
 }

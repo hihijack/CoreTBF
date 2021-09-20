@@ -1,7 +1,10 @@
 #id,逻辑,名字,描述,,,
 id,logic,name,desc,icon,maxLayer,data
-1,ChangeProp,破甲,降低防御,Icons8_83,1,"{prop:def_phy,valAdd:0,valMul:-1}"
-2,Break,BREAK,,Icons8_84,1,{val:1.5}
-3,ChangeProp,迸发,提高攻击力,Icons8_85,1,"{prop:atk,valAdd:0,valMul:1}"
-4,ChangeProp,剑舞,提高攻击力,Icons8_86,1,"{prop:atk,valAdd:0,valMul:1}"
-5,ChangeProp,剑舞2,提高攻击力,Icons8_86,1,"{prop:atk,valAdd:0,valMul:1}"
+1,ChangeProp,破甲,降低防御,Icons8_83,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""def"",""val_mul"":0.5}]"
+2,Break,BREAK,受到伤害提升50%,Icons8_84,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""hurt"",""val_mul"":1.5}]"
+3,ChangeProp,迸发,提高攻击力,Icons8_85,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
+4,ChangeProp,剑舞,提高攻击力,Icons8_86,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
+5,ChangeProp,剑舞2,提高攻击力,Icons8_86,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
+6,ChangeProp,恐惧,降低攻击力及强韧度,Icons8_47,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":0.5},{""tris"":[""active""],""effect"":""change_prop"",""prop"":""toughness"",""val_mul"":0.2}]"
+7,ChangeProp,狂怒,后续行动变为狂怒攻击,Icon6_68,1,"[{""tris"":[""active""],""effect"":""change_ai"",""ais"":[5,6,7]}]"
+8,Break,虚弱,受到伤害提升300%,Icon1_01,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""hurt"",""val_mul"":3}]"

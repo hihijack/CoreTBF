@@ -18,9 +18,18 @@ public static class FightSkillProcVal
     public const string EFFECT_DMG_TARGET = "dmg_target";
     public const string HEAL_TARGET = "heal_target";//治疗目标
     public const string ADD_BUFF = "add_buff";
+    public const string REMOVE_BUFF = "remove_buff";//移除buff
     public const string SUMMON = "summon";
     public const string GET_MP = "get_mp";
+    public const string CHANGE_PROP = "change_prop";
+    public const string CHANGE_LOC = "change_loc";
+    public const string CHANGE_AI = "change_ai";
     public const string CONDITION_NONE = "none";
+}
+
+public static class FightSkillConditionVal
+{
+    public const string HP_LINE = "hp_line";
 }
 
 /// <summary>
@@ -34,6 +43,8 @@ public static class FightSkillTriType
     public const string HIT = "hit"; //命中目标
     public const string START_ATTACK = "start_attack"; //开始攻击
     public const string START_ATTACKED = "start_attacked"; //开始受击时
+    public const string ACTIVE = "active"; //生效时；技能拥有；buff拥有时
+    public const string BEFORE_END_TRUN = "end_turn";//回合结束前
 }
 
 /// <summary>
@@ -45,6 +56,15 @@ public static class SkillProcTarget
     public const string Self = "self"; //自身
     public const string RanTarget = "rantarget"; //随机目标
     public const string Tank = "tank"; //敌方最前排单位
+}
+
+/// <summary>
+/// 换位类型
+/// </summary>
+public static class LocChangeType
+{
+    public const string AHEAD = "ahead";
+    public const string LAST = "last";
 }
 
 /// <summary>
@@ -67,11 +87,57 @@ public abstract class FightSkillProcessorBase
 
     protected List<Character> m_cacheTargets;
 
+    SkillProcTargetFinderBase targetFinder;
+
     public FightSkillProcessorBase(ISkillProcOwner owner, JSONNode jsonData, FightSkillConditionBase condition)
     {
         this.owner = owner;
         this.condition = condition;
+        if (this.condition != null)
+        {
+            this.condition.SetOwnerProc(this);
+        }
         ParseFrom(jsonData);
+        ParseFinder(jsonData);
+    }
+
+    /// <summary>
+    /// 构建目标选择器
+    /// </summary>
+    /// <param name="jsonData"></param>
+    private void ParseFinder(JSONNode jsonData)
+    {
+        string targetType = jsonData["target"].Value;
+        if (!string.IsNullOrEmpty(targetType))
+        {
+            switch (targetType)
+            {
+                case SkillProcTarget.Targets:
+                    targetFinder = new TargetFinderTargets();
+                    break;
+                case SkillProcTarget.Self:
+                    targetFinder = new TargetFinderSelf(owner);
+                    break;
+                case SkillProcTarget.RanTarget:
+                    targetFinder = new TargetFinderRanTarget(owner);
+                    break;
+                case SkillProcTarget.Tank:
+                    //敌方最前排目标
+                    targetFinder = new TargetFinderEnemyTank(owner);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            var targetRole = jsonData["target_role"];
+            if (targetRole != null)
+            {
+                var roleID = targetRole.AsInt;
+                targetFinder = new TargetFinderRoleID(roleID);
+            }
+        }
     }
 
     public void CacheTarget(List<Character> targets)
@@ -79,41 +145,22 @@ public abstract class FightSkillProcessorBase
         m_cacheTargets = targets;
     }
 
+    public bool CheckConditon()
+    {
+        return condition.IsTrue();
+    }
+
     protected abstract void ParseFrom(JSONNode jsonData);
     public abstract SkillProcResult Proc(ActionContent content);
 
-    public abstract List<Character> GetTargets(ActionContent content);
-
-    public virtual List<Character> GetTargets(string targetType, ActionContent content) 
+    public virtual List<Character> GetTargets(ActionContent content) 
     {
         if (m_cacheTargets != null)
         {
             return m_cacheTargets;
         }
 
-        List<Character> targets = null;
-        var selfCharacter = owner.GetOwnerCharacter();
-        switch (targetType)
-        {
-            case SkillProcTarget.Targets:
-                targets = content.targets;
-                break;
-            case SkillProcTarget.Self:
-                targets = new List<Character>();
-                targets.Add(selfCharacter);
-                break;
-            case SkillProcTarget.RanTarget:
-                targets = FightState.Inst.characterMgr.GetRandomOfCamp(1, selfCharacter.GetEnemyCamp());
-                break;
-            case SkillProcTarget.Tank:
-                //敌方最前排目标
-                targets = new List<Character>();
-                targets.Add(FightState.Inst.characterMgr.GetTankCharacter(selfCharacter.GetEnemyCamp()));
-                break;
-            default:
-                break;
-        }
-
+        List<Character> targets = targetFinder.GetTargets(content);
         return targets;
     }
 

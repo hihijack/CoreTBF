@@ -1,0 +1,7 @@
+id,data,level,elite
+1,"[5,6]",1,FALSE
+2,"[5,5]",1,FALSE
+3,[6],1,FALSE
+4,"[7,8]",1,FALSE
+5,"[7,9,8]",1,TRUE
+6,[15],1,FALSE

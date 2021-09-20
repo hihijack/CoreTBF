@@ -1,25 +1,22 @@
 ﻿using Data;
 using System.Collections.Generic;
 
-namespace DefaultNamespace
+public class FightActionWait : FightActionBase
 {
-    public class FightActionWait : FightActionBase
+    public FightActionWait(Skill skill, ActionContent content) : base(skill, content)
     {
-        public FightActionWait(Skill skill, ActionContent content) : base(skill, content)
-        {
 
-        }
+    }
 
-        public override void Act()
-        {
-            base.Act();
-        }
+    public override void Act()
+    {
+        base.Act();
+    }
 
-        public override void RealAct()
-        {
-            base.RealAct();
-            var caster = actionContent.caster;
-            caster.State = ECharacterState.Wait;
-        }
+    public override void RealAct()
+    {
+        base.RealAct();
+        var caster = actionContent.caster;
+        caster.State = ECharacterState.Wait;
     }
 }

@@ -56,16 +56,18 @@ namespace Data
             toughness = reader.GetInt16(13);
             speed = reader.GetFloat(14);
             tenClearStiff = reader.GetFloat(15);
-            skills = new int[5];
-            skills[0] = reader.GetInt16(16);
-            skills[1] = reader.GetInt16(17);
-            skills[2] = reader.GetInt16(18);
-            skills[3] = reader.GetInt16(19);
-            skills[4] = reader.GetInt16(20);
+            //skills = new int[5];
+            //skills[0] = reader.GetInt16(16);
+            //skills[1] = reader.GetInt16(17);
+            //skills[2] = reader.GetInt16(18);
+            //skills[3] = reader.GetInt16(19);
+            //skills[4] = reader.GetInt16(20);
 
-            if (!reader.IsDBNull(21))
+            skills = JSONNode.Parse(reader.GetString(16)).AsArray.ToIntArr();
+
+            if (!reader.IsDBNull(17))
             {
-                JSONNode aiData = JSONNode.Parse(reader.GetString(21));
+                JSONNode aiData = JSONNode.Parse(reader.GetString(17));
                 if (aiData != null)
                 {
                     int count = aiData.Count;

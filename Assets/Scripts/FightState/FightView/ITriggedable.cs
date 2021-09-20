@@ -8,4 +8,5 @@ public interface ITriggedable
      void OnHurtd(ActionContent sourceContent);
      void OnStartAttack(ActionContent sourceContent);
      void OnStartAttacked(ActionContent sourceContent);
+     void OnBeforeEndTurn(ActionContent sourceContent);
 }

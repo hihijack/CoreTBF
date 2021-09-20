@@ -18,6 +18,10 @@ public class FightViewCmdCastSkill : FightViewCmdBase
 
     public FightViewCmdCastSkill(Character caster, List<Character> targets, Skill skill, bool isPowStartAct)
     {
+        if (targets == null)
+        {
+            Debug.LogError(skill.GetBaseData().name);//######
+        }
         _lstEffectsCache = new List<GameObject>(10);
         this.caster = caster;
         this.targets = targets;

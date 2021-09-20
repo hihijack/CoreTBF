@@ -19,6 +19,8 @@ public class BuffBase : ITriggedable,ISkillProcOwner
 
     List<FightSkillProcessorBase> lstProcessor;
 
+    List<FightSkillActiveableProcBase> lstProcActived;
+
     public BuffBase(BuffBaseData data, Character target, Character caster, int layer, float dur)
     {
         this.baseData = data;
@@ -27,6 +29,8 @@ public class BuffBase : ITriggedable,ISkillProcOwner
         this.layer = layer;
         this.dur = dur;
         valid = true;
+
+        lstProcActived = new List<FightSkillActiveableProcBase>();
 
         ParseProcessor();
     }
@@ -115,9 +119,15 @@ public class BuffBase : ITriggedable,ISkillProcOwner
         curDur = 0;
     }
     
-    public virtual void OnAdd() { }
+    public virtual void OnAdd() 
+    {
+        OnActive();
+    }
     protected virtual void OnChangeLayer() { }
-    protected virtual void OnRemoved() { }
+    protected virtual void OnRemoved() 
+    {
+        OnUnActive();
+    }
 
 
     /// <summary>
@@ -130,14 +140,21 @@ public class BuffBase : ITriggedable,ISkillProcOwner
         {
             JSONNode node = baseData.data[i];
             FightSkillConditionBase condition = null;
-            if (node[FightSkillProcKey.CONDITION] == null)
+
+            var conditonNode = node[FightSkillProcKey.CONDITION];
+            if (conditonNode == null)
             {
-                condition = new FightSkillConditionNone(node);
+                condition = new FightSkillConditionNone(null);
+            }
+            else if (conditonNode["type"] == FightSkillConditionVal.HP_LINE)
+            {
+                condition = new FightSkillConditionHPLine(conditonNode);
             }
 
             FightSkillProcessorBase processor = null;
 
-            switch (node[FightSkillProcKey.EFFECT])
+            var effectKey = node[FightSkillProcKey.EFFECT];
+            switch (effectKey)
             {
                 case FightSkillProcVal.EFFECT_DEF:
                     processor = (new FightSkillProcDef(this, node, condition));
@@ -148,6 +165,9 @@ public class BuffBase : ITriggedable,ISkillProcOwner
                 case FightSkillProcVal.ADD_BUFF:
                     processor = (new FightSkillProcAddBuff(this, node, condition));
                     break;
+                case FightSkillProcVal.REMOVE_BUFF:
+                    processor = new FightSkillProcRemoveBuff(this, node, condition);
+                    break;
                 case FightSkillProcVal.SUMMON:
                     processor = (new FightSkillProcSummon(this, node, condition));
                     break;
@@ -157,7 +177,14 @@ public class BuffBase : ITriggedable,ISkillProcOwner
                 case FightSkillProcVal.HEAL_TARGET:
                     processor = new FightSkillProcHealTarget(this, node, condition);
                     break;
+                case FightSkillProcVal.CHANGE_PROP:
+                    processor = new FightSkillProcChangeProp(this, node, condition);
+                    break;
+                case FightSkillProcVal.CHANGE_AI:
+                    processor = new FightSkillProcChangeAI(this, node, condition);
+                    break;
                 default:
+                    Debug.LogError("无效的处理器:" + effectKey);//#######
                     break;
             }
 
@@ -172,6 +199,7 @@ public class BuffBase : ITriggedable,ISkillProcOwner
                         processor.AddTri(triNode[triIndex]);
                     }
                 }
+
                 lstProcessor.Add(processor);
             }
         }
@@ -203,6 +231,26 @@ public class BuffBase : ITriggedable,ISkillProcOwner
     }
 
     /// <summary>
+    /// 生效时
+    /// </summary>
+    public void OnActive()
+    {
+        PassiveTried(FightSkillTriType.ACTIVE, null);
+    }
+
+
+    /// <summary>
+    /// 失效时
+    /// </summary>
+    public void OnUnActive()
+    {
+        foreach (var proc in lstProcActived)
+        {
+            proc.UnProc(null);
+        }
+    }
+
+    /// <summary>
     /// 被动触发
     /// </summary>
     /// <param name="content"></param>
@@ -213,9 +261,14 @@ public class BuffBase : ITriggedable,ISkillProcOwner
             if (procer.IsTried(tri))
             {
                 procer.Proc(content);
+                if (tri == FightSkillTriType.ACTIVE)
+                {
+                    lstProcActived.Add(procer as FightSkillActiveableProcBase);
+                }
             }
         }
     }
+
 
     internal List<FightSkillProcessorBase> GetProcs()
     {
@@ -230,5 +283,10 @@ public class BuffBase : ITriggedable,ISkillProcOwner
     public Skill GetOwnerSkill()
     {
         return null;
+    }
+
+    public void OnBeforeEndTurn(ActionContent sourceContent)
+    {
+        PassiveTried(FightSkillTriType.BEFORE_END_TRUN, sourceContent);
     }
 }
