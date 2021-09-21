@@ -39,78 +39,16 @@ public class Skill : ITriggedable,ISkillProcOwner
         {
             JSONNode node = baseData.data[i];
             
-            FightSkillConditionBase condition = null;
-
+            //构建条件判断对象
             var conditonNode = node[FightSkillProcKey.CONDITION];
-            if (conditonNode == null)
-            {
-                condition = new FightSkillConditionNone(null);
-            }
-            else
-            {
-                var conditonType = conditonNode["type"].Value;
-                if (conditonType.Equals(FightSkillConditionVal.HP_LINE))
-                {
-                    condition = new FightSkillConditionHPLine(conditonNode);
-                }
-                else
-                {
-                    Debug.LogError("错误的条件类型:" + conditonType);
-                }
-            }
+            FightSkillConditionBase condition = FightSkillConditionFactory.Create(conditonNode);
 
-            FightSkillProcessorBase processor = null;
-
-            var effectKey = node[FightSkillProcKey.EFFECT].Value;
-            switch (effectKey)
-            {
-                case FightSkillProcVal.EFFECT_DEF:
-                    processor = (new FightSkillProcDef(this, node, condition));
-                    break;
-                case FightSkillProcVal.EFFECT_DMG_TARGET:
-                    processor = (new FightSkillProcDmgTarget(this, node, condition));
-                    break;
-                case FightSkillProcVal.ADD_BUFF:
-                    processor = (new FightSkillProcAddBuff(this, node, condition));
-                    break;
-                case FightSkillProcVal.REMOVE_BUFF:
-                    processor = new FightSkillProcRemoveBuff(this, node, condition);
-                    break;
-                case FightSkillProcVal.SUMMON:
-                    processor = (new FightSkillProcSummon(this, node, condition));
-                    break;
-                case FightSkillProcVal.GET_MP:
-                    processor = new FightSkillProcGetMP(this, node, condition);
-                    break;
-                case FightSkillProcVal.HEAL_TARGET:
-                    processor = new FightSkillProcHealTarget(this, node, condition);
-                    break;
-                case FightSkillProcVal.CHANGE_LOC:
-                    processor = new FightSkillProcChangeLoc(this, node, condition);
-                    break;
-                case FightSkillProcVal.CHANGE_AI:
-                    processor = new FightSkillProcChangeAI(this, node, condition);
-                    break;
-                default:
-                    Debug.LogError("无效的处理器:" + effectKey);
-                    break;
-            }
-
+            FightSkillProcessorBase processor = FightSkillProcessorFactory.Crate(this, node, condition);
+           
             if (processor != null)
             {
-                //触发器
-                var triNode = node[FightSkillProcKey.TIRS];
-                if (triNode != null)
-                {
-                    for (int triIndex = 0; triIndex < triNode.Count; triIndex++)
-                    {
-                        processor.AddTri(triNode[triIndex]);
-                    }
-                }
-
                 lstProcessor.Add(processor);
             }
-
         }
     }
 

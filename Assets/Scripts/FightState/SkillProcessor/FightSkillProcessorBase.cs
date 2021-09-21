@@ -24,12 +24,14 @@ public static class FightSkillProcVal
     public const string CHANGE_PROP = "change_prop";
     public const string CHANGE_LOC = "change_loc";
     public const string CHANGE_AI = "change_ai";
+    public const string KILL = "kill";
     public const string CONDITION_NONE = "none";
 }
 
 public static class FightSkillConditionVal
 {
     public const string HP_LINE = "hp_line";
+    public const string BUFF_LAYER = "buff_layer";
 }
 
 /// <summary>
@@ -45,6 +47,7 @@ public static class FightSkillTriType
     public const string START_ATTACKED = "start_attacked"; //开始受击时
     public const string ACTIVE = "active"; //生效时；技能拥有；buff拥有时
     public const string BEFORE_END_TRUN = "end_turn";//回合结束前
+    public const string LAYER_CHANGE = "layer_change";//buff层数改变
 }
 
 /// <summary>

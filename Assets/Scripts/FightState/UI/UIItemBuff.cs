@@ -8,6 +8,7 @@ public class UIItemBuff : MonoBehaviour
     public Image icon;
     public Image mask;
     public Text txtDur;
+    public Text txtLayer;
 
     public BuffBase data;
 
@@ -26,6 +27,15 @@ public class UIItemBuff : MonoBehaviour
         //mask
         var prog = data.GetDurProg();
         mask.fillAmount = prog > 0 ? prog : 0;
+        //layer
+        if (data.GetLayer() > 1)
+        {
+            txtLayer.text = data.GetLayer().ToString();
+        }
+        else
+        {
+            txtLayer.text = "";
+        }
     }
 
     public void OnHoverIn()

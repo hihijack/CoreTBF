@@ -1,10 +1,14 @@
-#id,逻辑,名字,描述,,,
+#id,"计时结束模式
+Clear - 清除
+LayerReduce - 层数减少
+LayerAdd - 层数增加",名字,描述,,,
 id,logic,name,desc,icon,maxLayer,data
-1,ChangeProp,破甲,降低防御,Icons8_83,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""def"",""val_mul"":0.5}]"
-2,Break,BREAK,受到伤害提升50%,Icons8_84,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""hurt"",""val_mul"":1.5}]"
-3,ChangeProp,迸发,提高攻击力,Icons8_85,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
-4,ChangeProp,剑舞,提高攻击力,Icons8_86,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
-5,ChangeProp,剑舞2,提高攻击力,Icons8_86,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
-6,ChangeProp,恐惧,降低攻击力及强韧度,Icons8_47,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":0.5},{""tris"":[""active""],""effect"":""change_prop"",""prop"":""toughness"",""val_mul"":0.2}]"
-7,ChangeProp,狂怒,后续行动变为狂怒攻击,Icon6_68,1,"[{""tris"":[""active""],""effect"":""change_ai"",""ais"":[5,6,7]}]"
-8,Break,虚弱,受到伤害提升300%,Icon1_01,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""hurt"",""val_mul"":3}]"
+1,Clear,破甲,降低防御,Icons8_83,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""def"",""val_mul"":0.5}]"
+2,Clear,BREAK,受到伤害提升50%,Icons8_84,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""hurt"",""val_mul"":1.5}]"
+3,Clear,迸发,提高攻击力,Icons8_85,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
+4,Clear,剑舞,提高攻击力,Icons8_86,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
+5,Clear,剑舞2,提高攻击力,Icons8_86,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":2}]"
+6,Clear,恐惧,降低攻击力及强韧度,Icons8_47,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""atk"",""val_mul"":0.5},{""tris"":[""active""],""effect"":""change_prop"",""prop"":""toughness"",""val_mul"":0.2}]"
+7,Clear,狂怒,后续行动变为狂怒攻击,Icon6_68,1,"[{""tris"":[""active""],""effect"":""change_ai"",""ais"":[5,6,7]}]"
+8,Clear,虚弱,受到伤害提升300%,Icon1_01,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""hurt"",""val_mul"":3}]"
+9,LayerReduce,恐惧,叠满3层时，立即死亡,Icon6_08,3,"[{""tris"":[""layer_change""],""condition"":{""type"":""buff_layer"",""buff_id"":9,""layer"":3},""effect"":""kill"",""target"":""self""}]"

@@ -71,6 +71,11 @@ public class BuffBase : ITriggedable,ISkillProcOwner
         }
     }
 
+    public int GetLayer()
+    {
+        return layer;
+    }
+
     public void UpdateDur(float time)
     {
         if (valid)
@@ -80,8 +85,27 @@ public class BuffBase : ITriggedable,ISkillProcOwner
             {
                 if (curDur > dur)
                 {
-                    //设为0层,移除
-                    SetLayer(0);
+                    switch (baseData.timeOutMode)
+                    {
+                        case EBuffTimeOutMode.Clear:
+                            //设为0层,移除
+                            SetLayer(0);
+                            break;
+                        case EBuffTimeOutMode.LayerReduce:
+                            //层数-1
+                            ChangeLayer(-1);
+                            //重新计时
+                            RestartDur();
+                            break;
+                        case EBuffTimeOutMode.LayerAdd:
+                            //层数+1
+                            ChangeLayer(1);
+                            //重新计时
+                            RestartDur();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -123,7 +147,10 @@ public class BuffBase : ITriggedable,ISkillProcOwner
     {
         OnActive();
     }
-    protected virtual void OnChangeLayer() { }
+    protected virtual void OnChangeLayer() 
+    {
+        PassiveTried(FightSkillTriType.LAYER_CHANGE, null);
+    }
     protected virtual void OnRemoved() 
     {
         OnUnActive();
@@ -142,64 +169,11 @@ public class BuffBase : ITriggedable,ISkillProcOwner
             FightSkillConditionBase condition = null;
 
             var conditonNode = node[FightSkillProcKey.CONDITION];
-            if (conditonNode == null)
-            {
-                condition = new FightSkillConditionNone(null);
-            }
-            else if (conditonNode["type"] == FightSkillConditionVal.HP_LINE)
-            {
-                condition = new FightSkillConditionHPLine(conditonNode);
-            }
+            condition = FightSkillConditionFactory.Create(conditonNode);
 
-            FightSkillProcessorBase processor = null;
-
-            var effectKey = node[FightSkillProcKey.EFFECT];
-            switch (effectKey)
-            {
-                case FightSkillProcVal.EFFECT_DEF:
-                    processor = (new FightSkillProcDef(this, node, condition));
-                    break;
-                case FightSkillProcVal.EFFECT_DMG_TARGET:
-                    processor = (new FightSkillProcDmgTarget(this, node, condition));
-                    break;
-                case FightSkillProcVal.ADD_BUFF:
-                    processor = (new FightSkillProcAddBuff(this, node, condition));
-                    break;
-                case FightSkillProcVal.REMOVE_BUFF:
-                    processor = new FightSkillProcRemoveBuff(this, node, condition);
-                    break;
-                case FightSkillProcVal.SUMMON:
-                    processor = (new FightSkillProcSummon(this, node, condition));
-                    break;
-                case FightSkillProcVal.GET_MP:
-                    processor = new FightSkillProcGetMP(this, node, condition);
-                    break;
-                case FightSkillProcVal.HEAL_TARGET:
-                    processor = new FightSkillProcHealTarget(this, node, condition);
-                    break;
-                case FightSkillProcVal.CHANGE_PROP:
-                    processor = new FightSkillProcChangeProp(this, node, condition);
-                    break;
-                case FightSkillProcVal.CHANGE_AI:
-                    processor = new FightSkillProcChangeAI(this, node, condition);
-                    break;
-                default:
-                    Debug.LogError("无效的处理器:" + effectKey);//#######
-                    break;
-            }
-
+            FightSkillProcessorBase processor = FightSkillProcessorFactory.Crate(this, node, condition);
             if (processor != null)
             {
-                //触发器
-                var triNode = node[FightSkillProcKey.TIRS];
-                if (triNode != null)
-                {
-                    for (int triIndex = 0; triIndex < triNode.Count; triIndex++)
-                    {
-                        processor.AddTri(triNode[triIndex]);
-                    }
-                }
-
                 lstProcessor.Add(processor);
             }
         }
@@ -258,7 +232,7 @@ public class BuffBase : ITriggedable,ISkillProcOwner
     {
         foreach (var procer in lstProcessor)
         {
-            if (procer.IsTried(tri))
+            if (procer.IsTried(tri) && procer.CheckConditon())
             {
                 procer.Proc(content);
                 if (tri == FightSkillTriType.ACTIVE)

@@ -484,6 +484,14 @@ public class Character : ITriggedable
         propData.ChangeHP(heal);
     }
 
+    /// <summary>
+    /// 立即死亡
+    /// </summary>
+    public void Killed()
+    {
+        propData.hp = 0;
+    }
+
     public void HandleHPState(ActionContent content)
     {
         //死亡处理

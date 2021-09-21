@@ -11,6 +11,7 @@ static class AICfg
     public const string TYPE_RAN = "ran";
     public const string TYPE_ROLE = "role";
     public const string ROLE_ID = "role_id";
+    public const string SAME_LOC = "same_loc";
 }
 
 public class AI
@@ -258,40 +259,6 @@ public class AI
     {
         var skillData = skill.GetBaseData();
 
-       
-
-        //TODO AI目标获取
-        //if (skillData.targetType == ESkillTarget.Enemy)
-        //{
-        //    //从允许目标中找到第一个存活的
-        //    Character targetChara = null;
-        //    //以1号位为目标
-        //    int targetTeamLoc = 0;
-        //    //查找正在蓄力的敌方目标
-        //    var poweringChara = FightState.Inst.characterMgr.FindThatIsPowering(ECamp.Ally);
-        //    if (poweringChara != null)
-        //    {
-        //        targetChara = poweringChara;
-        //        targetTeamLoc = targetChara.teamLoc;
-        //    }
-        //    else
-        //    {
-        //        targetTeamLoc = 1;
-        //        targetChara = FightState.Inst.characterMgr.GetAliveCharacter(ECamp.Ally, targetTeamLoc);
-        //    }
-
-        //    targets.Add(targetChara);
-        //    for (int i = 0; i < skillData.targetCount - 1; i++)
-        //    {
-        //       //往后添加目标
-        //        var chara = FightState.Inst.characterMgr.GetAliveCharacter(ECamp.Ally, targetTeamLoc + i + 1);
-        //        if (chara != null)
-        //        {
-        //            targets.Add(chara);
-        //        }
-        //    }
-        //}
-
         List<Character> targets = new List<Character>();
 
         if (!skill.GetBaseData().IsNeedSelectTarget())
@@ -328,6 +295,12 @@ public class AI
                         Debug.LogError("AI指定角色ID查找失败,roleID:" + roleID);
                     }
                 }
+                else if (type == AICfg.SAME_LOC)
+                {
+                    //取相同位置的敌方目标
+                    var teamLoc = _character.teamLoc;
+                    targetChara = GetEnemyAtLoc(targetsEnable, teamLoc);
+                }
                 else
                 {
                     Debug.LogError("无效的AI目标模式" + type);
@@ -353,6 +326,7 @@ public class AI
             else
             {
                 //没找到目标
+                Debug.Log($"AI目标选择,没有找到目标");
             }
         }
 
@@ -362,6 +336,44 @@ public class AI
         }
 
         return targets;
+    }
+
+    /// <summary>
+    /// 获取离指定位置最近的敌方目标（往前搜索）
+    /// </summary>
+    /// <param name="targetsEnable"></param>
+    /// <param name="teamLoc"></param>
+    /// <returns></returns>
+    private Character GetEnemyNearLoc(List<Character> targetsEnable, int teamLoc)
+    {
+        Character result = null;
+        int dis = 999;
+        foreach (var chara in targetsEnable)
+        {
+            if (chara.camp == _character.GetEnemyCamp() && teamLoc - chara.teamLoc >= 0)
+            {
+                var disT = teamLoc - chara.teamLoc;
+                if (disT <= dis)
+                {
+                    result = chara;
+                }
+            }
+        }
+        return result;
+    }
+
+    private Character GetEnemyAtLoc(List<Character> targetsEnable, int teamLoc)
+    {
+        Character result = null;
+        foreach (var chara in targetsEnable)
+        {
+            if (chara.camp == _character.GetEnemyCamp() && chara.teamLoc == teamLoc)
+            {
+                result = chara;
+                break;
+            }
+        }
+        return result;
     }
 
     /// <summary>
