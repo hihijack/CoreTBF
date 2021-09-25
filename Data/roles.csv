@@ -16,3 +16,4 @@ id,name,job,model,headicon,hp,atk,def,resFire,resThunder,resDark,resMagic,tenaci
 15,–‹…ÒÀπø®,1,beargod,hd_beargod,200,40,10,5,5,5,5,100,30,3,1,"[37,38,13,46,44,45,41]","[1,1,2,3,4,1,1]"
 16,∞µ”∞Ω·æß,1,crystal,hd_crystal,10,100,0,0,0,0,0,100,100,4,1,"[42,43]",[1]
 17,—€ƒß,2,beholder,hd_beholder,100,0,0,0,0,0,0,100,100,3,1,[47],[1]
+18,∫°π«÷©÷Î,1,bonespider,hd_bonespider,80,20,0,0,0,0,0,100,100,3,1,"[48,13]","[1,2]"

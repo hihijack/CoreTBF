@@ -47,3 +47,4 @@ id,name,type,icon,logic,targetType,timeLimit,dmg,dmgFire,dmgTenacity,targetCount
 45,暗影风暴,Active,Buffs/Icon1_47,Atk,Enemy,0,1000,0,30,3,0.45,0.3,0.2,0,0,0.1,1,对所有敌人造成伤害,common_atk,common_battleroar,"[{""effect"":""dmg_target"",""target"":""target""}]","{""type"":""enemy_tank""}",[1]
 46,野蛮挥击,Active,Buffs/Icon1_47,Atk,Enemy,0,200,0,30,3,0,1.3,0.2,0,0,0,1,大范围但空挡大的野蛮攻击，攻击所有敌人。,common_atk2,,"[{""effect"":""dmg_target"",""target"":""target""}]","{""type"":""enemy_tank""}",[1]
 47,恐惧凝视,Active,Buffs/Icon1_47,Atk,Enemy,0,0,0,0,1,0,0.5,0,0,0,0,3,给目标添加恐惧效果,common_atk,,"[{""effect"":""add_buff"",""buff_id"":9,""dur"":1,""target"":""target""}]","{""type"":""same_loc""}",[1]
+48,剧毒攻击,Active,Buffs/Icon1_47,Atk,Enemy,0,100,0,10,1,0,0.5,0,0,0,0,1,给目标添加中毒效果,common_atk,,"[{""effect"":""dmg_target"",""target"":""target""},{""effect"":""add_buff"",""buff_id"":10,""dur"":1,""target"":""target""}]","{""type"":""enemy_tank""}",[1]

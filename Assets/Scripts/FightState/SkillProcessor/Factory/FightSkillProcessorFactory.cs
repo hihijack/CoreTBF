@@ -1,6 +1,7 @@
 ﻿using SimpleJSON;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class FightSkillProcessorFactory
@@ -40,6 +41,9 @@ public class FightSkillProcessorFactory
                 break;
             case FightSkillProcVal.KILL:
                 processor = new FightSkillProcKill(owner, node, condition);
+                break;
+            case FightSkillProcVal.HURTED:
+                processor = new FightSkillProcHurted(owner, node, condition);
                 break;
             default:
                 Debug.LogError("无效的处理器:" + effectKey);//#######

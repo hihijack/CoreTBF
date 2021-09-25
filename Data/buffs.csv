@@ -12,3 +12,4 @@ id,logic,name,desc,icon,maxLayer,data
 7,Clear,狂怒,后续行动变为狂怒攻击,Icon6_68,1,"[{""tris"":[""active""],""effect"":""change_ai"",""ais"":[5,6,7]}]"
 8,Clear,虚弱,受到伤害提升300%,Icon1_01,1,"[{""tris"":[""active""],""effect"":""change_prop"",""prop"":""hurt"",""val_mul"":3}]"
 9,LayerReduce,恐惧,叠满3层时，立即死亡,Icon6_08,3,"[{""tris"":[""layer_change""],""condition"":{""type"":""buff_layer"",""buff_id"":9,""layer"":3},""effect"":""kill"",""target"":""self""}]"
+10,LayerAdd,剧毒,剧毒会逐渐加深，造成越来越多的伤害,Icon1_06,10,"[{""tris"":[""layer_change""],""effect"":""hurted"",""val"":10,""target"":""self""}]"

@@ -27,7 +27,8 @@ public enum ECharacterState
 
 public struct DmgData
 {
-    public float dmgPrecent;//伤害百分百
+    public float dmgPrecent;//伤害百分比
+    public int val;
     public float timeAtkStiff;//攻击硬直
     public int tenAtk;//韧性伤害
 }
@@ -404,6 +405,35 @@ public class Character : ITriggedable
     {
         target.Healed(CalHeal(heal));
         //TODO 濒死治疗
+    }
+
+    /// <summary>
+    /// 受到伤害
+    /// </summary>
+    /// <param name="dmgData"></param>
+    /// <returns></returns>
+    public DmgResult HurtSelf(DmgData dmgData)
+    {
+        //计算增伤减伤
+        var dmg = Mathf.CeilToInt(dmgData.val * propData.DmgHurtedMul);
+
+        //调试用。降低100倍伤害
+        if (DebugCMD.isInvincible)
+        {
+            if (camp == ECamp.Enemy)
+            {
+                dmg = Mathf.FloorToInt(dmg * 0.01f);
+            }
+        }
+
+
+        //计算抗性
+        var targetDef = (float)propData.Def;
+        dmg = Mathf.CeilToInt(dmg * (1 - targetDef * 6 / (100 + targetDef * 6)));
+
+        Hurted(dmg);
+
+        return new DmgResult() { dmg = dmg };
     }
 
     public DmgResult DamageTarget(Character target, DmgData dmgData)

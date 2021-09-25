@@ -25,6 +25,7 @@ public static class FightSkillProcVal
     public const string CHANGE_LOC = "change_loc";
     public const string CHANGE_AI = "change_ai";
     public const string KILL = "kill";
+    public const string HURTED = "hurted";
     public const string CONDITION_NONE = "none";
 }
 

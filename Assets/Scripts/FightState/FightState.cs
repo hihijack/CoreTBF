@@ -13,7 +13,8 @@ public enum EFightStage
     ActionSelect,//行动选择
     ActionReady,//准备阶段,其他人行动选择
     ActionAct,//行动生效阶段
-    ActionEnd//行动结束阶段
+    ActionEnd,//行动结束阶段
+    NormalView //常态表现阶段
 }
 
 [System.Serializable]
@@ -120,7 +121,8 @@ public class FightState : GameStateBase
             {EFightStage.ActionSelect, new FightStageActionSelect()},
             {EFightStage.ActionReady, new FightStageActionReady()},
             {EFightStage.ActionAct, new FightStageActionAct()},
-            {EFightStage.ActionEnd, new FightStageActionEnd()}
+            {EFightStage.ActionEnd, new FightStageActionEnd()},
+            {EFightStage.NormalView, new FightStageNormalView() }
         };
     }
 

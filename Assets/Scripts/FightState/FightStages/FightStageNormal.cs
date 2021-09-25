@@ -9,19 +9,23 @@ namespace DefaultNamespace.FightStages
             base.OnUpdate();
 
             FightState.Inst.characterMgr.UpdateAllCharacterInNormalStage();
-          
-            //检测是否有进入触发
-            if (FightState.Inst.GetActiveCharacter() != null)
+
+            Debug.Log($"t[{Time.frameCount}]>>Update nomal stage");//##########
+
+            //检测是否有表现命令
+            if (FightState.Inst.fightViewBehav.HasCmdCached())
             {
-                FightState.Inst.SetFightStage(EFightStage.ActionSelect);
+                Debug.Log($"t[{Time.frameCount}]>>HasCmdCached");//##########
+                //进入表现阶段
+                FightState.Inst.SetFightStage(EFightStage.NormalView);
             }
             else
             {
-                //等待中的开始行动
-                //if (Input.GetKeyDown(KeyCode.Space))
-                //{
-                //    GameMgr.Inst.BtnActionAtOnce();
-                //}
+                //检测是否有进入触发
+                if (FightState.Inst.GetActiveCharacter() != null)
+                {
+                    FightState.Inst.SetFightStage(EFightStage.ActionSelect);
+                }
             }
         }
     }

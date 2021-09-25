@@ -31,6 +31,11 @@ public class FightViewBehav
         _ppv = ppv;
     }
 
+    internal bool HasCmdCached()
+    {
+        return _lstCmdCache.Count > 0;
+    }
+
     public TimeLineCtl TimeLineCtl
     {
         get
@@ -126,6 +131,10 @@ public class FightViewBehav
                 if (lastSkillCastCmd != null)
                 {
                     lastSkillCastCmd.AddChildCmd(cmd);
+                }
+                else
+                {
+                    _queueViewCmd.Enqueue(cmd);
                 }
             }
             else
