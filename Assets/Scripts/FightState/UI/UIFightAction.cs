@@ -138,7 +138,7 @@ namespace UI
 
             var skill = uiItemAction.GetData();
             var skillData = skill.GetBaseData();
-            if (skillData.targetType == ESkillTarget.Self)
+            if (skillData.targetType == ESkillTarget.Self || skillData.targetType == ESkillTarget.None)
             {
                 //不需要选择目标
                 //对自身释放不需要

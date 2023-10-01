@@ -14,22 +14,33 @@ public class FightSkillProcChangeLoc : FightSkillProcessorBase
     {
         var targets = GetTargets(content);
         var target = targets[0];
-        int loc = 0;
-        if (locChangeType == LocChangeType.AHEAD)
+
+        var isHit = IsHitTarget(content, target);
+        if (isHit)
         {
-            loc = 1;
+            int loc = 0;
+            if (locChangeType == LocChangeType.AHEAD)
+            {
+                loc = 1;
+            }
+            else if (locChangeType == LocChangeType.LAST)
+            {
+                loc = FightState.Inst.characterMgr.GetCharactersCount(target.camp);
+            }
+
+            var hasChange = FightState.Inst.characterMgr.ChangeToLoc(target, loc);
+            if (hasChange)
+            {
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventRefAllChrPos(target.camp, true));
+            }
         }
-        else if (locChangeType == LocChangeType.LAST)
+        else
         {
-            loc = FightState.Inst.characterMgr.GetCharactersCount(target.camp);
+            FightState.Inst.eventRecorder.CacheEvent(new FightEventDodge(target));
         }
 
-        var hasChange = FightState.Inst.characterMgr.ChangeToLoc(target, loc);
-        if (hasChange)
-        {
-            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdRefAllChrPos(target.camp, true));
-        }
-        return new SkillProcResult() { targets = targets };
+       
+        return new SkillProcResult() { };
     }
 
     protected override void ParseFrom(JSONNode jsonData)

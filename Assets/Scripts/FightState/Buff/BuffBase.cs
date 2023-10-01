@@ -53,6 +53,21 @@ public class BuffBase : ITriggedable,ISkillProcOwner
         }
     }
 
+    internal void PassiveProc(ActionContent content)
+    {
+        foreach (var procer in lstProcessor)
+        {
+            if (procer.IsTried(content.tri) && procer.CheckConditon())
+            {
+                procer.Proc(content);
+                if (content.tri == FightSkillTriType.ACTIVE)
+                {
+                    lstProcActived.Add(procer as FightSkillActiveableProcBase);
+                }
+            }
+        }
+    }
+
     public bool IsValid()
     {
         return valid;
@@ -230,16 +245,19 @@ public class BuffBase : ITriggedable,ISkillProcOwner
     /// <param name="content"></param>
     public void PassiveTried(string tri, ActionContent content)
     {
-        foreach (var procer in lstProcessor)
+        bool tried = false;
+        foreach (var proc in lstProcessor)
         {
-            if (procer.IsTried(tri) && procer.CheckConditon())
+            if (proc.IsTried(tri) && proc.CheckConditon())
             {
-                procer.Proc(content);
-                if (tri == FightSkillTriType.ACTIVE)
-                {
-                    lstProcActived.Add(procer as FightSkillActiveableProcBase);
-                }
+                tried = true;
+                break;
             }
+        }
+        if (tried)
+        {
+            var newContent = ActionContentFactory.Create(GetOwnerCharacter(), this, content, tri);
+            FightState.Inst.skillProcHandler.EnqueueNode(newContent);
         }
     }
 

@@ -38,6 +38,11 @@ public struct DmgResult
     public int dmg;
 }
 
+public struct HealResult
+{
+    public int heal;
+}
+
 public class Character : ITriggedable
 {
     public RoleEntityCtl entityCtl;
@@ -401,10 +406,12 @@ public class Character : ITriggedable
         }
     }
 
-    internal void HealTarget(Character target, float heal)
+    internal HealResult HealTarget(Character target, float heal)
     {
+        var val = CalHeal(heal);
         target.Healed(CalHeal(heal));
         //TODO 濒死治疗
+        return new HealResult() { heal = val };
     }
 
     /// <summary>
@@ -567,8 +574,11 @@ public class Character : ITriggedable
         mTimePower = 0f;
         //清空buff,所有buff层数归0
         ClearAllBuff();
-        FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCharacterDie(this));
+
+        FightState.Inst.eventRecorder.CacheEvent(new FightEventDie(this));
+
         FightState.Inst.characterMgr.OnCharacterDead(this);
+
     }
 
     /// <summary>
@@ -596,8 +606,7 @@ public class Character : ITriggedable
         //hp上限为50%,并恢复满血
         propData.MaxHPParamMul -= 0.5f;
         propData.hp = propData.MaxHP;
-        FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdHPChanged(this, 0, propData.hp));
-        FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCharacterDying(this));
+        FightState.Inst.eventRecorder.CacheEvent(new FightEventToDying(this, propData.hp));
     }
 
     /// <summary>

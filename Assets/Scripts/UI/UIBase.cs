@@ -18,7 +18,9 @@ public class UIBase : MonoBehaviour
 {
     public EUILayer layer;
     CanvasGroup canvasGroup;
-    
+
+    RectTransform _rectTransform;
+
     public virtual void Init() { }
     public virtual void OnShow() 
     {
@@ -66,5 +68,14 @@ public class UIBase : MonoBehaviour
         canvasGroup.alpha = visible ? 1 : 0;
         canvasGroup.interactable = visible && interactable;
         canvasGroup.blocksRaycasts = visible && blockRay;
+    }
+
+    public RectTransform GetRectTransform()
+    {
+        if (_rectTransform == null)
+        {
+            _rectTransform = GetComponent<RectTransform>();
+        }
+        return _rectTransform;
     }
 }

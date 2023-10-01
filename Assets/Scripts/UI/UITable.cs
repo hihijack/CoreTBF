@@ -21,5 +21,6 @@
         UIGetItem, //物品拾取界面
         UIRoleInfo, //角色信息
         UISkillGet, //技能获取
+        UIFightTipRoot //战斗信息界面
     }
 }

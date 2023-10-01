@@ -23,9 +23,10 @@ public class FightSkillProcGetMP : FightSkillProcessorBase
 
     public override SkillProcResult Proc(ActionContent content)
     {
+        var oriVal = PlayerRolePropDataMgr.Inst.propData.mp;
         PlayerRolePropDataMgr.Inst.ChangeMP(val);
-        FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdMPChange(0, PlayerRolePropDataMgr.Inst.propData.mp));
-        return new SkillProcResult() { targets = null };
+        FightState.Inst.eventRecorder.CacheEvent(new FightEventMPChanged(oriVal, val));
+        return new SkillProcResult();
     }
 
     protected override void ParseFrom(JSONNode jsonData)

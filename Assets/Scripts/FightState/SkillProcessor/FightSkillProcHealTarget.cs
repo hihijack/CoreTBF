@@ -18,14 +18,24 @@ public class FightSkillProcHealTarget : FightSkillProcessorBase
         var selfCharacter = owner.GetOwnerCharacter();
         var skill = owner.GetOwnerSkill();
         var skillBaseData = skill.GetBaseData();
+        //List<SkillProcResultNode> lstProcResult = new List<SkillProcResultNode>();
         foreach (var target in targets) 
         {
-            int oriHP = target.propData.hp;
-            selfCharacter.HealTarget(target, skillBaseData.dmg);
-            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdHPChanged(target, oriHP, target.propData.hp));
-            target.HandleHPState(content);
+            bool isHit = IsHitTarget(content, target);
+            if (isHit)
+            {
+                int oriHP = target.propData.hp;
+                var result = selfCharacter.HealTarget(target, skillBaseData.dmg);
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventHPHeal(target, oriHP, target.propData.hp, result));
+                target.HandleHPState(content);
+            }
+            else
+            {
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventDodge(target));
+            }
+            //lstProcResult.Add(new SkillProcResultNode() { target = target, isHit = isHit });
         }
-        return new SkillProcResult() { targets = targets };
+        return new SkillProcResult() {};
     }
 
     protected override void ParseFrom(JSONNode jsonData)

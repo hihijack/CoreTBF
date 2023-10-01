@@ -16,11 +16,17 @@ public class FightSkillProcRemoveBuff : FightSkillProcessorBase
     public override SkillProcResult Proc(ActionContent content)
     {
         var targets = GetTargets(content);
+        List<SkillProcResultNode> lstProcResult = new List<SkillProcResultNode>();
         foreach (var target in targets)
         {
-            target.RemoveBuff(targetBuffID);
+            bool isHit = IsHitTarget(content, target);
+            if (isHit)
+            {
+                target.RemoveBuff(targetBuffID);
+            }
+            lstProcResult.Add(new SkillProcResultNode() { target = target, isHit = isHit });
         }
-        return new SkillProcResult() { targets = targets };
+        return new SkillProcResult() { results = lstProcResult };
     }
 
     protected override void ParseFrom(JSONNode jsonData)

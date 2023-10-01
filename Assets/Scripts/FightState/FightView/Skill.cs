@@ -101,12 +101,28 @@ public class Skill : ITriggedable,ISkillProcOwner
         }
 
         bool tried = false;
-
-        List<Character> targets = null;
-
         foreach (var proc in lstProcessor)
         {
             if (proc.IsTried(tri) && proc.CheckConditon())
+            {
+                tried = true;
+                break;
+            }
+        }
+        if (tried)
+        {
+            var newContent = ActionContentFactory.Create(GetOwnerCharacter(), this, content, tri);
+            FightState.Inst.skillProcHandler.EnqueueNode(newContent);
+        }
+    }
+
+    public void PassiveProc(ActionContent content)
+    {
+        List<Character> targets = null;
+        bool tried = false;
+        foreach (var proc in lstProcessor)
+        {
+            if (proc.IsTried(content.tri) && proc.CheckConditon())
             {
                 tried = true;
                 var targetsT = proc.GetTargets(content);
@@ -120,14 +136,14 @@ public class Skill : ITriggedable,ISkillProcOwner
 
         if (tried)
         {
-            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCastSkill(this.owner, targets, this, false));
+            FightState.Inst.eventRecorder.CacheEvent(new FightEventCastSkill(this.owner, this, targets));
         }
 
         foreach (var proc in lstProcessor)
         {
-            if (proc.IsTried(tri) && proc.CheckConditon())
+            if (proc.IsTried(content.tri) && proc.CheckConditon())
             {
-                Debug.Log("t>>" + owner.roleData.name + "被动触发:" + tri);//##########
+                Debug.Log("t>>" + owner.roleData.name + "被动触发:" + content.tri);//##########
                 proc.Proc(content);
                 proc.CacheTarget(null);
             }
@@ -152,11 +168,14 @@ public class Skill : ITriggedable,ISkillProcOwner
 
         bool success = false;
 
+        List<SkillProcResult> lstResults = new List<SkillProcResult>();
+
         foreach (var proc in lstProcessor)
         {
             if (proc.IsActive() && proc.CheckConditon())
             {
-                proc.Proc(content);
+               var result =  proc.Proc(content);
+                lstResults.Add(result);
                 success = true;
             }
         }

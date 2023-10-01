@@ -18,14 +18,20 @@ public class FightSkillProcAddBuff : FightSkillProcessorBase
     {
         var selfCharacter = owner.GetOwnerCharacter();
         var lstTarget = GetTargets(content);
+        List<SkillProcResultNode> lstProcResult = new List<SkillProcResultNode>();
         if (lstTarget != null)
         {
             foreach (var target in lstTarget)
             {
-                target.AddABuff(buffTID, dur, selfCharacter);
+                bool isHit = IsHitTarget(content, target);
+                if (isHit)
+                {
+                    target.AddABuff(buffTID, dur, selfCharacter);
+                }
+                lstProcResult.Add(new SkillProcResultNode() { target = target, isHit = isHit });
             }
         }
-        return new SkillProcResult() { targets = lstTarget };
+        return new SkillProcResult() { results = lstProcResult};
     }
 
     protected override void ParseFrom(JSONNode jsonData)

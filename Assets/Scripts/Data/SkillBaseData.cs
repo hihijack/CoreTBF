@@ -108,6 +108,11 @@ namespace Data
         /// </summary>
         public int[] enableJob;
 
+        /// <summary>
+        /// 命中率
+        /// </summary>
+        public int odds;
+
         public SkillBaseData(IDataReader reader)
         {
             ID = reader.GetInt16(0);
@@ -141,6 +146,8 @@ namespace Data
             {
                 enableJob = jsonJob.AsArray.ToIntArr();
             }
+
+            odds = reader.GetInt16(24);
         }
 
         public bool IsTargetTypeContainAlly()

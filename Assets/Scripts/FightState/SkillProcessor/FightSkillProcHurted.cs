@@ -1,4 +1,5 @@
 ﻿using SimpleJSON;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -18,21 +19,30 @@ internal class FightSkillProcHurted : FightSkillProcessorBase
 
         foreach (var target in targets)
         {
-            var oriHP = target.propData.hp;
-            var result = target.HurtSelf(new DmgData() { val = val });
-            var curHP = target.propData.hp;
-
-            Debug.Log($"t[{Time.frameCount}]>>添加更新血条命令,{curHP}");//############
-            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdHPChanged(target, oriHP, curHP));
-
-            if (result.dmg > 0 && target.IsAlive())
+            bool isHit = IsHitTarget(content, target);
+            if (isHit)
             {
-                target.OnHurtd(content);
+                var oriHP = target.propData.hp;
+                var result = target.HurtSelf(new DmgData() { val = val });
+                var curHP = target.propData.hp;
+
+                Debug.Log($"t[{Time.frameCount}]>>添加更新血条命令,{curHP}");//############
+
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventHPHurted(target, oriHP, curHP, result));
+
+                if (result.dmg > 0 && target.IsAlive())
+                {
+                    target.OnHurtd(content);
+                }
+                target.HandleHPState(content);
             }
-            target.HandleHPState(content);
+            else
+            {
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventDodge(target));
+            }
         }
 
-        return new SkillProcResult() { targets = targets };
+        return new SkillProcResult() { };
     }
 
     protected override void ParseFrom(JSONNode jsonData)

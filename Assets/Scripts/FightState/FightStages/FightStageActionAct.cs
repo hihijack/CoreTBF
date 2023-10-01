@@ -53,8 +53,9 @@ namespace DefaultNamespace.FightStages
                             }
                             if (cost > 0)
                             {
+                                var mpVal = PlayerRolePropDataMgr.Inst.propData.mp;
                                 PlayerRolePropDataMgr.Inst.ChangeMP(-1 * cost);
-                                FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdMPChange(0, PlayerRolePropDataMgr.Inst.propData.mp));
+                                FightState.Inst.eventRecorder.CacheEvent(new FightEventMPChanged(mpVal, -1 * cost));
                             }
                         }
 

@@ -38,6 +38,11 @@ namespace Data
 
         JobBaseData jobData;
 
+        /// <summary>
+        /// 闪避
+        /// </summary>
+        public int dodge;
+
         public RoleBaseData(IDataReader reader)
         {
             ID = reader.GetInt16(0);
@@ -78,6 +83,8 @@ namespace Data
                     }
                 }
             }
+
+            dodge = reader.GetInt16(18);
         }
 
         public JobBaseData JobData 

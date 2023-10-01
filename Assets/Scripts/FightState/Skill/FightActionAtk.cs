@@ -51,11 +51,11 @@ public class FightActionAtk : FightActionBase
             //蓄力改变韧性
             if (skillBaseData.tenChangeToPower > 0)
             {
+                var oriVal = caster.propData.tenacity;
                 caster.propData.SetTenacityPercent(skillBaseData.tenChangeToPower);
-                FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdTenacityChange(caster, 0, caster.propData.tenacity));
+                var curVal = caster.propData.tenacity;
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventTenHurted(caster,oriVal, curVal - oriVal));
             }
-
-            //UIFightLog.Inst.AppendLog($"{caster.roleData.name}开始蓄力:{skillBaseData.name}!!");
         }
         else
         {
@@ -66,8 +66,10 @@ public class FightActionAtk : FightActionBase
             //韧性改变至指定百分比;0不改变
             if (skillBaseData.tenChangeTo > 0)
             {
+                var oriVal = caster.propData.tenacity;
                 caster.propData.SetTenacityPercent(skillBaseData.tenChangeTo);
-                FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdTenacityChange(caster, 0, caster.propData.tenacity));
+                var curVal = caster.propData.tenacity;
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventTenHurted(caster, oriVal, curVal - oriVal));
             }
 
             ProcActEffect();

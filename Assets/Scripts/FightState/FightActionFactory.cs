@@ -48,6 +48,8 @@ public class FightActionFactory
         content.caster = caster;
         content.targets = targets;
         content.skill = skill;
+        //命中判断
+        FightLogicUtil.InitSkillHitInfo(content);
         return content;
     }
 }

@@ -85,6 +85,8 @@ public class PropData
         }
     }
 
+    public int Dodge { get; internal set; }
+
     public void ChangeHP(int hpchange)
     {
         hp += hpchange;

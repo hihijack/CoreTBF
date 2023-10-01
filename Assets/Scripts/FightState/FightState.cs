@@ -47,6 +47,10 @@ public class FightState : GameStateBase
 
     public static FightState Inst { get; private set; }
 
+    public FightEventRecorder eventRecorder;
+
+    public SkillProcLinkHandler skillProcHandler;
+
     /// <summary>
     /// 获取站位位置
     /// </summary>
@@ -419,6 +423,9 @@ public class FightState : GameStateBase
         var uiFight = UIMgr.Inst.ShowUI(UITable.EUITable.UIFight);
         //刷新血量UI
         var uiHPRoot = UIMgr.Inst.ShowUI(UITable.EUITable.UIHPRoot) as UIHPRoot;
+        //战斗信息界面
+        UIMgr.Inst.ShowUI(UITable.EUITable.UIFightTipRoot);
+
         var lstCharacters = characterMgr.GetCharacters();
         foreach (var character in lstCharacters)
         {
@@ -461,8 +468,10 @@ public class FightState : GameStateBase
             characterMgr = new FightCharacterMgr();
             lstActionData = new List<FightActionBase>();
             skillActionCastMgr = new SkillActionCastMgr();
+            eventRecorder = new FightEventRecorder();
             //战斗视图初始化
             fightViewBehav = new FightViewBehav(director, ppv);
+            skillProcHandler = new SkillProcLinkHandler();
         }
         hasInit = true;
     }

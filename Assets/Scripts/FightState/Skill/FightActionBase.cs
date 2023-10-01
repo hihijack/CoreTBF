@@ -41,12 +41,17 @@ public class FightActionBase
 
         Debug.Log("释放技能:" + Caster.roleData.name + ",skill:" + skill.GetBaseData().name);//##########
 
-        FightState.Inst.fightViewBehav.CacheViewCmd(
-            new FightViewCmdPreCastSkill(new FightViewCmdPreCastSkillData() { target = this.Caster, skill = this.skill}));
         //预处理阶段
         PreAct();
 
-        FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdCastSkill(Caster, Targets, skill, IsPowerAct()));
+        if (IsPowerAct())
+        {
+            FightState.Inst.eventRecorder.CacheEvent(new FightEventStartPower(Caster, skill));
+        }
+        else
+        {
+            FightState.Inst.eventRecorder.CacheEvent(new FightEventCastSkill(Caster, skill, Targets));
+        }
         //效果发生
         RealAct();
 
@@ -103,6 +108,7 @@ public class FightActionBase
     /// </summary>
     protected void ProcActEffect()
     {
-        skill.Proc(actionContent);
+        //skill.Proc(actionContent);
+        FightState.Inst.skillProcHandler.ActiveProc(actionContent);
     }
 }

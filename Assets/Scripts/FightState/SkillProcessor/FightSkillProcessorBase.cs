@@ -76,7 +76,13 @@ public static class LocChangeType
 /// </summary>
 public struct SkillProcResult
 {
-    public List<Character> targets;
+    public List<SkillProcResultNode> results;
+}
+
+public struct SkillProcResultNode
+{
+    public Character target;
+    public bool isHit;
 }
 
 /// <summary>
@@ -166,6 +172,21 @@ public abstract class FightSkillProcessorBase
 
         List<Character> targets = targetFinder.GetTargets(content);
         return targets;
+    }
+
+    public virtual bool IsHitTarget(ActionContent content, Character target)
+    {
+        if (content.caster.camp == target.camp)
+        {
+            //友方总是命中
+            return true;
+        }
+        var index = content.GetIndex(target);
+        if (index >= 0)
+        {
+            return content.hitInfos[index];
+        }
+        return true;
     }
 
     internal void AddTri(string tri)

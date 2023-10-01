@@ -65,16 +65,6 @@ public class FightViewBehav
     }
 
     /// <summary>
-    /// 缓存表现命令
-    /// </summary>
-    /// <param name="cmd"></param>
-    public void CacheViewCmd(FightViewCmdBase cmd)
-    {
-        Debug.Log("t>>ViewCmd:" + cmd);
-        _lstCmdCache.Add(cmd);
-    }
-
-    /// <summary>
     /// 开始播放缓存表现命令
     /// </summary>
     public void StartPlayCachedViewCmd(Action onComplete)
@@ -119,29 +109,18 @@ public class FightViewBehav
     /// </summary>
     private void PreHandleViewCmd()
     {
-        FightViewCmdBase lastSkillCastCmd = null; 
+        ParseViewCmdFromEvent();
+
         foreach (var cmd in _lstCmdCache)
         {
-            if (cmd.GetType() == typeof(FightViewCmdCastSkill))
-            {
-                lastSkillCastCmd = cmd;
-            }
-            if (cmd.GetType() == typeof(FightViewCmdHPChanged) || cmd.GetType() == typeof(FightViewCmdTenacityChange))
-            {
-                if (lastSkillCastCmd != null)
-                {
-                    lastSkillCastCmd.AddChildCmd(cmd);
-                }
-                else
-                {
-                    _queueViewCmd.Enqueue(cmd);
-                }
-            }
-            else
-            {
-                _queueViewCmd.Enqueue(cmd);
-            }
+            _queueViewCmd.Enqueue(cmd);
         }
+    }
+
+    private void ParseViewCmdFromEvent()
+    {
+        _lstCmdCache.Clear();
+        FightState.Inst.eventRecorder.ParseToViewCmd(_lstCmdCache);
     }
 
     void ClearViewCmd()

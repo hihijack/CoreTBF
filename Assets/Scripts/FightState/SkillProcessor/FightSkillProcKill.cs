@@ -14,14 +14,20 @@ public class FightSkillProcKill : FightSkillProcessorBase
     public override SkillProcResult Proc(ActionContent content)
     {
         var targets = GetTargets(content);
+        List<SkillProcResultNode> lstProcResult = new List<SkillProcResultNode>();
         foreach (var target in targets)
         {
-            var oriHP = target.propData.hp;
-            target.Killed();
-            FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdHPChanged(target, oriHP, 0));
-            target.HandleHPState(content);
+            var isHit = IsHitTarget(content, target);
+            if (isHit)
+            {
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventDie(target));
+                var oriHP = target.propData.hp;
+                target.Killed();
+                target.HandleHPState(content);
+            }
+            lstProcResult.Add(new SkillProcResultNode() { target = target, isHit = isHit });
         }
-        return new SkillProcResult() { targets = targets };
+        return new SkillProcResult() { results = lstProcResult };
     }
 
     protected override void ParseFrom(JSONNode jsonData)

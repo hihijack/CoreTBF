@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using UI;
+using UnityEngine;
 
-public struct FightViewCmdHpChangedData
+public enum EHPChangedType
 {
-    public Character target;
-    public int oriVal;
-    public int curVal;
+    Hurted,
+    Healed,
+    ToDying,
+    Killed //直接杀死
 }
 
 /// <summary>
@@ -18,13 +20,16 @@ public class FightViewCmdHPChanged : FightViewCmdBase
     private readonly Character target;
     private readonly int oriVal;
     private readonly int curVal;
+    private EHPChangedType changeType;
 
-    public FightViewCmdHPChanged(Character target, int oriVal, int curVal)
+    public FightViewCmdHPChanged(Character target, int oriVal, int curVal, EHPChangedType type)
     {
         this.target = target;
         this.oriVal = oriVal;
         this.curVal = curVal;
+        this.changeType = type;
     }
+
 
     public override void Play()
     {

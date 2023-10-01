@@ -385,7 +385,7 @@ public class FightCharacterMgr
             if (chr.camp == character.camp && chr != character && chr.teamLoc > character.teamLoc)
             {
                 chr.teamLoc--;
-                FightState.Inst.fightViewBehav.CacheViewCmd(new FightViewCmdRefChrPos(chr, true));
+                FightState.Inst.eventRecorder.CacheEvent(new FightEventChangePos(chr, true));
             }
         }
     }
