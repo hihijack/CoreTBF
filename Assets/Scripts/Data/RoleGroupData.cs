@@ -1,6 +1,4 @@
 ﻿using SimpleJSON;
-using System;
-using System.Collections.Generic;
 using System.Data;
 
 public class RoleGroupData

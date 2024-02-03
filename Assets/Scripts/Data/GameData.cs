@@ -18,7 +18,12 @@ public class GameData : Singleton<GameData>
     public readonly string TABAL_AREA = "area";
     public readonly string TABLE_JOBS = "jobs";
 
+#if UNITY_EDITOR
     readonly string _sqlDBLocation = "URI=file:Data/coretbf.db";
+#elif UNITY_STANDALONE_WIN
+    readonly string _sqlDBLocation = $"URI=file:{Application.dataPath}/StreamingAssets/Data/coretbf.db";
+#endif
+
 
     /// <summary>
     /// DB objects

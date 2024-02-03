@@ -17,7 +17,9 @@ public class RoleEntityCtl : MonoBehaviour
         _anim = GameUtil.GetOrAdd<Animator>(gameObject);
         if (_anim.runtimeAnimatorController == null)
         {
-            GameResLoader.Load<RuntimeAnimatorController>("comm_character.controller", (a) => { _anim.runtimeAnimatorController = a; });
+            //GameResLoader.Load<RuntimeAnimatorController>("comm_character.controller", (a) => { _anim.runtimeAnimatorController = a; });
+            var animCtl = GameResLoader.Load<RuntimeAnimatorController>("Animator/comm_character.controller");
+            _anim.runtimeAnimatorController = animCtl;
         }
         else
         {

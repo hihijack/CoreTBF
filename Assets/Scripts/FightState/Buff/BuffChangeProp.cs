@@ -1,10 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using DefaultNamespace;
-using System;
-using UnityEngine.Experimental.TerrainAPI;
-
-public enum EDefType
+﻿public enum EDefType
 {
     /// <summary>
     /// 物理防御

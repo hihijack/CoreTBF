@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using System;
 using UnityEngine.UIElements;
-using Boo.Lang;
+using System.Collections.Generic;
 
 /// <summary>
 /// 预设事件选择器
@@ -28,7 +28,7 @@ public class EditorWinEventPersetSelector : EditorWindow
             }
         }
         ListView lstView = new ListView(lstDatas, 30, ItemCreator, BindItem);
-        lstView.onItemChosen += onItemChosen;
+        lstView.onSelectionChange += onItemChosen;
         rootVisualElement.Add(lstView);
     }
 

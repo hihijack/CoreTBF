@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
-using DefaultNamespace;
-using Boo.Lang;
-using System;
 using UI;
+using System.Collections.Generic;
 
 public class UIBuffRoot : UIItemBase
 {
@@ -58,5 +55,15 @@ public class UIBuffRoot : UIItemBase
         }
         GoPool.Inst.Cache(uiItembuff.gameObject);
         _lstBuffItems.Remove(uiItembuff);
+    }
+
+    public override void Cache()
+    {
+        foreach (var uiBuffItem in _lstBuffItems)
+        {
+            GoPool.Inst.Cache(uiBuffItem.gameObject);
+        }
+        _lstBuffItems.Clear();
+        base.Cache();
     }
 }

@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Boo.Lang;
 using UI;
 using DefaultNamespace;
 using System.Collections.Generic;
-using System;
 
 public class UIHPRoot : UIBase
 {
@@ -89,6 +86,7 @@ public class UIHPRoot : UIBase
             var pfbItem = Resources.Load<GameObject>("Prefabs/UI/ItemMP");
             var uiItemMP = GameUtil.PopOrInst(pfbItem);
             uiItemMP.transform.SetParent(goGridMP.transform);
+            uiItemMP.transform.localScale = Vector3.one;
             var itemMP = uiItemMP.GetComponent<UIItemMP>();
             if (i == mpCount)
             {

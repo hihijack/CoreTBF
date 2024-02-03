@@ -266,7 +266,7 @@ public class WorldRaidData : Singleton<WorldRaidData>
     }
 
     /// <summary>
-    /// 遭遇过的敌人组猎豹
+    /// 遭遇过的敌人组列表
     /// </summary>
     /// <returns></returns>
     internal List<int> GetEnemyGroupVisitedLst()

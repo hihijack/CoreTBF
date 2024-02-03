@@ -3,9 +3,7 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using System;
 using UnityEditor.UIElements;
-using System.Linq;
 using System.Collections.Generic;
-using UnityEngine.Experimental.PlayerLoop;
 using Sirenix.Utilities;
 using SimpleJSON;
 using UnityEditor.Experimental.GraphView;
@@ -234,7 +232,7 @@ public class EditorWinEventEditor : EditorWindow
             return;
         }
         _curFocusNodeView.AddANewPort();
-        _portListView.Refresh();
+        _portListView.Rebuild();
     }
 
 

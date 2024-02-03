@@ -36,7 +36,7 @@ namespace UnityEngine.UIElements
         public void SortWithIndex()
         {
             Sort(SortByIndex);
-            Refresh();
+            Rebuild();
         }
 
         private int SortByIndex(VisualElement x, VisualElement y)

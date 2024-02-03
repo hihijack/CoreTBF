@@ -67,6 +67,7 @@ namespace UI
              //添加可行动列表
              var uiItem = GameUtil.PopOrInst(pfbCharacterActionItem);
             uiItem.transform.parent = goGridAction.transform;
+            uiItem.transform.localScale = Vector3.one;
             var uiItemFightAction = uiItem.GetComponent<UIFightAction>();
             uiItemFightAction.SetData(target);
 

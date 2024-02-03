@@ -1,7 +1,4 @@
-﻿using DefaultNamespace;
-using System;
-using System.Collections.Generic;
-using System.Data.Odbc;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 

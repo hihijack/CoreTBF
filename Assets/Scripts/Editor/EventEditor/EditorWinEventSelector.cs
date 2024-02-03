@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using System;
 using UnityEngine.UIElements;
-using Boo.Lang;
+using System.Collections.Generic;
 
 public class EditorWinEventSelector : EditorWindow
 {
@@ -16,7 +16,7 @@ public class EditorWinEventSelector : EditorWindow
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/EventEditor/stylesWinEventSelector.uss");
         rootVisualElement.styleSheets.Add(styleSheet);
 
-        lstDatas = new Boo.Lang.List<EventBaseData>();
+        lstDatas = new List<EventBaseData>();
         foreach (var eventData in EventDataer.Inst.GetDic().Values)
         {
             if (eventData.isRoot)
@@ -25,7 +25,7 @@ public class EditorWinEventSelector : EditorWindow
             }
         }
         ListView lstView = new ListView(lstDatas, 30, ItemCreator, BindItem);
-        lstView.onItemChosen += onItemChosen;
+        lstView.onSelectionChange += onItemChosen;
         rootVisualElement.Add(lstView);
     }
 
